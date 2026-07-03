@@ -1,0 +1,104 @@
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
+import { from, switchMap, Observable, map, firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { StorageService } from './storage.service';
+import { UserRole } from '../api/enums';
+import { AuthResponse, UserMeResponse } from '../api/generated/models';
+
+interface JwtPayload {
+  sub: string;
+  exp: number;
+  iat: number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private http = inject(HttpClient);
+  private storage = inject(StorageService);
+  private router = inject(Router);
+
+  #currentUser = signal<UserMeResponse | null>(null);
+
+  readonly currentUser = this.#currentUser.asReadonly();
+  readonly isLoggedIn = computed(() => this.#currentUser() !== null);
+  readonly userRole = computed((): UserRole | null => {
+    const role = this.#currentUser()?.role;
+    return role != null ? (role as unknown as UserRole) : null;
+  });
+
+  login(nickname: string, password: string): Observable<void> {
+    return this.http
+      .post<AuthResponse>(`${environment.apiUrl}/api/auth/login`, { nickname, password })
+      .pipe(
+        switchMap((response) =>
+          from(this.storeTokens(response.accessToken, response.refreshToken))
+        ),
+        switchMap(() =>
+          this.http.get<UserMeResponse>(`${environment.apiUrl}/api/users/me`)
+        ),
+        map((user) => {
+          this.#currentUser.set(user);
+        })
+      );
+  }
+
+  async logout(): Promise<void> {
+    const refreshToken = await this.storage.get(this.storage.REFRESH_TOKEN);
+    if (refreshToken) {
+      this.http
+        .post(`${environment.apiUrl}/api/auth/logout`, { refreshToken })
+        .subscribe({ error: () => {} });
+    }
+    await this.storage.clearAfterLogout();
+    this.#currentUser.set(null);
+    await this.router.navigateByUrl('/login');
+  }
+
+  async isAuthenticated(): Promise<boolean> {
+    const token = await this.storage.get(this.storage.AUTH_TOKEN);
+    if (!token) return false;
+    try {
+      const payload = jwtDecode<JwtPayload>(token);
+      return payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  async getToken(): Promise<string | null> {
+    return this.storage.get(this.storage.AUTH_TOKEN);
+  }
+
+  setUser(user: UserMeResponse): void {
+    this.#currentUser.set(user);
+  }
+
+  async loadUserFromToken(): Promise<void> {
+    if (!(await this.isAuthenticated())) return;
+    try {
+      const user = await firstValueFrom(
+        this.http.get<UserMeResponse>(`${environment.apiUrl}/api/users/me`)
+      );
+      this.#currentUser.set(user);
+    } catch {
+      // network error — stay not populated but token remains valid
+    }
+  }
+
+  hasRole(role: UserRole): boolean {
+    return this.userRole() === role;
+  }
+
+  hasAnyRole(roles: UserRole[]): boolean {
+    const current = this.userRole();
+    return current != null && roles.includes(current);
+  }
+
+  private async storeTokens(accessToken: string, refreshToken: string): Promise<void> {
+    await this.storage.set(this.storage.AUTH_TOKEN, accessToken);
+    await this.storage.set(this.storage.REFRESH_TOKEN, refreshToken);
+  }
+}
