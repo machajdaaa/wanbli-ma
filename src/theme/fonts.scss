@@ -1,0 +1,39 @@
+/*
+ * Wanbli fonts
+ * ----------------------------------------------------------------------------
+ * Variable fonts only (one file covers the whole weight range instead of
+ * bundling a dozen static cuts per family). Files live in
+ * public/assets/fonts/, served as-is from /assets/fonts/.
+ */
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/assets/fonts/nunito/Nunito-Variable.ttf') format('truetype-variations');
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/assets/fonts/nunito/Nunito-Italic-Variable.ttf') format('truetype-variations');
+  font-weight: 200 1000;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter/Inter-Variable.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/inter/Inter-Italic-Variable.ttf') format('truetype-variations');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}

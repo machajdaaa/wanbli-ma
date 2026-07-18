@@ -1,0 +1,96 @@
+/*
+ * Wanbli design tokens
+ * ----------------------------------------------------------------------------
+ * Custom CSS variables for the app's own design system, kept separate from
+ * Ionic's --ion-color-* theming (Ionic components stay for structural/native
+ * behavior only — visual components are custom and read from these tokens).
+ *
+ * Categories below are the usual buckets for a design system. Active tokens
+ * are real CSS custom properties; commented-out lines are placeholders for
+ * categories we don't have values for yet — fill them in as specs arrive
+ * instead of hardcoding the value in a component.
+ */
+
+:root {
+  /* ---- Colors: brand / action ---- */
+  --wanbli-color-cta-bg: #D9791A;
+  --wanbli-color-cta-border: #E98929;
+  --wanbli-color-cta-text: #F1F1E7;
+
+  /* ---- Colors: borders / dividers ---- */
+  --wanbli-color-input-border: #1D3B19;
+  --wanbli-color-card-border: #D6D7D7;
+  --wanbli-color-daily-challenge-card-border: #C5D7D6;
+  --wanbli-color-eagle-feathers-card-border: #C5D7D6;
+  --wanbli-color-nav-border: #D9D9D9;
+  --wanbli-border-first-place: #FFD700;
+  --wanbli-border-second-place: #C0C0C0;
+  --wanbli-border-third-place: #CE8946;
+  --wanbli-border-rest-places: #D6D7D7;
+
+  /* ---- Colors: text ---- */
+  --wanbli-color-text-dark: #1D3B19;
+  --wanbli-color-text-light: #F1F1E7;
+  --wanbli-color-text-accent: #F3800E;
+
+  /* ---- Colors: state (success/error/warning/info) ---- */
+  /* --wanbli-color-success: ...; */
+  /* --wanbli-color-error: ...; */
+  /* --wanbli-color-warning: ...; */
+
+  /* ---- Colors: backgrounds (page/card/overlay) ---- */
+  --wanbli-color-bg-app: #F7F7F5;
+  --wanbli-color-bg-card: #F1F1E7;
+  --wanbli-daily-challenge-card-bg: linear-gradient(90deg, #F1F1E7 0%, #AFD7DC 100%);
+  --wanbli-eagle-feathers-card-bg: #12360E;
+  --wanbli-color-bg-nav: #FFFFFF;
+  --wanbli-bg-first-place: #FFD70080;
+  --wanbli-bg-second-place:#C0C0C080;
+  --wanbli-bg-third-place:#CE894680;
+  --wanbli-bg-rest-places: #F1F1E7;
+
+  /* ---- Radius ---- */
+  --wanbli-radius-md: 0.625rem;
+  --wanbli-radius-lg: 1.25rem;
+
+  /* ---- Border width ---- */
+  --wanbli-border-width-sm: 1px;
+  --wanbli-border-width-md: 2px;
+
+  /* ---- Typography: font family ---- */
+  --wanbli-font-family: 'Nunito', sans-serif; /* UI elements (buttons, inputs) */
+  --wanbli-font-family-text: 'Inter', sans-serif; /* Body/paragraph text */
+
+  /* ---- Typography: font size scale ---- */
+  --wanbli-font-size-12: 12px;
+  --wanbli-font-size-14: 14px;
+  --wanbli-font-size-15: 15px;
+  --wanbli-font-size-16: 16px;
+  --wanbli-font-size-24: 24px;
+  --wanbli-font-size-28: 28px;
+
+  /* ---- Typography: font weight ---- */
+  --wanbli-font-weight-regular: 400;
+  --wanbli-font-weight-medium: 500;
+  --wanbli-font-weight-bold: 700;
+
+  /* ---- Typography: line height ---- */
+  /* --wanbli-line-height-tight: ...; */
+  /* --wanbli-line-height-normal: ...; */
+
+  /* ---- Spacing scale ---- */
+  --wanbli-space-1: 0.25rem;
+  --wanbli-space-2: 0.5rem;
+  --wanbli-space-3: 0.75rem;
+  --wanbli-space-4: 1rem;
+  --wanbli-space-5: 1.25rem;
+  --wanbli-space-6: 1.5rem;
+
+  /* ---- Effects: transition timing ---- */
+  /* --wanbli-transition-fast: 0.15s ease; */
+
+  /* ---- Z-index scale ---- */
+  /* --wanbli-z-dropdown: 100; */
+  /* --wanbli-z-modal: 200; */
+  /* --wanbli-z-toast: 300; */
+}
