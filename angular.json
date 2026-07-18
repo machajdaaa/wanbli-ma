@@ -31,8 +31,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
+                "input": "public"
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
@@ -102,8 +101,7 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/assets",
-                "output": "assets"
+                "input": "public"
               }
             ],
             "styles": ["src/global.scss", "src/theme/variables.scss"],
