@@ -5,34 +5,106 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <ion-item>
-      <ion-input
+  @if (mode() === 'login') {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <app-text-input
         label="Přezdívka"
-        labelPlacement="floating"
         type="text"
         formControlName="nickname"
-        autocomplete="username"
-        inputmode="text">
-      </ion-input>
-    </ion-item>
+        autocomplete="username">
+      </app-text-input>
 
-    <ion-item>
-      <ion-input
+      <app-text-input
         label="Heslo"
-        labelPlacement="floating"
         type="password"
         formControlName="password"
         autocomplete="current-password">
-      </ion-input>
-    </ion-item>
+      </app-text-input>
 
-    <ion-button
-      expand="block"
-      type="submit"
-      class="ion-margin-top"
-      [disabled]="form.invalid || isSubmitting()">
-      {{ isSubmitting() ? 'Přihlašování...' : 'Přihlásit se' }}
-    </ion-button>
-  </form>
+      <app-primary-cta
+        class="ion-margin-top"
+        type="submit"
+        [disabled]="form.invalid || isSubmitting()">
+        {{ isSubmitting() ? 'Přihlašování...' : 'Přihlásit se' }}
+      </app-primary-cta>
+    </form>
+
+    <p>
+      Nemáte účet?
+      <a (click)="toggleMode()">Zaregistrujte se</a>
+    </p>
+  } @else {
+    <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+      <app-text-input
+        label="Přezdívka"
+        type="text"
+        formControlName="nickname"
+        autocomplete="username">
+      </app-text-input>
+
+      <app-text-input
+        label="E-mail"
+        type="email"
+        formControlName="email"
+        autocomplete="email">
+      </app-text-input>
+
+      <app-text-input
+        label="Jméno"
+        type="text"
+        formControlName="firstName"
+        autocomplete="given-name">
+      </app-text-input>
+
+      <app-text-input
+        label="Příjmení"
+        type="text"
+        formControlName="lastName"
+        autocomplete="family-name">
+      </app-text-input>
+
+      <app-text-input
+        label="Datum narození (RRRR-MM-DD)"
+        type="text"
+        formControlName="birthDate"
+        autocomplete="bday">
+      </app-text-input>
+
+      <select formControlName="gender">
+        <option [ngValue]="null" disabled>Vyberte pohlaví</option>
+        <option [ngValue]="Gender.Male">Muž</option>
+        <option [ngValue]="Gender.Female">Žena</option>
+      </select>
+
+      <app-text-input
+        label="Heslo"
+        type="password"
+        formControlName="password"
+        autocomplete="new-password">
+      </app-text-input>
+
+      <app-text-input
+        label="Heslo znovu"
+        type="password"
+        formControlName="passwordConfirm"
+        autocomplete="new-password">
+      </app-text-input>
+
+      @if (registerForm.errors?.['passwordsMismatch'] && registerForm.get('passwordConfirm')?.touched) {
+        <p>Hesla se neshodují.</p>
+      }
+
+      <app-primary-cta
+        class="ion-margin-top"
+        type="submit"
+        [disabled]="registerForm.invalid || isSubmitting()">
+        {{ isSubmitting() ? 'Registrace...' : 'Zaregistrovat se' }}
+      </app-primary-cta>
+    </form>
+
+    <p>
+      Máte účet?
+      <a (click)="toggleMode()">Přihlaste se</a>
+    </p>
+  }
 </ion-content>
