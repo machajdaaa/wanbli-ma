@@ -1,0 +1,94 @@
+$transition-timing: 0.15s ease;
+
+:host {
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.text-input {
+  position: relative;
+
+  &:has(.text-input-field:disabled) {
+    opacity: 0.5;
+  }
+}
+
+.text-input-field {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--wanbli-color-text-dark);
+  font-family: var(--wanbli-font-family);
+  font-size: 16px;
+  line-height: 1.25rem;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.text-input-border {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  min-width: 0;
+  padding: 0 0.5rem;
+  border: 1px solid var(--wanbli-color-input-border);
+  border-radius: var(--wanbli-radius-md);
+  pointer-events: none;
+  transition: border-width $transition-timing;
+}
+
+.text-input-legend {
+  max-width: 0;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--wanbli-font-family);
+  font-size: 12px;
+  transition: max-width $transition-timing;
+
+  span {
+    display: inline-block;
+    padding: 0 0.25rem;
+    visibility: hidden;
+  }
+}
+
+.text-input-label {
+  position: absolute;
+  top: 60%;
+  left: 1rem;
+  z-index: 1;
+  color: var(--wanbli-color-input-border);
+  font-family: var(--wanbli-font-family);
+  font-size: 14px;
+  line-height: 1.25rem;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transform-origin: left top;
+  transition: top $transition-timing, font-size $transition-timing, color $transition-timing;
+}
+
+.text-input:has(.text-input-field:focus) .text-input-border,
+.text-input:has(.text-input-field:not(:placeholder-shown)) .text-input-border {
+  border-width: 2px;
+}
+
+.text-input:has(.text-input-field:focus) .text-input-legend,
+.text-input:has(.text-input-field:not(:placeholder-shown)) .text-input-legend {
+  max-width: 100%;
+}
+
+.text-input:has(.text-input-field:focus) .text-input-label,
+.text-input:has(.text-input-field:not(:placeholder-shown)) .text-input-label {
+  top: 0;
+  color: var(--wanbli-color-text-dark);
+  font-size: 12px;
+}
