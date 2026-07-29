@@ -35,6 +35,14 @@
 @import './theme/tokens.scss';
 @import './theme/fonts.scss';
 
+/*
+ * Tailwind utilities only — preflight (Tailwind's base reset) is intentionally
+ * skipped since Ionic's normalize/typography CSS above already resets base
+ * elements, and re-resetting would fight the h1/h2/p rules below.
+ */
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/utilities' layer(utilities);
+
 body {
   font-family: var(--wanbli-font-family-text);
   color: var(--wanbli-color-text-dark);
