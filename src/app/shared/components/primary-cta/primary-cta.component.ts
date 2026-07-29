@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 export class PrimaryCtaComponent {
   type = input<'button' | 'submit'>('button');
   disabled = input(false);
+  label = input('');
 
   clicked = output<void>();
 
