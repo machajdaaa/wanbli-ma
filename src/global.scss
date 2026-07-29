@@ -39,3 +39,34 @@ body {
   font-family: var(--wanbli-font-family-text);
   color: var(--wanbli-color-text-dark);
 }
+
+.page {
+  padding: var(--wanbli-space-4);
+  background-color: var(--wanbli-color-bg-app);
+}
+
+/* Typography */
+h1 {
+  color: var(--wanbli-color-text-accent);
+  font-size: var(--wanbli-font-size-14);
+  line-height: var(--wanbli-line-height-14);
+  font-weight: var(--wanbli-font-weight-medium);
+  margin: 0;
+}
+
+h2 {
+  font-family: var(--wanbli-font-family-heading);
+  font-size: var(--wanbli-font-size-28);
+  line-height: var(--wanbli-line-height-28);
+  font-weight: var(--wanbli-font-weight-extrabold);
+  margin: 0;
+}
+
+p {
+  font-family: var(--wanbli-font-family-text);
+  font-size: var(--wanbli-font-size-14);
+  line-height: var(--wanbli-line-height-14);
+  font-weight: var(--wanbli-font-weight-medium);
+  color: var(--wanbli-color-text-dark-70);
+  margin: 0;
+}
