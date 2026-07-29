@@ -24,7 +24,7 @@ $transition-timing: 0.15s ease;
   outline: none;
   color: var(--wanbli-color-text-dark);
   font-family: var(--wanbli-font-family);
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.25rem;
 
   &:disabled {
@@ -51,7 +51,7 @@ $transition-timing: 0.15s ease;
   overflow: hidden;
   white-space: nowrap;
   font-family: var(--wanbli-font-family);
-  font-size: 12px;
+  font-size: 0.75rem;
   transition: max-width $transition-timing;
 
   span {
@@ -68,7 +68,7 @@ $transition-timing: 0.15s ease;
   z-index: 1;
   color: var(--wanbli-color-input-border);
   font-family: var(--wanbli-font-family);
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.25rem;
   pointer-events: none;
   transform: translateY(-50%);
@@ -90,5 +90,5 @@ $transition-timing: 0.15s ease;
 .text-input:has(.text-input-field:not(:placeholder-shown)) .text-input-label {
   top: 0;
   color: var(--wanbli-color-text-dark);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
