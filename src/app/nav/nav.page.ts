@@ -8,9 +8,9 @@ import {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-tabs',
-  templateUrl: 'tabs.page.html',
-  styleUrl: 'tabs.page.scss',
+  selector: 'app-nav',
+  templateUrl: 'nav.page.html',
+  styleUrl: 'nav.page.scss',
   imports: [IonTabs, IonTabBar, IonTabButton, IonLabel],
 })
-export class TabsPage {}
+export class NavPage {}

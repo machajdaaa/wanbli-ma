@@ -1,37 +1,37 @@
 import { Routes } from '@angular/router';
-import { TabsPage } from './tabs.page';
+import { NavPage } from './nav.page';
 
 export const routes: Routes = [
   {
-    path: 'tabs',
-    component: TabsPage,
+    path: 'nav',
+    component: NavPage,
     children: [
       {
-        path: 'tab1',
-        loadComponent: () => import('../tab1/tab1.page').then((m) => m.Tab1Page),
+        path: 'home',
+        loadComponent: () => import('../pages/home/home.page').then((m) => m.HomePage),
       },
       {
-        path: 'tab2',
-        loadComponent: () => import('../tab2/tab2.page').then((m) => m.Tab2Page),
+        path: 'eagle-feathers',
+        loadComponent: () => import('../pages/eagle-feathers/eagle-feathers.page').then((m) => m.EagleFeathersPage),
       },
       {
-        path: 'tab3',
-        loadComponent: () => import('../tab3/tab3.page').then((m) => m.Tab3Page),
+        path: 'group',
+        loadComponent: () => import('../pages/group/group.page').then((m) => m.GroupPage),
       },
       {
-        path: 'tab4',
-        loadComponent: () => import('../tab4/tab4.page').then((m) => m.Tab4Page),
+        path: 'profile',
+        loadComponent: () => import('../pages/profile/profile.page').then((m) => m.ProfilePage),
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/nav/home',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/nav/home',
     pathMatch: 'full',
   },
 ];

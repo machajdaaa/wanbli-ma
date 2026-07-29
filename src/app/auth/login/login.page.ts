@@ -91,7 +91,7 @@ export class LoginPage {
       next: async () => {
         await loading.dismiss();
         this.isSubmitting.set(false);
-        await this.navCtrl.navigateRoot('/tabs');
+        await this.navCtrl.navigateRoot('/nav');
       },
       error: async (err) => {
         await loading.dismiss();
@@ -139,7 +139,7 @@ export class LoginPage {
         next: async () => {
           await loading.dismiss();
           this.isSubmitting.set(false);
-          await this.navCtrl.navigateRoot('/tabs');
+          await this.navCtrl.navigateRoot('/nav');
         },
         error: async (err) => {
           await loading.dismiss();
