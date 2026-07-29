@@ -108,7 +108,28 @@ export class AuthService {
 
   async isAuthenticated(): Promise<boolean> {
     const token = await this.storage.get(this.storage.AUTH_TOKEN);
-    if (!token) return false;
+    return token != null && this.isTokenValid(token);
+  }
+
+  // Unlike isAuthenticated(), falls back to the refresh token so an expired access token doesn't force a re-login on reload.
+  async ensureAuthenticated(): Promise<boolean> {
+    const token = await this.storage.get(this.storage.AUTH_TOKEN);
+    if (token != null && this.isTokenValid(token)) {
+      return true;
+    }
+
+    const refreshToken = await this.storage.get(this.storage.REFRESH_TOKEN);
+    if (!refreshToken) return false;
+
+    try {
+      await firstValueFrom(this.refreshAccessToken());
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private isTokenValid(token: string): boolean {
     try {
       const payload = jwtDecode<JwtPayload>(token);
       return payload.exp * 1000 > Date.now();
@@ -126,7 +147,7 @@ export class AuthService {
   }
 
   async loadUserFromToken(): Promise<void> {
-    if (!(await this.isAuthenticated())) return;
+    if (!(await this.ensureAuthenticated())) return;
     try {
       await firstValueFrom(this.fetchAndSetCurrentUser());
     } catch {

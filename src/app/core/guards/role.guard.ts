@@ -8,7 +8,7 @@ export const roleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) =>
   const authService = inject(AuthService);
   const navCtrl = inject(NavController);
 
-  if (!(await authService.isAuthenticated())) {
+  if (!(await authService.ensureAuthenticated())) {
     await navCtrl.navigateRoot('/login');
     return false;
   }
@@ -22,6 +22,6 @@ export const roleGuard: CanActivateFn = async (route: ActivatedRouteSnapshot) =>
     return true;
   }
 
-  await navCtrl.navigateRoot('/tabs/tab1');
+  await navCtrl.navigateRoot('/nav/home');
   return false;
 };
