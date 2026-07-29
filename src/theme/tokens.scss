@@ -23,6 +23,7 @@
   --wanbli-color-daily-challenge-card-border: #C5D7D6;
   --wanbli-color-eagle-feathers-card-border: #C5D7D6;
   --wanbli-color-nav-border: #D9D9D9;
+  --wanbli-color-nav-divider: rgba(29, 59, 25, 0.1);
   --wanbli-border-first-place: #FFD700;
   --wanbli-border-second-place: #C0C0C0;
   --wanbli-border-third-place: #CE8946;
@@ -30,6 +31,7 @@
 
   /* ---- Colors: text ---- */
   --wanbli-color-text-dark: #1D3B19;
+  --wanbli-color-text-dark-70: rgba(29, 59, 25, 0.7);
   --wanbli-color-text-light: #F1F1E7;
   --wanbli-color-text-accent: #F3800E;
 
@@ -41,7 +43,7 @@
   /* ---- Colors: backgrounds (page/card/overlay) ---- */
   --wanbli-color-bg-app: #F7F7F5;
   --wanbli-color-bg-card: #F1F1E7;
-  --wanbli-daily-challenge-card-bg: linear-gradient(90deg, #F1F1E7 0%, #AFD7DC 100%);
+  --wanbli-daily-challenge-card-bg: linear-gradient(135deg, #F1F1E7 0%, #AFD7DC 100%);
   --wanbli-eagle-feathers-card-bg: #12360E;
   --wanbli-color-bg-nav: #FFFFFF;
   --wanbli-bg-first-place: #FFD70080;
@@ -60,23 +62,30 @@
   /* ---- Typography: font family ---- */
   --wanbli-font-family: 'Nunito', sans-serif; /* UI elements (buttons, inputs) */
   --wanbli-font-family-text: 'Inter', sans-serif; /* Body/paragraph text */
+  --wanbli-font-family-heading: 'Baloo 2', sans-serif; /* Headings/display, ExtraBold only */
 
   /* ---- Typography: font size scale ---- */
-  --wanbli-font-size-12: 12px;
-  --wanbli-font-size-14: 14px;
-  --wanbli-font-size-15: 15px;
-  --wanbli-font-size-16: 16px;
-  --wanbli-font-size-24: 24px;
-  --wanbli-font-size-28: 28px;
+  --wanbli-font-size-12: 0.75rem;
+  --wanbli-font-size-14: 0.875rem;
+  --wanbli-font-size-15: 0.9375rem;
+  --wanbli-font-size-16: 1rem;
+  --wanbli-font-size-24: 1.5rem;
+  --wanbli-font-size-28: 1.75rem;
 
   /* ---- Typography: font weight ---- */
   --wanbli-font-weight-regular: 400;
   --wanbli-font-weight-medium: 500;
   --wanbli-font-weight-bold: 700;
+  --wanbli-font-weight-extrabold: 800; /* Baloo 2 only */
 
   /* ---- Typography: line height ---- */
-  /* --wanbli-line-height-tight: ...; */
-  /* --wanbli-line-height-normal: ...; */
+  /* Paired 1:1 with the font-size scale above (line-height-N goes with font-size-N) */
+  --wanbli-line-height-12: 1rem;
+  --wanbli-line-height-14: 1.25rem;
+  --wanbli-line-height-15: 1.3125rem;
+  --wanbli-line-height-16: 1.375rem;
+  --wanbli-line-height-24: 1.875rem;
+  --wanbli-line-height-28: 2.125rem;
 
   /* ---- Spacing scale ---- */
   --wanbli-space-1: 0.25rem;

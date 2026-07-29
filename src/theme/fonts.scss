@@ -37,3 +37,12 @@
   font-style: italic;
   font-display: swap;
 }
+
+/* Baloo 2: static ExtraBold cut only, we don't use any other weight */
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('/assets/fonts/baloo/Baloo2-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
