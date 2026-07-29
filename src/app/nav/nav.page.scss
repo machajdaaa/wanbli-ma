@@ -1,0 +1,42 @@
+ion-tab-bar {
+  --background: var(--wanbli-color-bg-nav);
+  --border: 1px solid var(--wanbli-color-nav-border);
+  --color: var(--wanbli-color-text-dark);
+  --color-selected: var(--wanbli-color-text-dark);
+  height: 4.5rem;
+}
+
+ion-tab-button {
+  font-family: var(--wanbli-font-family);
+
+  ion-label {
+    font-size: var(--wanbli-font-size-12);
+    font-weight: var(--wanbli-font-weight-medium);
+  }
+}
+
+.tab-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.tab-icon-selected {
+  display: none;
+}
+
+ion-tab-button.tab-selected {
+  .tab-icon-default {
+    display: none;
+  }
+
+  .tab-icon-selected {
+    display: block;
+  }
+}
+
+.tab-divider {
+  align-self: center;
+  width: var(--wanbli-border-width-md);
+  height: 1.625rem;
+  background: var(--wanbli-color-nav-divider);
+}
