@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "generate:api": "ng-openapi-gen --config ng-openapi-gen.json"
+    "generate:api": "ng-openapi-gen --config ng-openapi-gen.json",
+    "prepare": "husky"
   },
   "private": true,
   "dependencies": {
@@ -53,10 +54,12 @@
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.16.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.1",
     "eslint-plugin-prefer-arrow": "1.2.2",
+    "husky": "^9.1.7",
     "jasmine-core": "~5.1.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.4.0",
@@ -64,10 +67,15 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "lint-staged": "^17.6.0",
     "ng-openapi-gen": "^1.0.5",
     "postcss": "^8.5.25",
     "tailwindcss": "^4.3.3",
     "typescript": "~5.9.0"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "lint-staged": {
+    "*.ts": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint --fix",
+    "*.html": "cross-env ESLINT_USE_FLAT_CONFIG=false eslint --fix"
+  }
 }
