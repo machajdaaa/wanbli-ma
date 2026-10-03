@@ -46,6 +46,7 @@
 body {
   font-family: var(--wanbli-font-family-text);
   color: var(--wanbli-color-text-dark);
+  background-color: var(--wanbli-color-bg-app);
 }
 
 .page {
@@ -67,6 +68,15 @@ h2 {
   font-size: var(--wanbli-font-size-28);
   line-height: var(--wanbli-line-height-28);
   font-weight: var(--wanbli-font-weight-extrabold);
+  margin: 0;
+}
+
+h3 {
+  font-family: var(--wanbli-font-family-heading);
+  font-size: var(--wanbli-font-size-14);
+  line-height: var(--wanbli-line-height-14);
+  font-weight: var(--wanbli-font-weight-regular);
+  color: var(--wanbli-color-text-dark-70);
   margin: 0;
 }
 

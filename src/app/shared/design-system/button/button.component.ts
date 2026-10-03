@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { IonButton } from '@ionic/angular/standalone';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-primary-cta',
+  selector: 'app-button',
   standalone: true,
-  templateUrl: 'primary-cta.component.html',
-  styleUrl: 'primary-cta.component.scss',
+  imports: [IonButton],
+  templateUrl: 'button.component.html',
+  styleUrl: 'button.component.scss',
 })
-export class PrimaryCtaComponent {
+export class ButtonComponent {
   type = input<'button' | 'submit'>('button');
   disabled = input(false);
   label = input('');

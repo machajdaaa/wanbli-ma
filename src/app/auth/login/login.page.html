@@ -21,12 +21,12 @@
         autocomplete="current-password">
       </app-text-input>
 
-      <app-primary-cta
-        class="ion-margin-top"
+      <app-button
+        class="mt-4"
         type="submit"
         [disabled]="form.invalid || isSubmitting()">
         {{ isSubmitting() ? 'Přihlašování...' : 'Přihlásit se' }}
-      </app-primary-cta>
+      </app-button>
     </form>
 
     <p>
@@ -94,12 +94,12 @@
         <p>Hesla se neshodují.</p>
       }
 
-      <app-primary-cta
-        class="ion-margin-top"
+      <app-button
+        class="mt-4"
         type="submit"
         [disabled]="registerForm.invalid || isSubmitting()">
         {{ isSubmitting() ? 'Registrace...' : 'Zaregistrovat se' }}
-      </app-primary-cta>
+      </app-button>
     </form>
 
     <p>

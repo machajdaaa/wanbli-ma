@@ -1,17 +1,14 @@
-<div class="text-input">
-  <input
-    class="text-input-field"
-    [id]="inputId"
-    placeholder=" "
-    [type]="type()"
-    [value]="value()"
-    [disabled]="disabled()"
-    [attr.autocomplete]="autocomplete()"
-    (input)="handleInput($event)"
-    (blur)="handleBlur()"
-  />
-  <label class="text-input-label" [for]="inputId">{{ label() }}</label>
-  <fieldset class="text-input-border" aria-hidden="true">
-    <legend class="text-input-legend"><span>{{ label() }}</span></legend>
-  </fieldset>
-</div>
+<ion-input
+  class="app-text-input"
+  mode="md"
+  [fill]="'outline'"
+  [labelPlacement]="'floating'"
+  [id]="inputId"
+  [label]="label()"
+  [type]="type()"
+  [value]="value()"
+  [disabled]="disabled()"
+  [autocomplete]="autocomplete()"
+  (ionInput)="handleInput($event)"
+  (ionBlur)="handleBlur()">
+</ion-input>

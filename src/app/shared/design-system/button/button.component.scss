@@ -1,0 +1,46 @@
+/*
+ * Restyled ion-button: keeps Ionic's native/a11y button behavior, visual
+ * appearance driven entirely by Wanbli design tokens via CSS custom
+ * properties (Ionic's own theming API) plus ::part(native) for the few
+ * things (text-transform, box-shadow, sizing) it doesn't expose as a prop.
+ */
+
+.app-button {
+  --background: var(--wanbli-color-cta-bg);
+  --background-activated: var(--wanbli-color-cta-bg);
+  --background-activated-opacity: 1;
+  --background-hover: var(--wanbli-color-cta-bg);
+  --background-hover-opacity: 1;
+  --border-color: var(--wanbli-color-cta-border);
+  --border-width: var(--wanbli-border-width-md);
+  --border-style: solid;
+  --border-radius: var(--wanbli-radius-md);
+  --box-shadow: none;
+  --color: var(--wanbli-color-cta-text);
+  --color-activated: var(--wanbli-color-cta-text);
+  --padding-top: 0.5rem;
+  --padding-bottom: 0.5rem;
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+
+  width: fit-content;
+  height: auto;
+  margin: 0;
+  font-family: var(--wanbli-font-family);
+  font-size: 1rem;
+  font-weight: bold;
+
+  &::part(native) {
+    text-transform: none;
+    letter-spacing: normal;
+    transition: filter 0.15s ease, opacity 0.15s ease;
+  }
+
+  &.ion-activated::part(native) {
+    filter: brightness(0.9);
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+}

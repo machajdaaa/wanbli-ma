@@ -6,6 +6,8 @@ import {
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { IonInput } from '@ionic/angular/standalone';
+import type { AutocompleteTypes, InputInputEventDetail } from '@ionic/core/components';
 
 let nextId = 0;
 
@@ -13,6 +15,7 @@ let nextId = 0;
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-text-input',
   standalone: true,
+  imports: [IonInput],
   templateUrl: 'text-input.component.html',
   styleUrl: 'text-input.component.scss',
   providers: [
@@ -28,7 +31,7 @@ export class TextInputComponent implements ControlValueAccessor {
 
   label = input('');
   type = input<'text' | 'password' | 'email'>('text');
-  autocomplete = input('off');
+  autocomplete = input<AutocompleteTypes>('off');
 
   value = signal('');
   disabled = signal(false);
@@ -52,8 +55,8 @@ export class TextInputComponent implements ControlValueAccessor {
     this.disabled.set(isDisabled);
   }
 
-  handleInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
+  handleInput(event: CustomEvent<InputInputEventDetail>): void {
+    const value = event.detail.value ?? '';
     this.value.set(value);
     this.onChange(value);
   }

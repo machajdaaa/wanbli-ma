@@ -2,8 +2,10 @@
  * Wanbli design tokens
  * ----------------------------------------------------------------------------
  * Custom CSS variables for the app's own design system, kept separate from
- * Ionic's --ion-color-* theming (Ionic components stay for structural/native
- * behavior only — visual components are custom and read from these tokens).
+ * Ionic's --ion-color-* theming. Ionic components are restyled to match this
+ * palette (see src/app/design-system) rather than kept purely structural —
+ * they read these tokens through their own CSS custom properties / shadow
+ * parts instead of hardcoded values, same as fully custom components do.
  *
  * Categories below are the usual buckets for a design system. Active tokens
  * are real CSS custom properties; commented-out lines are placeholders for

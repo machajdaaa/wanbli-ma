@@ -1,7 +1,0 @@
-<button class="primary-cta" [type]="type()" [disabled]="disabled()" (click)="handleClick()">
-  @if (label()) {
-    {{ label() }}
-  } @else {
-    <ng-content></ng-content>
-  }
-</button>

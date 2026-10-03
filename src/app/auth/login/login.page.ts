@@ -23,8 +23,8 @@ import {
 } from '@ionic/angular/standalone';
 import { AuthService } from '../../core/services/auth.service';
 import { Gender } from '../../core/api/enums';
-import { PrimaryCtaComponent } from '../../shared/components/primary-cta/primary-cta.component';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
+import { ButtonComponent } from '../../shared/design-system/button/button.component';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -41,7 +41,7 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   imports: [
     ReactiveFormsModule,
     IonContent, IonHeader, IonToolbar, IonTitle,
-    TextInputComponent, PrimaryCtaComponent,
+    TextInputComponent, ButtonComponent,
   ],
 })
 export class LoginPage {

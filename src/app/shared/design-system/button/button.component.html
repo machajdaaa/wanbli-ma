@@ -1,0 +1,12 @@
+<ion-button
+  class="app-button"
+  fill="solid"
+  [type]="type()"
+  [disabled]="disabled()"
+  (click)="handleClick()">
+  @if (label()) {
+    {{ label() }}
+  } @else {
+    <ng-content></ng-content>
+  }
+</ion-button>

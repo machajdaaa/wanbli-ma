@@ -1,0 +1,21 @@
+.activity-card {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  padding: var(--wanbli-space-4) var(--wanbli-space-6);
+  background-color: var(--wanbli-color-bg-card);
+  border-radius: var(--wanbli-radius-md);
+  border: var(--wanbli-color-card-border) solid var(--wanbli-border-color-card);
+}
+
+.pic-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--wanbli-radius-md);
+  background-color: #1D3B19;
+}
+
+.level img {
+  height: var(--wanbli-font-size-28);
+}
