@@ -3,7 +3,7 @@
  * ----------------------------------------------------------------------------
  * Custom CSS variables for the app's own design system, kept separate from
  * Ionic's --ion-color-* theming. Ionic components are restyled to match this
- * palette (see src/app/design-system) rather than kept purely structural —
+ * palette (see src/app/shared/design-system) rather than kept purely structural —
  * they read these tokens through their own CSS custom properties / shadow
  * parts instead of hardcoded values, same as fully custom components do.
  *
