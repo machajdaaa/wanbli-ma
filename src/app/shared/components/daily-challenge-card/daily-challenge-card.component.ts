@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {ButtonComponent} from "../../design-system/button/button.component";
 
 @Component({
@@ -9,10 +9,4 @@ import {ButtonComponent} from "../../design-system/button/button.component";
     ButtonComponent
   ]
 })
-export class DailyChallengeCardComponent  implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {}
-
-}
+export class DailyChallengeCardComponent {}

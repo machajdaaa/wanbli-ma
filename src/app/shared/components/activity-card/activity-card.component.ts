@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {IonRow, IonGrid, IonCol} from "@ionic/angular/standalone";
 
 @Component({
@@ -11,10 +11,4 @@ import {IonRow, IonGrid, IonCol} from "@ionic/angular/standalone";
     IonCol
   ]
 })
-export class ActivityCardComponent  implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {}
-
-}
+export class ActivityCardComponent {}
