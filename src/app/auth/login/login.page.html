@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="[--padding-top:1rem] [--padding-bottom:1rem] [--padding-start:1rem] [--padding-end:1rem]">
   @if (mode() === 'login') {
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <app-text-input
