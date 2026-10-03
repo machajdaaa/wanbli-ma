@@ -5,6 +5,10 @@ App/App/public
 DerivedData
 xcuserdata
 
+# Workspace/SwiftPM metadata — not needed to open or build the project
+App/App.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm
+
 # Cordova plugins for Capacitor
 capacitor-cordova-ios-plugins
 
