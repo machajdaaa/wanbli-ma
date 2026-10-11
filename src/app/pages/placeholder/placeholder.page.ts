@@ -17,9 +17,9 @@ export interface PlaceholderData {
 }
 
 /**
- * Generic "připravujeme" screen. Used permanently for /upload (the upload
- * form isn't designed yet) and temporarily for routes whose screens arrive in
- * later redesign phases. Configured via route `data` (PlaceholderData).
+ * Generic "připravujeme" screen for features that aren't designed or have no
+ * backend yet: /upload (feather upload form) and /forgot-password.
+ * Configured via route `data` (PlaceholderData).
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -30,7 +30,7 @@ import { IconComponent } from '../../design-system/icon/icon.component';
             }
             <a
               routerLink="/nav/group"
-              class="inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-surface-raised px-2.5 font-text text-[0.8125rem] leading-[18px] font-semibold text-text"
+              class="relative after:absolute after:inset-x-0 after:content-[''] inline-flex h-7 items-center gap-1.5 rounded-full border border-border bg-surface-raised px-2.5 font-text text-[0.8125rem] leading-[18px] font-semibold text-text after:-inset-y-2"
             >
               <app-icon name="group" [size]="14" />
               {{ group.name }}

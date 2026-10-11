@@ -46,6 +46,7 @@ export class ToggleComponent {
         : 'bg-border-strong';
     return (
       `relative h-8 w-[52px] rounded-full p-0 transition-colors duration-150 ${color} ` +
+      "after:absolute after:inset-x-0 after:-inset-y-1.5 after:content-[''] " +
       'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-pressed'
     );
   });

@@ -6,7 +6,7 @@ v `src/app/core/api/generated`) zatím nevrací. Každý řádek odpovídá zna�
 a mapují se ve službách v `src/app/core/services/`. Když backend data doplní,
 stačí změnit mapování ve službě a smazat mock; komponenty se nemění.
 
-Stav k 11. 10. 2026 (aktualizováno ve fázi 8 redesignu). Priorita: **P1** = bez toho je
+Stav k 11. 10. 2026 (konec redesignu, fáze 9). Priorita: **P1** = bez toho je
 obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drobnost.
 
 ## Příspěvky a feed
@@ -21,7 +21,7 @@ obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drob
 | – | Celé jméno autora | Karta pera | jen `nickname` | `firstName`, `lastName` v `PostAuthorResponse` – **rozhodnout, komu jméno ukazovat** (celá Liga vs. vlastní skupina, děti) | P2 |
 | – | Feed „celá Liga“, když nikoho nesleduju | Domů (stav 1b) | nevíme, co `/api/feed` vrací uživateli bez sledovaných | potvrdit chování, případně `GET /api/feed?scope=league` | P1 |
 | `user posts` | Příspěvky konkrétního uživatele | Můj profil, cizí profil | nic | `GET /api/users/{id}/posts` (stránkovaně) | P1 |
-| – | Skrýt / nahlásit příspěvek | Menu příspěvku | nic | `POST /api/posts/{id}/hide`, `POST /api/posts/{id}/report` (nahlášení jde vedoucímu oddílu) | P2 |
+| `hide post` | Skrýt / nahlásit příspěvek | Menu příspěvku | nic; skrytí jen lokálně do obnovení feedu, nahlášení UI poctivě označí jako nedostupné | `POST /api/posts/{id}/hide`, `POST /api/posts/{id}/report` (nahlášení jde vedoucímu oddílu) – **nahlašování je bezpečnostní funkce pro děti** | P1 |
 | `daily challenge` | Denní výzva (název, text, pero) | Domů | nic | `GET /api/challenges/today` → `{ title, text, eagleFeatherId }`; kdo ji vybírá (admin / los) je otevřené | P2 |
 
 ## Orlí pera
@@ -65,6 +65,23 @@ obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drob
 | – | Přihlášení e-mailem | Přihlášení | jen `nickname`; pole se proto jmenuje „Přezdívka“ | přijímat e-mail i přezdívku | P3 |
 | – | Lokalizované chyby validace | Registrace, úprava profilu | `ProblemDetails.errors` s texty serveru | vracet kódy chyb (`nickname_taken`, `email_invalid`…), klient je přeloží | P3 |
 | – | Text podmínek používání a ochrany údajů | Registrace, Nastavení | nic | URL nebo endpoint s textem | P2 |
-| – | Výběr oddílu při registraci | Registrace | pozvánky (`organisation-invites`), seznam oddílů není | rozhodnout tok (pozvánka vs. výběr); případně `GET /api/organisations` (veřejný seznam) | P2 |
+| `group picker` | Výběr oddílu při registraci | Registrace | pozvánky (`organisation-invites`), seznam oddílů není; výběr se neodesílá | rozhodnout tok (pozvánka vs. výběr); případně `GET /api/organisations` (veřejný seznam). Přijetí pozvánky zatím nemá v aplikaci obrazovku | P2 |
 | – | Souhlas rodiče pod 15 let | Registrace | nic; UI jen radí registrovat se s rodičem | `parentEmail` v `RegisterRequest` + potvrzovací e-mail; účet dítěte do potvrzení omezený. **Právní požadavek** (GDPR čl. 8, v ČR hranice 15 let) | P1 |
 | – | Hodnoty enumu `Gender` | Registrace | `0 \| 1 \| 2` bez názvů | potvrdit význam (klient: 0 = neuvedeno, 1 = kluk, 2 = holka) nebo přidat `x-enum-varnames` | P3 |
+
+## Shrnutí priorit
+
+**P1 – bez toho jsou obrazovky z velké části ukázkové nebo chybí důležitá funkce:**
+pero a výkon u příspěvku, `likedByMe`, chování feedu bez sledovaných,
+příspěvky uživatele, názvy kategorií, žebříček, rozšířený veřejný profil,
+nahlašování příspěvků, souhlas rodiče pod 15 let.
+
+**P2:** místo, více fotek, jméno autora (rozhodnout viditelnost), denní výzva,
+limity / co se měří / kdo ze skupiny pero má, výsledek u splnění, rozšířená
+oznámení, bio, počty per členů, hledání lidí, upload fotek, změna a obnova
+hesla, tok vstupu do oddílu, texty podmínek.
+
+**P3:** pravidla kategorie, slovníček, formát `section`, fulltext per,
+cover skupiny, notifikace/soukromí, přihlášení e-mailem, hodnoty `Gender`,
+lokalizované chyby validace.
+

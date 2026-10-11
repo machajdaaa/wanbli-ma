@@ -1,11 +1,7 @@
 {
-  "app": {
-    "title": "Orlí pera"
-  },
   "common": {
     "back": "Zpět",
     "cancel": "Zrušit",
-    "close": "Zavřít",
     "retry": "Zkusit znovu",
     "loading": "Načítám…",
     "saving": "Ukládám…",
@@ -24,10 +20,6 @@
     "addFeather": "Přidat orlí pero"
   },
   "placeholder": {
-    "soon": {
-      "title": "Připravujeme",
-      "text": "Tahle obrazovka bude brzy hotová."
-    },
     "upload": {
       "title": "Nahrání pera připravujeme",
       "text": "Brzy tu půjde přidat splněné pero i s fotkami a výkonem."
@@ -296,12 +288,6 @@
       "few": "{{count}} členové",
       "many": "{{count}} člena",
       "other": "{{count}} členů"
-    },
-    "people": {
-      "one": "{{count}} člověk",
-      "few": "{{count}} lidé",
-      "many": "{{count}} člověka",
-      "other": "{{count}} lidí"
     },
     "likes": {
       "one": "{{count}} pírko",

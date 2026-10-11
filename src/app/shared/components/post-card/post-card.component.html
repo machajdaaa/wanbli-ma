@@ -4,7 +4,7 @@
 >
   <!-- 1 Author -->
   <div class="flex items-center gap-3">
-    <a [routerLink]="authorLink()" class="flex min-w-0 flex-1 items-center gap-3 rounded-12">
+    <a [routerLink]="authorLink()" class="-my-0.5 flex min-h-11 min-w-0 flex-1 items-center gap-3 rounded-12">
       <app-avatar [size]="40" [name]="post().author.name" [imageUrl]="post().author.avatarUrl" [seed]="post().author.id" />
       <span class="flex min-w-0 flex-col gap-px">
         <span class="truncate type-label">{{ post().author.name }}</span>

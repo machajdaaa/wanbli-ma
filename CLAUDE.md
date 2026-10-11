@@ -43,7 +43,7 @@ Děti plní „orlí pera“, sdílejí je, sledují se a dávají si „pírka�
   rozumně a zapiš do `docs/redesign-plan.md` (sekce Rozhodnutí).
 - `docs/redesign-plan.md` – obrazovky, komponenty, view-modely, rozpory,
   rozhodnutí. `docs/backend-requirements.md` – co chybí v API.
-- `trilobit_prompt.md` – původní zadání redesignu (fáze 0–9).
+- `trilobit_prompt.md` – původní zadání redesignu (fáze 0–9, dokončeno 11. 10. 2026).
 
 ## Datová vrstva a mocky
 
@@ -79,7 +79,7 @@ Děti plní „orlí pera“, sdílejí je, sledují se a dávají si „pírka�
   - `services/mappers.ts` — sdílené mapování (`toPerson`, `displayName`, `categoryCode`, `normalizeSearch`)
 - `src/app/core/models/` — `view-models.ts` (všechny `*Vm`), `light.ts` (`Light`, `LIGHTS`)
 - `src/app/core/mocks/` — jediné místo pro ukázková data, každé s `// MOCK(<důvod>)` a řádkem v `docs/backend-requirements.md`
-- `src/app/pages/placeholder/` — obecná „připravujeme“ stránka konfigurovaná přes route `data` (`/upload` natrvalo, ostatní dočasně do své fáze)
+- `src/app/pages/placeholder/` — obecná „připravujeme“ stránka konfigurovaná přes route `data` (`/upload` a `/forgot-password`)
   - `core/api/generated/` — **nikdy needitovat ručně.** Při změně backend API spusť `npm run generate:api`; pokud generovaný klient neodpovídá potřebě, oprava patří do `ng-openapi-gen.json`/backend OpenAPI schématu, ne do vygenerovaného souboru.
 - `src/app/auth/` — login/register stránka
 - `src/app/nav/` — shell se 4 taby (`nav.routes.ts`)
@@ -172,7 +172,8 @@ vždy přes `environment.apiUrl`.
 ## Přístupnost
 
 - Skutečné `button` / `a` / `input`, `aria-label` u tlačítek jen s ikonou.
-- Dotykové plochy min. 44 px (i když je vizuál menší – rozšířit hit area).
+- Dotykové plochy min. 44 px (i když je vizuál menší – rozšířit hit area
+  přes `relative after:absolute after:-inset-y-… after:content-['']`).
 - Kontrast min. WCAG AA (známé výjimky z designu viz `docs/redesign-plan.md`).
 
 ## Native projekty (android/, ios/)
@@ -196,7 +197,7 @@ Capacitor pluginů v testech. Nový spec psát ve stejném minimálním duchu, p
 - Vizuální kontrolu při 390 px dělat přes emulaci zařízení (CDP `Emulation.setDeviceMetricsOverride`), ne `--window-size=390`: headless Chrome má minimální šířku okna ~500 px a snímek pak jen ořízne širší layout.
 - Karma spouští Chrome. Když Chrome není nainstalovaný (tenhle stroj má jen
   Brave): `CHROME_BIN="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" npm test -- --watch=false --browsers=ChromeHeadless`.
-- Na konci každé fáze redesignu musí projít `npm run lint`, `npm run build`
+- Před dokončením úkolu musí projít `npm run lint`, `npm run build`
   i `npm test`; testy rozbité změnou opravit.
 
 ## Gotchas

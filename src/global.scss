@@ -6,6 +6,12 @@
  * the type scale is exposed as `type-*` utilities instead of global h1/p rules.
  */
 
+// Design tokens, fonts, overlay styles. @use must come first in the file;
+// Sass still emits the plain-CSS @layer/@import statements below at the top.
+@use './theme/tokens';
+@use './theme/fonts';
+@use './theme/overlays';
+
 /*
  * Cascade layers, lowest priority first. Ionic's global CSS goes into the
  * `ionic` layer so Tailwind utilities (layer `utilities`, src/tailwind.css)
@@ -36,9 +42,6 @@
  * later by overriding the semantic tokens only.
  */
 
-@import './theme/tokens.scss';
-@import './theme/fonts.scss';
-@import './theme/overlays.scss';
 
 /* Tailwind (theme mapping + type-* utilities) lives in src/tailwind.css — plain CSS,
  * because Sass can't parse Tailwind's `--color-*: initial` syntax. */

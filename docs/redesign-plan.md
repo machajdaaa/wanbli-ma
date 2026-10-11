@@ -426,6 +426,14 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   pro souhlas se zpracováním osobních údajů dítěte 15 let (GDPR čl. 8,
   zákon 110/2019 Sb.) – souhlas rodiče je tedy **právní požadavek**,
   ne jen UX. Zapsáno v backend-requirements jako P1.
+- **R59 – Úklid (fáze 9).** Smazány fonty Nunito, staré ikony tabů
+  (`public/assets/icon/`) a dva nepoužívané obrázky; `UserRole` bez `Admin`
+  (API `0 | 1`); odstraněny nepoužité překladové klíče; Sass partials přes
+  `@use`. Odkaz na neexistující favicon odstraněn – logo zatím není
+  navržené. Audit dotykových ploch na všech obrazovkách: menší prvky
+  (segmenty, čipy, přepínač, štítek skupiny, autor v kartě) mají rozšířenou
+  klikací plochu na 44 px. `roleGuard` zůstává v kódu, ale žádná route ho
+  nepoužívá (vedoucí = dítě).
 - **R58 – Chyby přihlášení a registrace (fáze 8).** Špatné údaje (400/401)
   → u pole Heslo „Přezdívka nebo heslo nesedí“, smaže se při dalším psaní.
   Síť / 5xx → toast se „Zkusit znovu“. Validační chyby serveru
@@ -448,3 +456,28 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
 | 9 | úklid, a11y, shrnutí | `chore: cleanup and accessibility pass` |
 
 Každá fáze končí `npm run lint`, `npm run build` a `npm test` bez chyb.
+
+## 7. Stav po dokončení (11. 10. 2026)
+
+Všechny obrazovky z designu jsou hotové (kromě nenavržených: nahrání pera,
+detail příspěvku, dark mode). Lint, build a 38 unit testů procházejí.
+Vizuálně ověřeno při 390 px proti `design/` s mockovanými odpověďmi API;
+**proti skutečnému backendu zatím neověřeno** (chybí testovací účet).
+
+| Obrazovka | Skutečná data z API | Ukázková data (MOCK) / skryto |
+|---|---|---|
+| Přihlášení, registrace | přihlášení, registrace (všechna pole `RegisterRequest`) | výběr oddílu (neodesílá se); souhlas rodiče jen jako rada |
+| Domů | feed, pírka (odeslání), režim sleduju / celá Liga, mazání | pero + výkon u příspěvku, „lajkl jsem“, denní výzva; místo skryto |
+| Orlí pera | katalog, kategorie, pera, texty úkolů, můj postup | názvy kategorií, pravidla, co se měří, limity, slovníček, kdo ze skupiny pero má |
+| Skupina | hlavička, feed skupiny, oznámení (název, text, autor) | žebříček celý; cover = ilustrace; kdy/kde/vstupné/věk skryto |
+| Můj profil | jméno, přezdívka, skupina, počty sledujících, počet per, sbírka | bio (jen v zařízení), moje příspěvky |
+| Cizí profil | jméno, fotka, počty sledujících, sledovat / přestat | bio, počet per, sbírka, příspěvky; skupina skryta |
+| Hledání lidí | členové vlastní skupiny, sledování | počty per; hledá se jen ve skupině |
+| Nastavení | odhlášení, osobní údaje → úprava profilu | notifikace jen v zařízení; ostatní „Brzy“ |
+| Úprava profilu | jméno, příjmení, přezdívka | bio; změna fotky nedostupná |
+
+Otevřené body pro tebe: kontrast oranžových tlačítek (známý dluh, O1),
+souhlas rodiče pod 15 let (právní, R57), ukázkový žebříček s cizími jmény
+(R45), skloňování jmen (R31/R32), věkové kategorie limitů pro 8–13 let
+(§4.6), testovací účet pro ověření proti backendu.
+

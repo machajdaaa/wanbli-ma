@@ -68,7 +68,7 @@ export class SegmentedControlComponent<T extends string = string> {
 
   protected readonly segmentClasses = computed(
     () =>
-      'rounded-full font-text font-semibold leading-5 transition-colors duration-100 ' +
+      "relative rounded-full font-text font-semibold leading-5 transition-colors duration-100 after:absolute after:inset-x-0 after:-inset-y-[5px] after:content-[''] " +
       'focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-pressed ' +
       (this.size() === 'md' ? 'text-[0.875rem]' : 'text-[0.8125rem]'),
   );
