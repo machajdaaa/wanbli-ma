@@ -369,6 +369,23 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   čipy se porovnávají bez diakritiky (čip „běh“ je aktivní i pro „beh“).
 - **R43 – Pravidla kategorie** jdou rozbalit na místě („Celá pravidla“ ↔
   „Méně“), samostatná obrazovka pravidel není navržená.
+- **R44 – Přilepené taby skupiny (fáze 6).** Po odscrollování hlavičky se
+  taby přilepí nahoru na bílý pruh s kompaktním jménem skupiny (stav 3d).
+  Přepnutí tabu ve sticky stavu posune obsah tak, aby nový tab začínal
+  hned pod taby. Každý tab se načte až při prvním otevření.
+- **R45 – Vlastní řádek žebříčku** je zvýrazněný (oranžový, „Ty“) a připne
+  se nad navbar, jen když jeho místo v seznamu není na obrazovce. Celý
+  žebříček je zatím MOCK – ukázkové osoby (záporná id) nejdou otevřít,
+  vlastní řádek vede na můj profil.
+- **R46 – „více“ u popisu skupiny** se zobrazí jen tehdy, když popis
+  skutečně přeteče 3 řádky (měřeno po vykreslení); rozbalí se na místě.
+- **R47 – Cover skupiny** je ilustrace z designu jako SVG asset
+  (`group-cover.svg`), dokud API nemá `coverUrl`. Avatar skupiny bez
+  obrázku = první písmeno názvu.
+- **R48 – Oznámení bez info bloku.** API nemá kdy/kde/vstupné/věk ani
+  obrázek, blok se proto nezobrazí (R5); karta je připravená ho ukázat,
+  jakmile `AnnouncementVm.info` naplní backend. Autor oznámení je vždy
+  označen „Vedoucí“ (oznámení vytváří jen vedoucí v administraci).
 
 ## 6. Fáze a výstup
 

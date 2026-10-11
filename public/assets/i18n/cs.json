@@ -129,6 +129,35 @@
     "noResultsTitle": "Nic jsme nenašli",
     "noResultsText": "Zkus jiné slovo nebo kód pera, třeba „4A1“."
   },
+  "group": {
+    "cover": "Titulní fotka skupiny",
+    "less": "méně",
+    "tabsLabel": "Obsah skupiny",
+    "tabs": {
+      "posts": "Příspěvky",
+      "announcements": "Oznámení",
+      "leaderboard": "Žebříček"
+    },
+    "errorTitle": "Skupinu se nepodařilo načíst",
+    "tabError": "Tohle se nepodařilo načíst",
+    "noPostsTitle": "Zatím tu nic není",
+    "noPostsText": "Až někdo ze skupiny získá pero, uvidíš ho tady.",
+    "noAnnouncementsTitle": "Žádná oznámení",
+    "noAnnouncementsText": "Až vedoucí pošle oznámení, objeví se tady.",
+    "announcementPhoto": "Fotka k oznámení",
+    "when": "Kdy",
+    "where": "Kde",
+    "price": "Vstupné",
+    "age": "Věk",
+    "totalFeathers": "Celkem orlích per",
+    "podium": "Pódium",
+    "otherRanks": "Další pořadí",
+    "rank": "Místo",
+    "feathersShort": "per",
+    "yourPosition": "Tvoje pozice",
+    "noGroupTitle": "Zatím nejsi v žádné skupině",
+    "noGroupText": "Až tě vedoucí přidá do oddílu, uvidíš tady jeho pera, oznámení a žebříček."
+  },
   "time": {
     "today": "dnes {{time}}",
     "yesterday": "včera {{time}}",

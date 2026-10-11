@@ -124,6 +124,8 @@
   --shadow-navbar: var(--wanbli-shadow-navbar);
   --shadow-fab: var(--wanbli-shadow-fab);
   --shadow-cta: var(--wanbli-shadow-cta);
+  --shadow-own-row: var(--wanbli-shadow-own-row);
+  --shadow-sticky: var(--wanbli-shadow-sticky);
   --shadow-toast: var(--wanbli-shadow-toast);
   --shadow-sheet: var(--wanbli-shadow-sheet);
   --shadow-focus: var(--wanbli-shadow-focus);

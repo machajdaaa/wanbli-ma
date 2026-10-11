@@ -220,6 +220,8 @@
   --wanbli-shadow-fab: 0 0 0 6px var(--wanbli-color-bg), 0 10px 24px rgba(224, 123, 31, 0.45),
     0 0 36px rgba(224, 123, 31, 0.35);
   --wanbli-shadow-cta: 0 8px 20px rgba(224, 123, 31, 0.28);
+  --wanbli-shadow-own-row: 0 8px 20px rgba(201, 102, 26, 0.18); /* pinned own leaderboard row */
+  --wanbli-shadow-sticky: 0 4px 16px rgba(31, 58, 26, 0.06); /* stuck group header */
   --wanbli-shadow-toast: 0 8px 24px rgba(31, 58, 26, 0.25);
   --wanbli-shadow-sheet: 0 -8px 32px rgba(20, 36, 16, 0.18);
   --wanbli-shadow-knob: 0 1px 3px rgba(31, 58, 26, 0.3);

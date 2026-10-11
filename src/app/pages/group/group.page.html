@@ -1,5 +1,244 @@
-<ion-content>
-  <main class="flex min-h-full flex-col px-4">
-    <app-empty-state class="my-auto" [title]="'placeholder.soon.title' | transloco" [text]="'placeholder.soon.text' | transloco" />
-  </main>
+<ion-content [scrollEvents]="true" (ionScroll)="onScroll($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  @switch (groupStatus()) {
+    @case ('loading') {
+      <div aria-busy="true" [attr.aria-label]="'common.loading' | transloco">
+        <div class="h-[150px] bg-surface-dark"></div>
+        <div class="flex flex-col gap-3 px-4 pt-16">
+          <app-skeleton variant="post-card" />
+        </div>
+      </div>
+    }
+
+    @case ('error') {
+      <section class="flex flex-col items-center gap-3 px-8 pt-screen text-center" role="alert">
+        <h2 class="type-h3 text-text">{{ 'group.errorTitle' | transloco }}</h2>
+        <p class="type-body text-text-muted">{{ 'home.errorText' | transloco }}</p>
+        <app-button variant="secondary" (click)="loadGroup()">{{ 'common.retry' | transloco }}</app-button>
+      </section>
+    }
+
+    @case ('ready') {
+      @if (group(); as group) {
+        <header #header>
+          <div class="relative h-[150px] overflow-hidden bg-surface-dark" role="img" [attr.aria-label]="'group.cover' | transloco">
+            @if (group.coverUrl) {
+              <img [src]="group.coverUrl" alt="" class="size-full object-cover" />
+            } @else {
+              <img src="/assets/images/group-cover.svg" alt="" class="size-full object-cover" />
+            }
+          </div>
+          <div class="relative px-4">
+            <div
+              class="absolute -top-12 left-4 flex size-24 items-center justify-center overflow-hidden rounded-[30px] border-4 border-bg bg-primary-subtle font-display text-[2.5rem] leading-none font-extrabold text-primary-pressed"
+              aria-hidden="true"
+            >
+              @if (group.avatarUrl) {
+                <img [src]="group.avatarUrl" alt="" class="size-full object-cover" />
+              } @else {
+                {{ group.name.charAt(0) }}
+              }
+            </div>
+            <div class="ml-[108px] flex min-h-[52px] flex-col pt-1.5">
+              <h1 class="type-h1 text-text">{{ group.name }}</h1>
+              <span class="inline-flex items-center gap-1.5 font-text text-[0.8125rem] leading-[18px] font-medium text-text-muted">
+                <app-icon name="group" [size]="15" />
+                {{ group.memberCount | plural: 'members' }}
+              </span>
+            </div>
+          </div>
+          @if (group.description) {
+            <div class="mx-4 mt-3.5 flex flex-col items-start">
+              <p #description id="group-description" class="type-body text-text" [class.line-clamp-3]="!descriptionExpanded()">
+                {{ group.description }}
+              </p>
+              @if (descriptionOverflows()) {
+                <button
+                  type="button"
+                  class="relative font-text text-[0.875rem] leading-5 font-semibold text-text-accent after:absolute after:-inset-3 after:content-['']"
+                  aria-controls="group-description"
+                  [attr.aria-expanded]="descriptionExpanded()"
+                  (click)="descriptionExpanded.set(!descriptionExpanded())"
+                >
+                  {{ (descriptionExpanded() ? 'group.less' : 'common.more') | transloco }}
+                </button>
+              }
+            </div>
+          }
+        </header>
+
+        <!-- Sticky tabs; once stuck they show a compact group name on a white strip. -->
+        <div
+          class="sticky top-0 z-[5] flex flex-col gap-2.5 px-4 transition-[background-color,box-shadow] duration-150"
+          [class]="
+            stuck()
+              ? 'border-b border-border bg-surface-raised pt-[max(1rem,calc(var(--ion-safe-area-top,0px)+0.5rem))] pb-3 shadow-sticky'
+              : 'pt-4'
+          "
+        >
+          @if (stuck()) {
+            <div class="flex items-center justify-center gap-2" aria-hidden="true">
+              <span
+                class="flex size-7 items-center justify-center rounded-[9px] bg-primary-subtle font-display text-[0.9375rem] leading-none font-extrabold text-primary-pressed"
+                >{{ group.name.charAt(0) }}</span
+              >
+              <span class="font-display text-[1.125rem] leading-6 font-extrabold text-text">{{ group.name }}</span>
+            </div>
+          }
+          <app-segmented-control
+            [ariaLabel]="'group.tabsLabel' | transloco"
+            [options]="tabs()"
+            [controls]="panelIds"
+            [value]="tab()"
+            (valueChange)="selectTab($event)"
+          />
+        </div>
+
+        <!-- Příspěvky -->
+        @if (tab() === 'posts') {
+          <section id="group-panel-posts" role="tabpanel" class="flex flex-col gap-3 px-4 pt-4">
+            @switch (posts().status) {
+              @case ('error') {
+                <ng-container *ngTemplateOutlet="tabError" />
+              }
+              @case ('ready') {
+                @for (post of posts().items; track post.id) {
+                  <app-post-card [post]="post" (menu)="menuPost.set($event)" />
+                } @empty {
+                  <app-empty-state [title]="'group.noPostsTitle' | transloco" [text]="'group.noPostsText' | transloco" />
+                }
+              }
+              @default {
+                <app-skeleton variant="post-card" aria-busy="true" />
+              }
+            }
+          </section>
+        }
+
+        <!-- Oznámení -->
+        @if (tab() === 'announcements') {
+          <section id="group-panel-announcements" role="tabpanel" class="flex flex-col gap-3 px-4 pt-4">
+            @switch (announcements().status) {
+              @case ('error') {
+                <ng-container *ngTemplateOutlet="tabError" />
+              }
+              @case ('ready') {
+                @for (a of announcements().items; track a.id) {
+                  <app-announcement-card [announcement]="a" />
+                } @empty {
+                  <app-empty-state [title]="'group.noAnnouncementsTitle' | transloco" [text]="'group.noAnnouncementsText' | transloco" />
+                }
+              }
+              @default {
+                <app-skeleton variant="post-card" aria-busy="true" />
+              }
+            }
+          </section>
+        }
+
+        <!-- Žebříček (MOCK) -->
+        @if (tab() === 'leaderboard') {
+          <section id="group-panel-leaderboard" role="tabpanel" class="flex flex-col gap-2 px-4 pt-5">
+            @switch (leaderboardStatus()) {
+              @case ('error') {
+                <ng-container *ngTemplateOutlet="tabError" />
+              }
+              @case ('ready') {
+                @if (leaderboard(); as board) {
+                  <h2 class="px-1 type-overline text-text-muted">{{ 'group.totalFeathers' | transloco }}</h2>
+                  <ol [attr.aria-label]="'group.podium' | transloco" class="my-2 grid grid-cols-3 items-end gap-2">
+                    @for (row of podium(); track row.rank) {
+                      <li class="flex flex-col items-center gap-1.5 text-center" [attr.data-own-row]="row.person.isMe ? '' : null">
+                        @if (row.rank === 1) {
+                          <svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true" class="fill-medal-gold stroke-medal-gold-edge">
+                            <path d="M2 6l6 5 6-9 6 9 6-5-2 13H4z" stroke-width="2" stroke-linejoin="round" />
+                          </svg>
+                        }
+                        <app-avatar
+                          [size]="56"
+                          [name]="row.person.name"
+                          [imageUrl]="row.person.avatarUrl"
+                          [seed]="row.person.id"
+                          class="rounded-[18px]"
+                          [class]="
+                            row.rank === 1
+                              ? 'shadow-[0_0_0_3px_var(--wanbli-color-medal-gold-edge)]'
+                              : row.rank === 2
+                                ? 'shadow-[0_0_0_3px_var(--wanbli-color-medal-silver-edge)]'
+                                : 'shadow-[0_0_0_3px_var(--wanbli-color-medal-bronze-edge)]'
+                          "
+                        />
+                        <span class="mt-1 font-text text-[0.875rem] leading-[18px] font-semibold text-text">
+                          {{ row.person.name.split(' ')[0] }}<br />{{ row.person.name.split(' ').slice(1).join(' ') }}
+                        </span>
+                        <span class="inline-flex items-center gap-1 font-display text-[1rem] leading-5 font-bold text-text">
+                          <app-icon name="feather" [size]="16" class="text-text-muted" />{{ row.featherCount }}
+                          <span class="sr-only">{{ 'group.feathersShort' | transloco }}</span>
+                        </span>
+                        <div
+                          class="mt-1 flex w-full justify-center rounded-t-16 rounded-b-[4px] border-2 pt-1.5 font-display font-extrabold text-text"
+                          [class]="
+                            row.rank === 1
+                              ? 'h-[116px] border-medal-gold-edge bg-medal-gold text-[2.75rem] leading-[48px]'
+                              : row.rank === 2
+                                ? 'h-[88px] border-medal-silver-edge bg-medal-silver text-[2.25rem] leading-10'
+                                : 'h-[68px] border-medal-bronze-edge bg-medal-bronze text-[2rem] leading-9'
+                          "
+                        >
+                          <span class="sr-only">{{ 'group.rank' | transloco }}</span>{{ row.rank }}
+                        </div>
+                      </li>
+                    }
+                  </ol>
+                  <ol [attr.aria-label]="'group.otherRanks' | transloco" class="flex flex-col gap-2">
+                    @for (row of board.rows; track row.rank) {
+                      <li [attr.data-own-row]="row.person.isMe ? '' : null">
+                        <app-leaderboard-row [row]="row" />
+                      </li>
+                    }
+                  </ol>
+                }
+              }
+              @default {
+                <app-skeleton variant="list-row" aria-busy="true" />
+                <app-skeleton variant="list-row" />
+              }
+            }
+          </section>
+        }
+      } @else {
+        <!-- R13: not a member of any group -->
+        <main class="flex min-h-full flex-col px-4">
+          <app-empty-state class="my-auto" [title]="'group.noGroupTitle' | transloco" [text]="'group.noGroupText' | transloco" />
+        </main>
+      }
+    }
+  }
+
+  <ion-infinite-scroll threshold="25%" [disabled]="!canLoadMore()" (ionInfinite)="onInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" />
+  </ion-infinite-scroll>
+
+  @if (showPinnedRow() && leaderboard()?.me; as me) {
+    <div
+      slot="fixed"
+      class="absolute inset-x-4 bottom-[calc(var(--wanbli-size-navbar-area)+var(--ion-safe-area-bottom,0px)+0.625rem)]"
+      [attr.aria-label]="'group.yourPosition' | transloco"
+      role="region"
+    >
+      <app-leaderboard-row [row]="me" [pinned]="true" />
+    </div>
+  }
+
+  <app-post-menu-sheet [(post)]="menuPost" (hidden)="removePost($event)" (deleted)="removePost($event)" />
 </ion-content>
+
+<ng-template #tabError>
+  <section class="flex flex-col items-center gap-3 px-4 pt-6 text-center" role="alert">
+    <h2 class="type-h3 text-text">{{ 'group.tabError' | transloco }}</h2>
+    <app-button variant="secondary" (click)="retryTab()">{{ 'common.retry' | transloco }}</app-button>
+  </section>
+</ng-template>
