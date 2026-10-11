@@ -14,6 +14,28 @@
     "more": "více",
     "soon": "Brzy"
   },
+  "nav": {
+    "label": "Hlavní navigace",
+    "home": "Domů",
+    "eagleFeathers": "Orlí pera",
+    "group": "Skupina",
+    "profile": "Profil",
+    "addFeather": "Přidat orlí pero"
+  },
+  "placeholder": {
+    "soon": {
+      "title": "Připravujeme",
+      "text": "Tahle obrazovka bude brzy hotová."
+    },
+    "upload": {
+      "title": "Nahrání pera připravujeme",
+      "text": "Brzy tu půjde přidat splněné pero i s fotkami a výkonem."
+    },
+    "forgotPassword": {
+      "title": "Obnovu hesla připravujeme",
+      "text": "Zatím ji v aplikaci nejde udělat. Brzy to tu půjde."
+    }
+  },
   "time": {
     "today": "dnes {{time}}",
     "yesterday": "včera {{time}}",

@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { IonContent } from '@ionic/angular/standalone';
+import { TranslocoPipe } from '@jsverse/transloco';
+import { EmptyStateComponent } from '../../shared/design-system/empty-state/empty-state.component';
 
+// Temporary tab root until redesign phase 5 builds the real screen.
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-eagle-feathers',
   templateUrl: './eagle-feathers.page.html',
-  styleUrls: ['./eagle-feathers.page.scss'],
-  standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonContent, TranslocoPipe, EmptyStateComponent],
 })
 export class EagleFeathersPage {}

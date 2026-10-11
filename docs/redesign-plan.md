@@ -307,6 +307,26 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
 - **R25 – Hit area.** Malá tlačítka z designu (36 px „Do toho!“/„Začít“,
   `size="sm"`) mají vizuál 36 px, klikací plochu 44 px přes `::after`.
   Akční tlačítko v toastu je 44 px místo 36 px.
+- **R26 – Placeholdery rout (fáze 3).** Všechny routy z plánu existují.
+  Obrazovky z fází 4–8 zatím vedou na obecnou `PlaceholderPage`
+  („Připravujeme“, s tlačítkem zpět) nastavenou přes route `data`; `/upload`
+  ji používá natrvalo. Šablonové taby Orlí pera / Skupina / Profil přišly
+  o výchozí `ion-header` a do své fáze ukazují stejný stav.
+- **R27 – `ApiClient` (fáze 3).** Generovaná třída `Api` je Promise-based;
+  služby volají generované `fn/*` funkce přes tenký `ApiClient` (Observable,
+  `allPages` pro stránkované seznamy). `AuthService.ensureCurrentUser()`
+  dodá přihlášeného uživatele (případně ho načte) – služby z něj berou id
+  a `organisationId`.
+- **R28 – Fotky u skutečných příspěvků (fáze 3).** Jen skutečný `imageUrl`;
+  šedé placeholder dlaždice (z designu) mají jen čistě mockované příspěvky
+  (`FeedService.userPosts`), aby skutečný příspěvek nenaznačoval fotky,
+  které nemá (navazuje na R5).
+- **R29 – Daily challenge určuje pero kódem** (`featherCode: '1A1'`) a na id
+  se převede přes katalog až při „Do toho!“ – mock tak nezávisí na id
+  v databázi.
+- **R30 – Text „Zapomněl/a jsi heslo?“** vede na `/forgot-password`
+  s neutrálním „Obnovu hesla připravujeme“ – nevymýšlí se postup (např.
+  „obnoví vedoucí“), který nikdo nepotvrdil.
 
 ## 6. Fáze a výstup
 

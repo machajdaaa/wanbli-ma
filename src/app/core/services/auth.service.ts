@@ -12,6 +12,7 @@ import {
   throwError,
   shareReplay,
   finalize,
+  of,
 } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { StorageService } from './storage.service';
@@ -140,6 +141,13 @@ export class AuthService {
 
   async getToken(): Promise<string | null> {
     return this.storage.get(this.storage.AUTH_TOKEN);
+  }
+
+  /** The signed-in user, fetching /api/user/me if it isn't loaded yet. */
+  ensureCurrentUser(): Observable<UserMeResponse> {
+    const user = this.#currentUser();
+    if (user) return of(user);
+    return this.fetchAndSetCurrentUser().pipe(map(() => this.#currentUser()!));
   }
 
   setUser(user: UserMeResponse): void {

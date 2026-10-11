@@ -74,6 +74,12 @@ Děti plní „orlí pera“, sdílejí je, sledují se a dávají si „pírka�
   - `interceptors/auth.interceptor.ts` — přidává `Authorization: Bearer <token>`, na 401 (mimo `/api/auth/login` a `/api/auth/refresh`) zkusí refresh a request zopakuje
   - `services/auth.service.ts` — `AuthService`, signals (`currentUser`, `isLoggedIn`, `userRole`)
   - `services/storage.service.ts` — `StorageService`, token storage přes `@capacitor/preferences` + in-memory cache (viz Known debt níže — **není** to Keychain/Keystore)
+  - `services/api-client.ts` — `ApiClient.call(fn, params)` / `allPages(fn, params)`: Observable obal nad generovanými `fn/*` funkcemi. Datové služby volají API jen přes něj.
+  - datové služby (vrací view-modely): `FeedService`, `PostService` (pírka, mazání), `PeopleService` (sledování – signál `followingIds`), `EagleFeatherService` (katalog se cachuje celý), `GroupService`, `ProfileService`, `ChallengeService`, `SettingsService`
+  - `services/mappers.ts` — sdílené mapování (`toPerson`, `displayName`, `categoryCode`, `normalizeSearch`)
+- `src/app/core/models/` — `view-models.ts` (všechny `*Vm`), `light.ts` (`Light`, `LIGHTS`)
+- `src/app/core/mocks/` — jediné místo pro ukázková data, každé s `// MOCK(<důvod>)` a řádkem v `docs/backend-requirements.md`
+- `src/app/pages/placeholder/` — obecná „připravujeme“ stránka konfigurovaná přes route `data` (`/upload` natrvalo, ostatní dočasně do své fáze)
   - `core/api/generated/` — **nikdy needitovat ručně.** Při změně backend API spusť `npm run generate:api`; pokud generovaný klient neodpovídá potřebě, oprava patří do `ng-openapi-gen.json`/backend OpenAPI schématu, ne do vygenerovaného souboru.
 - `src/app/auth/` — login/register stránka
 - `src/app/nav/` — shell se 4 taby (`nav.routes.ts`)
@@ -113,8 +119,9 @@ Preferences.
 
 ## Routing
 
-- Nová stránka v rámci tab shellu: vytvořit `pages/<name>/`, lazy-registrovat (`loadComponent`) jako child v `nav/nav.routes.ts`. Guardování řeší `authGuard`, kterým je v `app.routes.ts` obalený celý `nav` subtree — jednotlivé taby svůj vlastní `authGuard` nepotřebují.
-- Stránka mimo tab shell (např. plnohodnotný modal/detail flow): registrovat v `app.routes.ts`, s `canActivate: [authGuard]`, pokud má být dostupná jen přihlášeným.
+- Nová stránka v rámci tab shellu: vytvořit `pages/<name>/`, lazy-registrovat (`loadComponent`) jako child v `nav/nav.routes.ts`. Podstránka tabu (detail kategorie, pera…) patří mezi `children` cesty svého tabu (`eagle-feathers/category/...`), aby zůstala v jeho stacku a s navbarem. Guardování řeší `authGuard`, kterým je v `app.routes.ts` obalený celý `nav` subtree — jednotlivé taby svůj vlastní `authGuard` nepotřebují.
+- Navbar je restylovaný `ion-tab-bar` (`nav/nav.page.*`), plovoucí přes obsah; `app-nav ion-content` má v `global.scss` spodní padding na jeho výšku + safe area. Tlačítko zpět = `<app-back-button [fallback]>` (Ionic stack, bez historie na `fallback`).
+- Stránka mimo tab shell (`/search`, `/users/:id`, `/settings`, `/profile/edit`, `/upload`): registrovat v `app.routes.ts`, s `canActivate: [authGuard]`, pokud má být dostupná jen přihlášeným. Nemá navbar, má tlačítko zpět.
 - Role-gated stránka: `canActivate: [authGuard, roleGuard]` + `data: { roles: [UserRole.X] }`.
 
 ## Konfigurace / API URL

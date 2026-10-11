@@ -91,3 +91,8 @@ body {
 ion-content {
   --background: var(--wanbli-color-bg);
 }
+
+/* Tab pages scroll under the floating navbar — reserve its height + safe area. */
+app-nav ion-content {
+  --padding-bottom: calc(var(--wanbli-size-navbar-area) + var(--ion-safe-area-bottom, 0px));
+}

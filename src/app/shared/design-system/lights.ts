@@ -1,7 +1,7 @@
-/** 1.–4. světlo. */
-export type Light = 1 | 2 | 3 | 4;
+import { Light } from '../../core/models/light';
 
-export const LIGHTS: readonly Light[] = [1, 2, 3, 4];
+export { LIGHTS } from '../../core/models/light';
+export type { Light } from '../../core/models/light';
 
 /**
  * Per-light classes. Full class names on purpose — Tailwind only generates
