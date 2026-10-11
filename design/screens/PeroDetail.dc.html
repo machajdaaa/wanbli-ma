@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Detail orlího pera</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1640px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+
+  <header style="padding: 52px 16px 22px; background: {{p.tint}}; border-radius: 0 0 28px 28px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <a href="{{p.back}}" aria-label="Zpět na kategorii" style="width: 44px; height: 44px; margin-left: -4px; flex-shrink: 0; border-radius: 50%; background: rgba(255,255,255,0.6); color: #1F3A1A; display: flex; align-items: center; justify-content: center">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+      </a>
+      <span style="font: 600 13px/18px Inter, system-ui, sans-serif; color: {{p.dark}}">{{p.light}} · {{p.catCode}} {{p.cat}}</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="align-self: flex-start; height: 26px; padding: 0 9px; box-sizing: border-box; border-radius: 7px; background: #FFFFFF; color: {{p.dark}}; display: inline-flex; align-items: center; font: 800 14px/1 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{p.code}}</span>
+      <h1 style="margin: 0; font: 800 32px/36px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{p.name}}</h1>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px">
+        <span style="display: inline-flex; align-items: center; height: 26px; padding: 0 9px; border-radius: 7px; background: rgba(255,255,255,0.65); font: 600 12px/16px Inter, system-ui, sans-serif">{{p.measure}}</span>
+      </div>
+    </div>
+  </header>
+
+  <main style="display: flex; flex-direction: column; gap: 24px; padding: 16px 16px 220px">
+
+    <section aria-label="Tvůj stav" style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 14px; border-bottom: 1px solid #ECEBE3">
+        <sc-if value="{{p.cinDone}}" hint-placeholder-val="{{ true }}"><span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #3E8E41; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span></sc-if>
+        <sc-if value="{{p.cinTodo}}" hint-placeholder-val="{{ false }}"><span style="width: 36px; height: 36px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 2px dashed #C6CBBD"></span></sc-if>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 1px">
+          <span style="font: 700 16px/22px Inter, system-ui, sans-serif">Čin</span>
+          <span style="font: 500 13px/18px Inter, system-ui, sans-serif; color: #5E6B57">{{p.cinStatus}}</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; padding: 14px">
+        <span style="width: 36px; height: 36px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 2px dashed #E9C75A; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B88A0E" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg></span>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 1px">
+          <span style="font: 700 16px/22px Inter, system-ui, sans-serif">Grand challenge</span>
+          <span style="font: 500 13px/18px Inter, system-ui, sans-serif; color: #5E6B57">{{p.gcStatus}}</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font: 700 20px/26px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Úkol</h2>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 16px">
+        <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px 0 7px; border-radius: 7px; background: #E2EFE2; color: #2B6A2E; font: 600 12px/16px Inter, system-ui, sans-serif"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Čin</span>
+        <p style="margin: 0; font: 400 15px/22px Inter, system-ui, sans-serif">{{p.cinText}}</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 16px">
+        <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px 0 7px; border-radius: 7px; background: #FCEFB4; color: #5A4200; font: 800 11px/16px Inter, system-ui, sans-serif; letter-spacing: 0.6px; text-transform: uppercase"><svg width="12" height="12" viewBox="0 0 24 24" fill="#B88A0E" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>Grand challenge</span>
+        <p style="margin: 0; font: 400 15px/22px Inter, system-ui, sans-serif">{{p.gcText}}</p>
+      </div>
+    </section>
+
+    <sc-if value="{{p.hasTable}}" hint-placeholder-val="{{ true }}">
+      <section style="display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: baseline; justify-content: space-between">
+          <h2 style="margin: 0; font: 700 20px/26px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Limity</h2>
+          <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{p.unit}}</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+          <div role="tablist" aria-label="Pohlaví" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; height: 44px; box-sizing: border-box; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 999px">
+            <sc-if value="{{isMen}}" hint-placeholder-val="{{ true }}">
+              <button type="button" role="tab" aria-selected="true" onClick="{{pickMen}}" style="border: 0; border-radius: 999px; background: #E07B1F; color: #FFFFFF; font: 600 13px/18px Inter, system-ui, sans-serif; cursor: pointer">Muži</button>
+              <button type="button" role="tab" aria-selected="false" onClick="{{pickWomen}}" style="border: 0; border-radius: 999px; background: transparent; color: #1F3A1A; font: 600 13px/18px Inter, system-ui, sans-serif; cursor: pointer">Ženy</button>
+            </sc-if>
+            <sc-if value="{{isWomen}}" hint-placeholder-val="{{ false }}">
+              <button type="button" role="tab" aria-selected="false" onClick="{{pickMen}}" style="border: 0; border-radius: 999px; background: transparent; color: #1F3A1A; font: 600 13px/18px Inter, system-ui, sans-serif; cursor: pointer">Muži</button>
+              <button type="button" role="tab" aria-selected="true" onClick="{{pickWomen}}" style="border: 0; border-radius: 999px; background: #E07B1F; color: #FFFFFF; font: 600 13px/18px Inter, system-ui, sans-serif; cursor: pointer">Ženy</button>
+            </sc-if>
+          </div>
+          <table style="width: 100%; border-collapse: collapse">
+            <thead>
+              <tr>
+                <th scope="col" style="text-align: left; padding: 6px 4px; font: 600 11px/14px Inter, system-ui, sans-serif; letter-spacing: 0.8px; text-transform: uppercase; color: #5E6B57">Věk</th>
+                <th scope="col" style="text-align: right; padding: 6px 4px; font: 600 11px/14px Inter, system-ui, sans-serif; letter-spacing: 0.8px; text-transform: uppercase; color: #2B6A2E">Čin</th>
+                <th scope="col" style="text-align: right; padding: 6px 4px; font: 600 11px/14px Inter, system-ui, sans-serif; letter-spacing: 0.8px; text-transform: uppercase; color: #6B4F00">Grand ch.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{vlRows}}" as="v" hint-placeholder-count="5">
+                <tr>
+                  <th scope="row" style="text-align: left; padding: 10px 4px; border-top: 1px solid #ECEBE3; font: 600 14px/20px Inter, system-ui, sans-serif">{{v.age}}</th>
+                  <td style="text-align: right; padding: 10px 4px; border-top: 1px solid #ECEBE3; font: 700 18px/22px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{v.cin}}</td>
+                  <td style="text-align: right; padding: 10px 4px; border-top: 1px solid #ECEBE3; font: 700 18px/22px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif; color: #6B4F00">{{v.gc}}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{p.hasTerms}}" hint-placeholder-val="{{ false }}">
+      <section style="display: flex; flex-direction: column; gap: 10px">
+        <h2 style="margin: 0; font: 700 20px/26px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Co to znamená</h2>
+        <dl style="margin: 0; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+          <sc-for list="{{p.terms}}" as="t" hint-placeholder-count="3">
+            <div style="display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-bottom: 1px solid #ECEBE3">
+              <dt style="font: 700 14px/20px Inter, system-ui, sans-serif">{{t.term}}</dt>
+              <dd style="margin: 0; font: 400 13px/19px Inter, system-ui, sans-serif; color: #5E6B57">{{t.def}}</dd>
+            </div>
+          </sc-for>
+        </dl>
+      </section>
+    </sc-if>
+
+    <section style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+      <sc-if value="{{p.hasSocial}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex">
+          <span style="width: 32px; height: 32px; border-radius: 10px; background: #DDE8D2; border: 2px solid #FFFFFF; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Baloo 2', system-ui, sans-serif">TS</span>
+          <span style="width: 32px; height: 32px; margin-left: -8px; border-radius: 10px; background: #F4E8C1; border: 2px solid #FFFFFF; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Baloo 2', system-ui, sans-serif">MD</span>
+          <span style="width: 32px; height: 32px; margin-left: -8px; border-radius: 10px; background: #D6E6EF; border: 2px solid #FFFFFF; display: flex; align-items: center; justify-content: center; font: 700 12px/1 'Baloo 2', system-ui, sans-serif">VP</span>
+        </div>
+      </sc-if>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 1px">
+        <span style="font: 600 14px/20px Inter, system-ui, sans-serif">{{p.socialTitle}}</span>
+        <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{p.socialSub}}</span>
+      </div>
+    </section>
+  </main>
+
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 230px; background: linear-gradient(180deg, rgba(247,246,242,0) 0%, rgba(247,246,242,0.94) 40%, #F7F6F2 100%)"></div>
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 124px">
+    <button type="button" style="width: 100%; height: 52px; display: flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; border: 1.5px solid #C9661A; background: #E07B1F; color: #FFFFFF; font: 600 16px/20px Inter, system-ui, sans-serif; box-shadow: 0 8px 20px rgba(224,123,31,0.28)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4c-7.5.3-12.6 5.2-13 12.5L7 20l3.4-.1C17.4 19.4 20.5 12 20 4Z"></path><path d="M3.5 20.5 15 9"></path></svg>{{p.cta}}</button>
+  </div>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 116px">
+    <dc-import name="NavBar" active="pera" hint-size="390px,116px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"pero":{"editor":"enum","options":["1A1","4A1"],"default":"1A1"},"$preview":{"width":390,"height":1640}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var st = this.state || {};
+    var g = st.g || 'm';
+    var s = function (x) { return String(x).replace('.', ',') + ' s'; };
+    var ages = ['14–15 let', '16–17 let', '18–33 let', '34–49 let', '50 a více'];
+    var ML = function (who, val, me) { return { who: who, val: val, me: !!me, bg: me ? '#FCEBD9' : '#F7F6F2', bd: me ? '#E07B1F' : '#ECEBE3' }; };
+    var DATA = {
+      '1A1': {
+        code: '1A1', name: 'Běh na 100 m', catCode: '1A', cat: 'Atletika – běhy', light: '1. světlo', back: 'KategorieDetail.dc.html',
+        tint: '#E3ECDA', dark: '#2F5A1A', measure: 'Měří se čas', unit: 'v sekundách',
+        cinDone: true, cinStatus: 'Splněno 12. 9. 2026 · 14,3 s',
+        gcStatus: 'Zatím nesplněno',
+        cinText: 'Uběhni 100 m v limitu pro svou věkovou kategorii.',
+        gcText: 'Uběhni 100 m v přísnějším limitu.',
+        hasTable: true, hasTerms: false,
+        vl: { m: { cin: [14.5, 14.0, 13.4, 14.1, 15.8], gc: [13.6, 13.0, 12.6, 13.1, 15.1] }, z: { cin: [16.1, 15.6, 15.0, 15.7, 17.4], gc: [15.1, 14.6, 14.2, 14.7, 16.7] } },
+        hasSocial: true, socialTitle: 'V Trilobitu ho má 7 lidí', socialSub: 'Tereza, Matěj, Vojtěch a 4 další',
+        cta: 'Přidat splnění'
+      },
+      '4A1': {
+        code: '4A1', name: 'Bylinkové čaje', catCode: '4A', cat: 'Bylinkářství', light: '4. světlo', back: 'KategorieDetail-4A.dc.html',
+        tint: '#F6ECCB', dark: '#6B4F00', measure: 'Ověřuje odborník',
+        cinDone: false, cinStatus: 'Zatím nesplněno', gcStatus: 'Zatím nesplněno',
+        cinText: 'Prokaž, že znáš 10 rostlin, které se používají k výrobě čajů. Vysvětli, které části se používají, kdy se sbírají, jak se čaje připravují, jaké mají použití a účinky. 5 druhů čajů správně připrav.',
+        gcText: 'Prokaž takto znalost 20 rostlin a připrav 10 čajů.',
+        hasTable: false, hasTerms: true,
+        terms: [
+          { term: 'Prokaž, že znáš', def: 'Popiš či předveď odborníkovi. Ten může dávat doplňující otázky.' },
+          { term: 'Vysvětli', def: 'Popiš odborníkovi. Ten může dávat doplňující otázky.' },
+          { term: 'Odborník', def: 'Člověk, který obor vystudoval, studuje nebo v něm pracuje – nebo se o obor zajímá, sám tento čin splnil a své znalosti umí doložit.' }
+        ],
+        hasSocial: false, socialTitle: 'V Trilobitu ho zatím nikdo nemá', socialSub: 'Buď první, kdo ho získá!',
+        cta: 'Začít s perem'
+      }
+    };
+    var p = DATA[this.props.pero] || DATA['1A1'];
+    var p2 = Object.assign({}, p, { cinTodo: !p.cinDone });
+    var vlRows = [];
+    if (p.vl) {
+      var src = p.vl[g];
+      vlRows = ages.map(function (a, i) { return { age: a, cin: s(src.cin[i]), gc: s(src.gc[i]) }; });
+    }
+    return {
+      p: p2,
+      vlRows: vlRows,
+      isMen: g === 'm', isWomen: g === 'z',
+      pickMen: function () { self.setState({ g: 'm' }); },
+      pickWomen: function () { self.setState({ g: 'z' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

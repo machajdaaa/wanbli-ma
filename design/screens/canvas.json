@@ -1,0 +1,312 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "CiziProfil.dc.html": {
+      "h": 1600,
+      "is_interactive": true,
+      "title": "8 · Cizí profil",
+      "w": 390,
+      "x": 1880,
+      "y": 12000
+    },
+    "DailyChallenge.dc.html": {
+      "h": 239,
+      "title": "Komponenta · Daily challenge",
+      "w": 358,
+      "x": 1520,
+      "y": 836
+    },
+    "Domu-MenuPrispevku.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "1d · Domů – menu příspěvku (cizí)",
+      "w": 390,
+      "x": 1410,
+      "y": 6200
+    },
+    "Domu-Nesleduji.dc.html": {
+      "h": 1240,
+      "title": "1b · Domů – nikoho nesleduješ",
+      "w": 390,
+      "x": 470,
+      "y": 6200
+    },
+    "Domu-Prazdny.dc.html": {
+      "h": 844,
+      "title": "1c · Domů – prázdný stav",
+      "w": 390,
+      "x": 940,
+      "y": 6200
+    },
+    "Domu.dc.html": {
+      "h": 1560,
+      "title": "1 · Domů",
+      "w": 390,
+      "x": 0,
+      "y": 6200
+    },
+    "Hledani.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "7 · Vyhledávání lidí",
+      "w": 390,
+      "x": 1410,
+      "y": 12000
+    },
+    "KartaPera.dc.html": {
+      "h": 1300,
+      "is_interactive": true,
+      "title": "Karta pera – varianty",
+      "w": 1250,
+      "x": 1990,
+      "y": 0
+    },
+    "Kategorie.dc.html": {
+      "h": 1269,
+      "title": "Reference · Kategorie orlích per",
+      "w": 1688,
+      "x": 1520,
+      "y": 1452
+    },
+    "KategorieDetail-4A.dc.html": {
+      "h": 1480,
+      "is_interactive": true,
+      "title": "2b · Kategorie – 4A Bylinkářství",
+      "w": 390,
+      "x": 940,
+      "y": 8060
+    },
+    "KategorieDetail.dc.html": {
+      "h": 1480,
+      "is_interactive": true,
+      "title": "2a · Kategorie – 1A Atletika – běhy",
+      "w": 390,
+      "x": 470,
+      "y": 8060
+    },
+    "Main.dc.html": {
+      "h": 5800,
+      "title": "Design systém",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "MapaAplikace.dc.html": {
+      "h": 1280,
+      "title": "Mapa aplikace (wireframe toků)",
+      "w": 1712,
+      "x": 0,
+      "y": 15400
+    },
+    "Nastaveni.dc.html": {
+      "h": 1240,
+      "title": "5 · Nastavení",
+      "w": 390,
+      "x": 470,
+      "y": 12000
+    },
+    "NavBar.dc.html": {
+      "h": 116,
+      "title": "Komponenta · Navbar",
+      "w": 390,
+      "x": 1520,
+      "y": 640
+    },
+    "OrliPera.dc.html": {
+      "h": 1180,
+      "title": "2 · Orlí pera",
+      "w": 390,
+      "x": 0,
+      "y": 8060
+    },
+    "PeroDetail-4A1.dc.html": {
+      "h": 1640,
+      "is_interactive": true,
+      "title": "2d · Pero – 4A1 Bylinkové čaje",
+      "w": 390,
+      "x": 1880,
+      "y": 8060
+    },
+    "PeroDetail.dc.html": {
+      "h": 1640,
+      "is_interactive": true,
+      "title": "2c · Pero – 1A1 Běh na 100 m",
+      "w": 390,
+      "x": 1410,
+      "y": 8060
+    },
+    "PostCard.dc.html": {
+      "h": 560,
+      "is_interactive": true,
+      "title": "Komponenta · Karta pera",
+      "w": 358,
+      "x": 1520,
+      "y": 0
+    },
+    "Prihlaseni.dc.html": {
+      "h": 844,
+      "is_interactive": true,
+      "title": "9 · Přihlášení",
+      "w": 390,
+      "x": 0,
+      "y": 14000
+    },
+    "Profil-MenuPrispevku.dc.html": {
+      "h": 844,
+      "title": "1e · Domů – menu příspěvku (vlastní)",
+      "w": 390,
+      "x": 1880,
+      "y": 6200
+    },
+    "Profil.dc.html": {
+      "h": 1700,
+      "title": "4 · Můj profil",
+      "w": 390,
+      "x": 0,
+      "y": 12000
+    },
+    "Registrace.dc.html": {
+      "h": 1000,
+      "is_interactive": true,
+      "title": "10 · Registrace",
+      "w": 390,
+      "x": 470,
+      "y": 14000
+    },
+    "Skupina-Oznameni.dc.html": {
+      "h": 1700,
+      "title": "3b · Skupina – Oznámení",
+      "w": 390,
+      "x": 470,
+      "y": 10000
+    },
+    "Skupina-Prispevky.dc.html": {
+      "h": 1500,
+      "title": "3a · Skupina – Příspěvky",
+      "w": 390,
+      "x": 0,
+      "y": 10000
+    },
+    "Skupina-Zebricek-Scroll.dc.html": {
+      "h": 844,
+      "title": "3d · Žebříček po scrollu",
+      "w": 390,
+      "x": 1410,
+      "y": 10000
+    },
+    "Skupina-Zebricek.dc.html": {
+      "h": 1400,
+      "title": "3c · Skupina – Žebříček",
+      "w": 390,
+      "x": 940,
+      "y": 10000
+    },
+    "UpravitProfil.dc.html": {
+      "h": 844,
+      "title": "6 · Upravit profil",
+      "w": 390,
+      "x": 940,
+      "y": 12000
+    },
+    "VyhledaniPera.dc.html": {
+      "h": 960,
+      "is_interactive": true,
+      "title": "2e · Vyhledání pera",
+      "w": 390,
+      "x": 2350,
+      "y": 8060
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-08T09:30:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t-auth": {
+      "kind": "title1",
+      "maxW": 860,
+      "text": "Přihlášení a registrace",
+      "w": 240,
+      "x": 0,
+      "y": 13740
+    },
+    "t-ds": {
+      "kind": "title1",
+      "maxW": 3240,
+      "text": "Design systém a komponenty",
+      "w": 240,
+      "x": 0,
+      "y": -280
+    },
+    "t-group": {
+      "kind": "title1",
+      "maxW": 4556,
+      "text": "3 · Skupina",
+      "w": 240,
+      "x": 0,
+      "y": 9740
+    },
+    "t-home": {
+      "kind": "title1",
+      "maxW": 2270,
+      "text": "1 · Domů",
+      "w": 240,
+      "x": 0,
+      "y": 5940
+    },
+    "t-pera": {
+      "kind": "title1",
+      "maxW": 2740,
+      "text": "2 · Orlí pera",
+      "w": 240,
+      "x": 0,
+      "y": 7800
+    },
+    "t-profile": {
+      "kind": "title1",
+      "maxW": 2270,
+      "text": "Profil, nastavení a hledání",
+      "w": 240,
+      "x": 0,
+      "y": 11740
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "PostCard.dc.html",
+    "NavBar.dc.html",
+    "DailyChallenge.dc.html",
+    "Kategorie.dc.html",
+    "KartaPera.dc.html",
+    "Domu.dc.html",
+    "Domu-Nesleduji.dc.html",
+    "Domu-Prazdny.dc.html",
+    "Domu-MenuPrispevku.dc.html",
+    "Profil-MenuPrispevku.dc.html",
+    "OrliPera.dc.html",
+    "KategorieDetail.dc.html",
+    "KategorieDetail-4A.dc.html",
+    "PeroDetail.dc.html",
+    "PeroDetail-4A1.dc.html",
+    "VyhledaniPera.dc.html",
+    "Skupina-Prispevky.dc.html",
+    "Skupina-Oznameni.dc.html",
+    "Skupina-Zebricek.dc.html",
+    "Skupina-Zebricek-Scroll.dc.html",
+    "Profil.dc.html",
+    "Nastaveni.dc.html",
+    "UpravitProfil.dc.html",
+    "Hledani.dc.html",
+    "CiziProfil.dc.html",
+    "Prihlaseni.dc.html",
+    "Registrace.dc.html",
+    "MapaAplikace.dc.html"
+  ],
+  "pages": [],
+  "title": "Orlí pera"
+}

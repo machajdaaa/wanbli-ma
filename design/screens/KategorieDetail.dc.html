@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Kategorie orlích per</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1480px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+
+  <header style="padding: 52px 16px 20px; background: {{k.tint}}; border-radius: 0 0 28px 28px; display: flex; flex-direction: column; gap: 16px">
+    <a href="OrliPera.dc.html" aria-label="Zpět na Orlí pera" style="width: 44px; height: 44px; margin-left: -4px; border-radius: 50%; background: rgba(255,255,255,0.6); color: #1F3A1A; display: flex; align-items: center; justify-content: center">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+    </a>
+    <div style="display: flex; align-items: center; gap: 14px">
+      <div style="width: 64px; height: 64px; flex-shrink: 0; border-radius: 20px; background: #FFFFFF; color: {{k.dark}}; display: flex; align-items: center; justify-content: center; font: 800 26px/1 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{k.code}}</div>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+        <span style="display: inline-flex; align-items: center; gap: 6px; font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: {{k.dark}}"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{k.color}}"></span>{{k.light}}</span>
+        <h1 style="margin: 0; font: 800 28px/32px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{k.name}}</h1>
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between">
+        <span style="font: 700 16px/20px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{k.done}} ze {{k.total}} per splněno</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px; font: 600 12px/16px Inter, system-ui, sans-serif; color: {{k.dark}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="#B88A0E" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>{{k.gc}}× grand challenge</span>
+      </div>
+      <div style="height: 8px; border-radius: 999px; background: rgba(255,255,255,0.75); overflow: hidden"><div style="height: 100%; width: {{k.pct}}; border-radius: 999px; background: {{k.color}}"></div></div>
+    </div>
+  </header>
+
+  <main style="display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 140px">
+
+    <sc-if value="{{k.hasRules}}" hint-placeholder-val="{{ false }}">
+      <section style="position: relative; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 12px">
+        <span style="display: inline-flex; align-items: center; gap: 6px; font: 600 14px/20px Inter, system-ui, sans-serif"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M16 13H8M16 17H8"></path></svg>Pravidla kategorie</span>
+        <p style="margin: 0; font: 400 13px/19px Inter, system-ui, sans-serif; color: #5E6B57; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden">{{k.rules}}</p>
+        <button type="button" style="align-self: flex-start; height: 32px; padding: 0; border: 0; background: transparent; color: #1F3A1A; font: 600 13px/18px Inter, system-ui, sans-serif; text-decoration: underline; text-decoration-color: #E07B1F; text-decoration-thickness: 2px; text-underline-offset: 4px">Celá pravidla</button>
+      </section>
+    </sc-if>
+
+    <h2 style="margin: 4px 0 0; font: 700 20px/26px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Pera v kategorii</h2>
+
+    <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+        <li>
+          <a href="{{r.href}}" style="display: flex; align-items: center; gap: 10px; padding: 14px 10px 14px 14px; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 16px; text-decoration: none; color: #1F3A1A; opacity: {{r.op}}">
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span style="height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 6px; background: {{k.tint}}; color: {{k.dark}}; display: inline-flex; align-items: center; font: 800 12px/1 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{r.code}}</span>
+              </div>
+              <span style="font: 700 18px/22px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{r.name}}</span>
+              <span style="display: flex; align-items: flex-start; gap: 6px; font: 500 13px/18px Inter, system-ui, sans-serif; color: #5E6B57">
+                <sc-if value="{{r.locked}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></sc-if>
+                <sc-if value="{{r.open}}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0; margin-top: 2px"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1"></circle></svg></sc-if>
+                {{r.goal}}
+              </span>
+              <sc-if value="{{r.open}}" hint-placeholder-val="{{ true }}">
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px">
+                  <sc-if value="{{r.cinDone}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px 0 7px; border-radius: 7px; background: #E2EFE2; color: #2B6A2E; font: 600 12px/16px Inter, system-ui, sans-serif"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Čin</span></sc-if>
+                  <sc-if value="{{r.cinTodo}}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; height: 26px; padding: 0 9px; box-sizing: border-box; border-radius: 7px; border: 1.5px dashed #C6CBBD; color: #5E6B57; font: 600 12px/16px Inter, system-ui, sans-serif">Čin</span></sc-if>
+                  <sc-if value="{{r.gcDone}}" hint-placeholder-val="{{ false }}"><span style="display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px 0 7px; border-radius: 7px; background: #FCEFB4; color: #5A4200; font: 800 11px/16px Inter, system-ui, sans-serif; letter-spacing: 0.6px; text-transform: uppercase"><svg width="12" height="12" viewBox="0 0 24 24" fill="#B88A0E" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>Grand challenge</span></sc-if>
+                  <sc-if value="{{r.gcTodo}}" hint-placeholder-val="{{ true }}"><span style="display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px 0 7px; box-sizing: border-box; border-radius: 7px; border: 1.5px dashed #C6CBBD; color: #5E6B57; font: 700 11px/16px Inter, system-ui, sans-serif; letter-spacing: 0.6px; text-transform: uppercase"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>Grand challenge</span></sc-if>
+                </div>
+              </sc-if>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="m9 18 6-6-6-6"></path></svg>
+          </a>
+        </li>
+      </sc-for>
+    </ul>
+  </main>
+
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 130px; background: linear-gradient(180deg, rgba(247,246,242,0) 0%, rgba(247,246,242,0.92) 55%, #F7F6F2 100%)"></div>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 116px">
+    <dc-import name="NavBar" active="pera" hint-size="390px,116px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"kat":{"editor":"enum","options":["1A","4A"],"default":"1A"},"$preview":{"width":390,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var st = this.state || {};
+    var filter = st.filter || 'all';
+    var R = function (code, name, lodge, goal, locked, cin, gc) {
+      return { href: code === '1A1' ? 'PeroDetail.dc.html' : (code === '4A1' ? 'PeroDetail-4A1.dc.html' : '#'), code: code, name: name, lodge: lodge, goal: goal, locked: !!locked, open: !locked, op: locked ? '0.55' : '1', cinDone: !!cin, cinTodo: !cin, gcDone: !!gc, gcTodo: !gc };
+    };
+    var DATA = {
+      '1A': {
+        code: '1A', name: 'Atletika – běhy', light: '1. světlo', color: '#5B8C3A', tint: '#E3ECDA', dark: '#2F5A1A', rules: '',
+        rows: [
+          R('1A1', 'Běh na 100 m', '', 'Měří se čas · limit podle věku', false, true, false),
+          R('1A2', 'Běh na 1500 m', '', 'Měří se čas · limit podle věku', false, false, false),
+          R('1A3', 'Dvanáctiminutový běh', '', 'Měří se vzdálenost · limit podle věku', false, true, false),
+          R('1A4', 'Běh na 200 m', '', 'Měří se čas · limit podle věku', false, false, false),
+          R('1A5', 'Běh na 400 m', '', 'Měří se čas · limit podle věku', false, false, false),
+          R('1A6', 'Maratonský běh', '', 'Půlmaraton nebo maraton bez přerušení', false, false, false),
+          R('1A7', 'Běh na 10 km přírodou', '', '4× do roka 10 km lesem a polem', false, true, false)
+        ]
+      },
+      '4A': {
+        code: '4A', name: 'Bylinkářství', light: '4. světlo', color: '#D4A017', tint: '#F6ECCB', dark: '#6B4F00',
+        rules: 'Lze použít bylinkářské rostliny (léčivé i aromatické) včetně dřevin. Je-li to možné, musí být bylinky vlastnoručně nasbírané. Jsou-li obtížně dosažitelné, musíš prokázat jejich perfektní znalost – bezpečné určení, podmínky k růstu, způsob sběru.',
+        rows: [
+          R('4A1', 'Bylinkové čaje', '', 'Poznej 10 rostlin na čaje a připrav 5 čajů', false, false, false),
+          R('4A2', 'Bylinky pro krásu', '', 'Poznej 10 rostlin pro péči o tělo, připrav 2 prostředky', false, false, false),
+          R('4A3', 'Přírodní suroviny v domácnosti', '', 'Poznej 6 surovin a připrav 3 prostředky', false, false, false),
+          R('4A4', 'Pěstování bylinek', '', 'Celou sezónu pěstuj 6 druhů bylinek', false, false, false),
+          R('4A5', 'Léčivé přípravky z bylinek', '', 'Poznej 10 rostlin a připrav 5 léčivých prostředků', false, false, false),
+          R('4A6', 'Léčivé rostliny', '', 'Poznej léčivé rostliny na 8 zdravotních potíží', false, false, false)
+        ]
+      }
+    };
+    var k = DATA[this.props.kat] || DATA['1A'];
+    var mineRows = k.rows.filter(function (r) { return r.open; });
+    var done = k.rows.filter(function (r) { return r.cinDone; }).length;
+    var gc = k.rows.filter(function (r) { return r.gcDone; }).length;
+    var kk = Object.assign({}, k, {
+      total: k.rows.length, mine: mineRows.length, done: done, gc: gc,
+      pct: Math.round(done / k.rows.length * 100) + '%', hasRules: !!k.rules
+    });
+    return {
+      k: kk,
+      rows: k.rows,
+      showAll: filter !== 'mine', showMine: filter === 'mine',
+      pickAll: function () { self.setState({ filter: 'all' }); },
+      pickMine: function () { self.setState({ filter: 'mine' }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

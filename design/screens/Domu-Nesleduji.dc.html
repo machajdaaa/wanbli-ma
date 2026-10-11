@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Domů – nikoho nesleduješ</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1240px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+  <main style="display: flex; flex-direction: column; gap: 20px; padding: 60px 16px 140px">
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <h1 style="margin: 0; font: 800 26px/32px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Ahoj, Jakube!</h1>
+      <a href="Hledani.dc.html" aria-label="Hledat kamarády" style="width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; border: 1px solid #DEDDD2; box-sizing: border-box; color: #1F3A1A; display: flex; align-items: center; justify-content: center">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      </a>
+    </header>
+
+    <dc-import name="DailyChallenge" hint-size="358px,239px"></dc-import>
+
+    <section aria-label="Nikoho nesleduješ" style="display: flex; flex-direction: column; gap: 14px; padding: 16px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: #FCEBD9; color: #C9661A; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6M22 11h-6"></path></svg></span>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font: 600 14px/20px Inter, system-ui, sans-serif">Tady jsou pera z celé organizace</span>
+          <span style="font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Zatím nikoho nesleduješ. Přidej si kamarády a uvidíš hlavně jejich pera.</span>
+        </div>
+      </div>
+      <a href="Hledani.dc.html" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 12px; border: 1.5px solid #C9661A; background: #E07B1F; color: #FFFFFF; text-decoration: none; font: 600 16px/20px Inter, system-ui, sans-serif">Najít kamarády</a>
+    </section>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 4px">
+      <h2 style="margin: 0; font: 700 18px/24px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Z celé Ligy</h2>
+      <sc-for list="{{posts}}" as="it" hint-placeholder-count="2">
+        <dc-import name="PostCard" post="{{it}}" hint-size="358px,480px"></dc-import>
+      </sc-for>
+    </div>
+  </main>
+
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 130px; background: linear-gradient(180deg, rgba(247,246,242,0) 0%, rgba(247,246,242,0.92) 55%, #F7F6F2 100%)"></div>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 116px">
+    <dc-import name="NavBar" active="domu" hint-size="390px,116px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { posts: [
+      { name: 'Eliška Černá', ini: 'EČ', tint: '#E2E5DA', place: 'Heřmanův Městec, Pardubický kraj', time: 'dnes 10:20', cat: 'Historie', color: '#3D7EA6', title: 'Poznej hrady a zámky', gc: false, metrics: [{ label: 'Navštíveno', value: '7', unit: 'zámků' }], photos: 5, likes: 31 },
+      { name: 'Vojtěch Procházka', ini: 'VP', tint: '#D6E6EF', place: 'Přelouč, Pardubický kraj', time: 'dnes 8:15', cat: 'Atletika – skoky', color: '#5B8C3A', title: 'Skok do výšky', gc: false, metrics: [{ label: 'Výška', value: '1,35', unit: 'm' }], photos: 0, likes: 9 }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

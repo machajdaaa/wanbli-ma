@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Domů</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1560px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+  <main style="display: flex; flex-direction: column; gap: 20px; padding: 60px 16px 140px">
+    <header style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+      <h1 style="margin: 0; font: 800 26px/32px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Ahoj, Jakube!</h1>
+      <a href="Hledani.dc.html" aria-label="Hledat kamarády" style="width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; border: 1px solid #DEDDD2; box-sizing: border-box; color: #1F3A1A; display: flex; align-items: center; justify-content: center">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      </a>
+    </header>
+
+    <dc-import name="DailyChallenge" hint-size="358px,239px"></dc-import>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 8px">
+      <h2 style="margin: 0; font: 700 18px/24px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Od kamarádů</h2>
+      <sc-for list="{{posts}}" as="it" hint-placeholder-count="3">
+        <dc-import name="PostCard" post="{{it}}" hint-size="358px,480px"></dc-import>
+      </sc-for>
+    </div>
+  </main>
+
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 130px; background: linear-gradient(180deg, rgba(247,246,242,0) 0%, rgba(247,246,242,0.92) 55%, #F7F6F2 100%)"></div>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 116px">
+    <dc-import name="NavBar" active="domu" hint-size="390px,116px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { posts: [
+      { name: 'Tereza Svobodová', ini: 'TS', tint: '#DDE8D2', place: 'Choltice, Pardubický kraj', time: 'dnes 9:00', cat: 'Atletika – běhy', color: '#5B8C3A', title: 'Běh na 100 m', gc: true, metrics: [{ label: 'Čas', value: '11,25', unit: 's' }], photos: 1, likes: 24, liked: true },
+      { name: 'Matěj Dvořák', ini: 'MD', tint: '#F4E8C1', place: 'Holice, Pardubický kraj', time: 'dnes 7:45', cat: 'Cyklistika', color: '#5B8C3A', title: 'Výlet na kole', gc: false, metrics: [{ label: 'Vzdálenost', value: '12,4', unit: 'km' }, { label: 'Čas', value: '48', unit: 'min' }], photos: 2, likes: 17 },
+      { name: 'Anežka Kučerová', ini: 'AK', tint: '#F1DCD5', place: 'Choltice, Pardubický kraj', time: 'včera 16:05', cat: 'Uzly a lana', color: '#B5523B', title: 'Uvaž 10 uzlů poslepu', gc: false, metrics: [], photos: 0, likes: 12 }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,9 +1,61 @@
-# Wanbli
+# Wanbli (v UI „Orlí pera“)
 
 Mobilní aplikace pro TechCrowd, postavená na Ionic 8 + Angular 20 (standalone
 komponenty) a Capacitoru 8 (iOS + Android). Backend běží na
 `https://trilobit.onrender.com`; klient k němu je generovaný OpenAPI klient
 v `src/app/core/api/generated` (přes `ng-openapi-gen`, `npm run generate:api`).
+
+„Wanbli“ je interní kódové jméno (prefix tokenů `--wanbli-*`, appId); v UI se
+aplikace jmenuje **Orlí pera**.
+
+## Produkt a koncept
+
+Sociální síť ve stylu Stravy pro děti 8–15 let z oddílů Ligy lesní moudrosti.
+Děti plní „orlí pera“, sdílejí je, sledují se a dávají si „pírka“ (lajky).
+
+- Hierarchie: **světlo** (1–4) → **kategorie** (kód `1A` = světlo + sekce,
+  např. Atletika – běhy) → **pero** (kód `1A1` = kategorie + číslo). Každé pero
+  má **Čin** a těžší **Grand challenge**. Kódy kategorií přeskakují X
+  (`2W → 2Y`, `3Z → 3AA`) – nikdy je nedopočítávat z indexu.
+- Aplikace je pro **všechny oddíly Ligy** – název oddílu (Trilobit) nikdy
+  natvrdo, vždy z dat skupiny.
+- Role: dítě a vedoucí mají v aplikaci **stejné možnosti**. Žádné admin
+  obrazovky ani tlačítka (oznámení, schvalování per, správa členů jsou
+  v samostatné administraci).
+- Schvalování per se v UI **vůbec neukazuje** (žádné čeká/potvrzeno/zamítnuto).
+- Dítě je členem právě jedné skupiny (`organisationId`).
+- Feed Domů = lidé, které sleduju; když nikoho, pera z celé Ligy.
+- Pírka ano, **komentáře v UI ne** (i když je API má).
+- Žebříček skupiny je celkový, řadí podle počtu per (pero = 1 bod).
+- Poloha jen na úrovni obce („Choltice, Pardubický kraj“), nikdy adresa ani mapa.
+- Oznámení jsou jen ke čtení – bez pírek a bez přihlašování na akci.
+- UI česky, **tyká**. Texty z designu, přes Transloco (připraveno na další jazyky).
+- Zatím se nenavrhuje: formulář nahrání pera (jen placeholder `/upload`),
+  dark mode (jen struktura tokenů), detail příspěvku, push notifikace, logo.
+
+## Redesign – zdroje pravdy
+
+- `design/` – export obrazovek z Claude Design; začni `design/README.md`
+  (formát `.dc.html`, mapa obrazovka → route). Inline styly = přesné hodnoty
+  v px při šířce 390. `design/screens/Main.dc.html` je design systém.
+  `design/` se neshipuje, je to jen reference.
+- Když se design a koncept liší, platí koncept. Co není ani v jednom, rozhodni
+  rozumně a zapiš do `docs/redesign-plan.md` (sekce Rozhodnutí).
+- `docs/redesign-plan.md` – obrazovky, komponenty, view-modely, rozpory,
+  rozhodnutí. `docs/backend-requirements.md` – co chybí v API.
+- `trilobit_prompt.md` – původní zadání redesignu (fáze 0–9).
+
+## Datová vrstva a mocky
+
+- Obrazovka čte data jen přes službu v `core/services/`, která vrací
+  view-model (`PostCardVm`, `FeatherDetailVm`, …), ne generované API typy.
+- Kde API data chybí: ukázková data **jen v `core/mocks/`**, označit
+  `// MOCK(<důvod>)` a přidat řádek do `docs/backend-requirements.md`
+  (co chybí, pro kterou obrazovku, navržený endpoint/pole). Když backend data
+  doplní, mění se jen mapování ve službě.
+- U skutečných entit z API se mockují jen pole nutná pro layout; pole, která
+  by vypadala jako fakt o skutečném člověku/akci (místo, termín akce), se
+  radši skryjí (viz R5 v `docs/redesign-plan.md`).
 
 ## Příkazy
 
@@ -78,6 +130,40 @@ vždy přes `environment.apiUrl`.
 - `src/theme/tokens.scss` je jediný zdroj pravdy pro vizuální hodnoty (`--wanbli-*` CSS custom properties — barvy, radius, typografie, spacing). Nehardcodovat barvy/rozměry v komponentách.
 - Ionic komponenty v `design-system/` se restylují přes jejich vlastní CSS custom properties (`--background`, `--border-color`, ...) a `::part()`, ne přepisováním shadow DOM selektorů.
 - Globální Ionic mode je `ios` (`src/main.ts`). Pokud konkrétní vzhled existuje jen v `md` módu (např. `ion-input fill="outline"` s floating labelem), vynutit `mode="md"` lokálně na té komponentě — neměnit globální mode.
+- Tokeny mají dvě vrstvy: `--wanbli-palette-*` (surové barvy, nepoužívat
+  v komponentách) a `--wanbli-color-*` / `--wanbli-radius-*` / … (sémantické).
+  Dark mode později přepíše jen sémantickou vrstvu. Žádné hex hodnoty mimo
+  `tokens.scss`.
+- Tailwind je nastavený v `src/tailwind.css` (čisté CSS – Sass neumí v4
+  syntaxi `--color-*: initial`). Výchozí palety, radiusy, fonty a stíny jsou
+  vypnuté; existují jen třídy z tokenů: `bg-surface`, `bg-surface-raised`,
+  `text-text`, `text-text-muted`, `border-border`, `bg-light-1-surface`,
+  `text-forest-500`, `rounded-12`, `rounded-full`, `font-display`,
+  `shadow-navbar`… V šablonách preferovat třídy před `var(--wanbli-*)` v SCSS.
+- Typografie přes utility `type-display`, `type-h1`, `type-h2`, `type-h3`,
+  `type-metric`, `type-body-l`, `type-body`, `type-label`, `type-caption`,
+  `type-overline` (barva zvlášť). Globální `h1`–`h6`/`p` nemají žádný styl.
+  Fonty: Inter (UI i text), Baloo 2 (nadpisy, čísla výkonů).
+- Ikony: inline SVG podle `Main.dc.html` (lineární, tah 2 px). Pírko je hlavní
+  symbol (lajk, počet per, prostřední tlačítko navbaru).
+
+## i18n a formátování
+
+- Všechny UI texty přes Transloco (`@jsverse/transloco`), klíče
+  v `public/assets/i18n/cs.json`. Žádný český text natvrdo v šabloně.
+  Konfigurace v `core/i18n/i18n.config.ts` (`provideI18n()`); překlady se
+  načtou v app initializeru, takže `TranslocoService.translate()` funguje
+  synchronně.
+- Čísla a data česky přes pipes ze `shared/pipes/`: `relativeTime`
+  („dnes 9:00“, „včera 17:40“, „středa 16:05“, „4. 10. 14:30“), `decimal`
+  („11,25“), `plural:'feathers'` („1 pero / 2 pera / 5 per“, klíče
+  `plural.<noun>.one|few|many|other`). Logika je v `core/i18n/format.ts`.
+
+## Přístupnost
+
+- Skutečné `button` / `a` / `input`, `aria-label` u tlačítek jen s ikonou.
+- Dotykové plochy min. 44 px (i když je vizuál menší – rozšířit hit area).
+- Kontrast min. WCAG AA (známé výjimky z designu viz `docs/redesign-plan.md`).
 
 ## Native projekty (android/, ios/)
 
@@ -91,6 +177,16 @@ Aktuálně existují jen smoke-test specy (`should create` přes `TestBed` +
 `fixture.detectChanges()`), žádné e2e, žádný zavedený postup pro mockování
 Capacitor pluginů v testech. Nový spec psát ve stejném minimálním duchu, pokud
 úkol nevyžaduje jinak; nevymýšlet mock konvenci, která v repu ještě není.
+
+- Smoke specy používají `providers: provideTestDefaults()` ze
+  `src/testing/test-providers.ts` (HttpClient + testing backend, router,
+  Transloco s reálným `cs.json`). Bez HttpClientu `should create` spadne
+  na NG0201. Komponentu s `input.required()` nastavit přes
+  `fixture.componentRef.setInput(...)` před `detectChanges()`.
+- Karma spouští Chrome. Když Chrome není nainstalovaný (tenhle stroj má jen
+  Brave): `CHROME_BIN="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" npm test -- --watch=false --browsers=ChromeHeadless`.
+- Na konci každé fáze redesignu musí projít `npm run lint`, `npm run build`
+  i `npm test`; testy rozbité změnou opravit.
 
 ## Gotchas
 

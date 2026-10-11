@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Karta pera – varianty</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1250px; min-height: 1300px; box-sizing: border-box; padding: 64px; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; gap: 40px">
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Klíčová komponenta</span>
+      <h1 style="margin: 0; font: 800 44px/48px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Karta orlího pera</h1>
+    </div>
+    <ol style="margin: 0; padding: 0; list-style: none; display: flex; gap: 20px; font: 500 13px/18px Inter, system-ui, sans-serif; color: #5E6B57">
+      <li><strong style="color: #1F3A1A">1</strong> Autor</li>
+      <li><strong style="color: #1F3A1A">2</strong> Světlo + název</li>
+      <li><strong style="color: #1F3A1A">3</strong> Výkon (max. 2)</li>
+      <li><strong style="color: #1F3A1A">4</strong> Fotky</li>
+      <li><strong style="color: #1F3A1A">5</strong> Pírko</li>
+    </ol>
+  </header>
+  <div style="display: grid; grid-template-columns: repeat(3, 358px); gap: 32px; align-items: start">
+    <sc-for list="{{cols}}" as="c" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; gap: 32px">
+        <sc-for list="{{c.items}}" as="it" hint-placeholder-count="2">
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">{{it.label}}</span>
+            <dc-import name="PostCard" post="{{it.post}}" hint-size="358px,420px"></dc-import>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1250,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var cols = [
+      { items: [
+        { label: 'Grand challenge · čas · 1 fotka', post: { name: 'Tereza Svobodová', ini: 'TS', tint: '#DDE8D2', place: 'Choltice, Pardubický kraj', time: 'dnes 9:00', cat: 'Atletika – běhy', color: '#5B8C3A', title: 'Běh na 100 m', gc: true, metrics: [{ label: 'Čas', value: '11,25', unit: 's' }], photos: 1, likes: 24 } },
+        { label: 'Výška · bez fotky', post: { name: 'Vojtěch Procházka', ini: 'VP', tint: '#D6E6EF', place: 'Přelouč, Pardubický kraj', time: 'včera 17:40', cat: 'Atletika – skoky', color: '#5B8C3A', title: 'Skok do výšky', gc: false, metrics: [{ label: 'Výška', value: '1,35', unit: 'm' }], photos: 0, likes: 9 } }
+      ] },
+      { items: [
+        { label: 'Vzdálenost + čas · 2 fotky', post: { name: 'Matěj Dvořák', ini: 'MD', tint: '#F4E8C1', place: 'Holice, Pardubický kraj', time: 'dnes 7:45', cat: 'Cyklistika', color: '#5B8C3A', title: 'Výlet na kole', gc: false, metrics: [{ label: 'Vzdálenost', value: '12,4', unit: 'km' }, { label: 'Čas', value: '48', unit: 'min' }], photos: 2, likes: 17 } },
+        { label: 'Bez výkonu · Splněno · olajkováno', post: { name: 'Anežka Kučerová', ini: 'AK', tint: '#F1DCD5', place: 'Choltice, Pardubický kraj', time: 'neděle 16:05', cat: 'Uzly a lana', color: '#B5523B', title: 'Uvaž 10 uzlů poslepu', gc: false, metrics: [], photos: 0, likes: 12, liked: true } }
+      ] },
+      { items: [
+        { label: 'Počet · 3+ fotky', post: { name: 'Eliška Černá', ini: 'EČ', tint: '#E2E5DA', place: 'Heřmanův Městec, Pardubický kraj', time: '4. 10. 14:30', cat: 'Historie', color: '#3D7EA6', title: 'Poznej hrady a zámky', gc: false, metrics: [{ label: 'Navštíveno', value: '7', unit: 'zámků' }], photos: 5, likes: 31 } },
+        { label: 'Grand challenge · počet · bez fotky', post: { name: 'Ondřej Veselý', ini: 'OV', tint: '#DDE8D2', place: 'Choltice, Pardubický kraj', time: 'včera 19:10', cat: 'Příroda – dřeviny', color: '#3D7EA6', title: 'Urči stromy v lese', gc: true, metrics: [{ label: 'Určeno', value: '30', unit: 'druhů' }], photos: 0, likes: 15, liked: true } }
+      ] }
+    ];
+    return { cols: cols };
+  }
+}
+</script>
+</body>
+</html>

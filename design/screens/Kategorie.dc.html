@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Kategorie orlích per</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F3A1A}a:hover{color:#C9661A}
+</style>
+</helmet>
+<div style="width: 1688px; min-height: 1200px; box-sizing: border-box; padding: 48px; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif; display: flex; flex-direction: column; gap: 32px">
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Reference · zdroj orlipera.cz</span>
+      <h1 style="margin: 0; font: 800 40px/44px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Kategorie orlích per</h1>
+    </div>
+    <p style="margin: 0; max-width: 520px; font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Kategorie (podsvětla) podle 4 světel. Kód se v appce ukazuje v kolečku na kartě kategorie, barva světla ve štítku na kartě pera. Každý řádek vede na svitek na orlipera.cz.</p>
+  </header>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; align-items: start">
+    <sc-for list="{{lights}}" as="l" hint-placeholder-count="4">
+      <section style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 16px 12px; border-bottom: 1px solid #ECEBE3">
+          <h2 style="margin: 0; display: flex; align-items: center; gap: 10px; font: 800 22px/28px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif"><span style="width: 12px; height: 12px; border-radius: 50%; background: {{l.color}}"></span>{{l.name}}</h2>
+          <span style="font: 600 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{l.count}} kategorií</span>
+        </div>
+        <ul style="margin: 0; padding: 6px 8px 10px; list-style: none; display: flex; flex-direction: column">
+          <sc-for list="{{l.items}}" as="c" hint-placeholder-count="20">
+            <li>
+              <a href="{{c.url}}" style="display: flex; align-items: center; gap: 10px; min-height: 30px; padding: 2px 8px; border-radius: 8px; text-decoration: none">
+                <span style="flex-shrink: 0; min-width: 34px; height: 22px; padding: 0 6px; box-sizing: border-box; border-radius: 6px; background: {{l.tint}}; color: {{l.dark}}; display: flex; align-items: center; justify-content: center; font: 800 12px/1 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{c.code}}</span>
+                <span style="font: 500 13px/18px Inter, system-ui, sans-serif">{{c.name}}</span>
+              </a>
+            </li>
+          </sc-for>
+        </ul>
+      </section>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1688,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var raw = [
+      { n: 1, color: '#5B8C3A', tint: '#E3ECDA', dark: '#2F5A1A', items: [
+        ['1A', 'Atletika – běhy'], ['1B', 'Atletika – chůze'], ['1C', 'Atletika – skoky'], ['1D', 'Bruslení'], ['1E', 'Cestování, chození'], ['1F', 'Cyklistika'], ['1G', 'Gymnastika'], ['1H', 'Hody, vrhy a kopy'], ['1I', 'Horolezectví, jeskyňářství'], ['1J', 'Jezdectví'], ['1K', 'Kolektivní sporty'], ['1L', 'Laso a bič'], ['1M', 'Lukostřelba'], ['1N', 'Lyžování'], ['1O', 'Orientační běh'], ['1P', 'Otužování'], ['1Q', 'Plavání a potápění'], ['1R', 'Pobyt v přírodě'], ['1S', 'Postřeh, vidění'], ['1T', 'Sebeobrana'], ['1U', 'Střelectví'], ['1V', 'Vodáctví'], ['1W', 'Zvláštní sportovní výkony']
+      ] },
+      { n: 2, color: '#3D7EA6', tint: '#DCE9F1', dark: '#1F4E6B', items: [
+        ['2A', 'Astronomie'], ['2B', 'Dorozumívání'], ['2C', 'Filozofie'], ['2D', 'Historie'], ['2E', 'Hledání pravdy'], ['2F', 'Měření a odhady'], ['2G', 'Meteorologie'], ['2H', 'Příroda – geologie'], ['2I', 'Příroda – houby'], ['2J', 'Příroda – lišejníky, mechorosty, kapraďorosty'], ['2K', 'Příroda – byliny'], ['2L', 'Příroda – dřeviny'], ['2M', 'Příroda – bezobratlí'], ['2N', 'Příroda – ryby'], ['2O', 'Příroda – obojživelníci'], ['2P', 'Příroda – plazi'], ['2Q', 'Příroda – ptáci'], ['2R', 'Příroda – savci'], ['2S', 'Příroda – pozorování, dokumentace, stopařství'], ['2T', 'Příroda – lovy beze zbraní'], ['2U', 'Příroda – ekologie'], ['2V', 'Přírodní národy a etnika'], ['2W', 'Topografie a zeměpis'], ['2Y', 'Věda']
+      ] },
+      { n: 3, color: '#B5523B', tint: '#F3E0DA', dark: '#7A2E1E', items: [
+        ['3A', 'Drhání'], ['3B', 'Dřevorubectví'], ['3C', 'Fotografování, filmování'], ['3D', 'Hudba'], ['3E', 'Indiánské řemeslo'], ['3F', 'Keramika'], ['3G', 'Knihařství, výroba papíru'], ['3H', 'Korálkování, práce z ostnů apod.'], ['3I', 'Košíkářství'], ['3J', 'Literární činnost, publikování'], ['3K', 'Modelářství'], ['3L', 'Pletení, háčkování, paličkování'], ['3M', 'Práce z kostí, rohu, parohu'], ['3N', 'Práce z kovu'], ['3O', 'Práce z kůže'], ['3P', 'Pravěká řemesla'], ['3Q', 'Přístřeší'], ['3R', 'Rozdělávání ohně'], ['3S', 'Rybářství'], ['3T', 'Sběratelství'], ['3U', 'Šití'], ['3V', 'Tanec'], ['3W', 'Tesařství, truhlářství'], ['3Y', 'Tkaní, barvení'], ['3Z', 'Uzly a lana'], ['3AA', 'Vyřezávání ze dřeva'], ['3BB', 'Výtvarné techniky'], ['3CC', 'Zábava'], ['3DD', 'Zálesácké výrobky'], ['3EE', 'Historické výrobky']
+      ] },
+      { n: 4, color: '#D4A017', tint: '#F6ECCB', dark: '#6B4F00', items: [
+        ['4A', 'Bylinkářství'], ['4B', 'Duchovní život'], ['4C', 'Farmaření'], ['4D', 'Chovatelství'], ['4E', 'Ochrana přírody'], ['4F', 'Organizování činnosti'], ['4G', 'Práce v domácnosti'], ['4H', 'Sociální programy'], ['4I', 'Tábornické stavby'], ['4J', 'Táborové vaření'], ['4K', 'Turistika'], ['4L', 'Vedení v kmeni, kmenová činnost'], ['4M', 'Vigilie'], ['4N', 'Vůle'], ['4O', 'Woodcraft'], ['4P', 'Zdravověda'], ['4Q', 'Virtualita']
+      ] }
+    ];
+    var lights = raw.map(function (l) {
+      return {
+        name: l.n + '. světlo', color: l.color, tint: l.tint, dark: l.dark, count: l.items.length,
+        items: l.items.map(function (it) { return { code: it[0], name: it[1], url: 'https://orlipera.cz/svitek_' + l.n + 'svetlo/' + it[0] }; })
+      };
+    });
+    return { lights: lights };
+  }
+}
+</script>
+</body>
+</html>

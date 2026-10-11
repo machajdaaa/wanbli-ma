@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Vyhledání pera</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 960px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+  <header style="display: flex; flex-direction: column; gap: 12px; padding: 52px 16px 4px 10px">
+    <div style="display: flex; align-items: center; gap: 6px">
+      <a href="OrliPera.dc.html" aria-label="Zpět na Orlí pera" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; color: #1F3A1A; display: flex; align-items: center; justify-content: center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+      </a>
+      <div style="position: relative; flex: 1; display: flex; align-items: center; gap: 10px; height: 48px; box-sizing: border-box; padding: 0 6px 0 14px; border-radius: 12px; border: 2px solid #E07B1F; box-shadow: 0 0 0 4px #FCEBD9; background: #FFFFFF; color: #5E6B57">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <label for="pq" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Hledat orlí pero</label>
+        <input id="pq" type="search" value="{{q}}" onInput="{{onQ}}" placeholder="Hledej pero podle názvu" autocomplete="off" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; color: #1F3A1A; font: 400 16px/20px Inter, system-ui, sans-serif">
+        <sc-if value="{{hasQ}}" hint-placeholder-val="{{ true }}">
+          <button type="button" aria-label="Vymazat hledání" onClick="{{clear}}" style="width: 36px; height: 36px; flex-shrink: 0; border: 0; border-radius: 50%; background: #F0EFE6; color: #5E6B57; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+          </button>
+        </sc-if>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; padding-left: 6px; overflow-x: auto">
+      <span style="flex-shrink: 0; font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">Zkus třeba</span>
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+        <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="flex-shrink: 0; height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid {{c.bd}}; background: {{c.bg}}; color: {{c.fg}}; font: 600 13px/18px Inter, system-ui, sans-serif; cursor: pointer">{{c.label}}</button>
+      </sc-for>
+    </div>
+  </header>
+
+  <main style="display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 150px">
+    <sc-if value="{{hasResults}}" hint-placeholder-val="{{ true }}">
+      <p aria-live="polite" style="margin: 0; font: 600 13px/18px Inter, system-ui, sans-serif; color: #5E6B57">{{countLabel}}</p>
+      <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+        <sc-for list="{{results}}" as="r" hint-placeholder-count="7">
+          <li style="border-bottom: 1px solid #ECEBE3">
+            <a href="{{r.href}}" style="display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 10px 10px 10px 12px; box-sizing: border-box; text-decoration: none; color: #1F3A1A">
+              <span style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 12px; background: {{r.tint}}; color: {{r.dark}}; display: flex; align-items: center; justify-content: center; font: 800 15px/1 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{r.code}}</span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                <span style="font: 700 15px/20px Inter, system-ui, sans-serif">{{r.name}}</span>
+                <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{r.light}} · {{r.cat}}</span>
+              </span>
+              <sc-if value="{{r.done}}" hint-placeholder-val="{{ false }}">
+                <span style="flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 7px 0 6px; border-radius: 7px; background: #E2EFE2; color: #2B6A2E; font: 600 11px/14px Inter, system-ui, sans-serif"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Čin</span>
+              </sc-if>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="m9 18 6-6-6-6"></path></svg>
+            </a>
+          </li>
+        </sc-for>
+      </ul>
+    </sc-if>
+
+    <sc-if value="{{noResults}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 48px 24px; text-align: center">
+        <span style="width: 64px; height: 64px; border-radius: 50%; background: #F0EFE6; color: #9AA392; display: flex; align-items: center; justify-content: center; margin-bottom: 6px">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        </span>
+        <h2 style="margin: 0; font: 800 20px/26px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Nic jsme nenašli</h2>
+        <p style="margin: 0; font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Zkus jiné slovo nebo kód pera, třeba „4A1“.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isIdle}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 6px; padding: 40px 24px; text-align: center; align-items: center">
+        <h2 style="margin: 0; font: 800 20px/26px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Jaké pero chceš získat?</h2>
+        <p style="margin: 0; font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Napiš název nebo kód pera a otevři si jeho detail.</p>
+      </div>
+    </sc-if>
+  </main>
+
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 130px; background: linear-gradient(180deg, rgba(247,246,242,0) 0%, rgba(247,246,242,0.92) 55%, #F7F6F2 100%)"></div>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 116px">
+    <dc-import name="NavBar" active="pera" hint-size="390px,116px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var st = this.state || {};
+    var q = typeof st.q === 'string' ? st.q : 'běh';
+    var norm = function (x) { return String(x).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim(); };
+    var L = {
+      1: { light: '1. světlo', tint: '#E3ECDA', dark: '#2F5A1A' },
+      2: { light: '2. světlo', tint: '#DCE9F1', dark: '#1F4E6B' },
+      3: { light: '3. světlo', tint: '#F3E0DA', dark: '#7A2E1E' },
+      4: { light: '4. světlo', tint: '#F6ECCB', dark: '#6B4F00' }
+    };
+    var P = function (code, name, cat, done) {
+      var l = L[code.charAt(0)];
+      return { code: code, name: name, cat: cat, done: !!done, light: l.light, tint: l.tint, dark: l.dark,
+        href: code === '1A1' ? 'PeroDetail.dc.html' : (code === '4A1' ? 'PeroDetail-4A1.dc.html' : '#') };
+    };
+    var ALL = [
+      P('1A1', 'Běh na 100 m', 'Atletika – běhy', true),
+      P('1A2', 'Běh na 1500 m', 'Atletika – běhy'),
+      P('1A3', 'Dvanáctiminutový běh', 'Atletika – běhy', true),
+      P('1A4', 'Běh na 200 m', 'Atletika – běhy'),
+      P('1A5', 'Běh na 400 m', 'Atletika – běhy'),
+      P('1A6', 'Maratonský běh', 'Atletika – běhy'),
+      P('1A7', 'Běh na 10 km přírodou', 'Atletika – běhy', true),
+      P('2A1', 'Astronomie v historii', 'Astronomie'),
+      P('2A2', 'Hvězdy a vesmírné objekty', 'Astronomie', true),
+      P('2A3', 'Sluneční hodiny', 'Astronomie'),
+      P('2A4', 'Souhvězdí', 'Astronomie'),
+      P('2A5', 'Znalost vesmíru', 'Astronomie'),
+      P('2A6', 'Astronomická orientace', 'Astronomie'),
+      P('3C1', 'Fotografie woodcrafterské činnosti', 'Fotografování, filmování'),
+      P('3C2', 'Promítání', 'Fotografování, filmování'),
+      P('3C3', 'Fotografie ze sněmu', 'Fotografování, filmování'),
+      P('3C4', 'Fotografická kompozice', 'Fotografování, filmování'),
+      P('3C5', 'Fotografické náměty', 'Fotografování, filmování'),
+      P('3C6', 'Fotografické techniky', 'Fotografování, filmování'),
+      P('3C7', 'Zpracování snímků', 'Fotografování, filmování'),
+      P('3C8', 'Dírková komora', 'Fotografování, filmování'),
+      P('3C9', 'Natočení filmu', 'Fotografování, filmování'),
+      P('4A1', 'Bylinkové čaje', 'Bylinkářství'),
+      P('4A2', 'Bylinky pro krásu', 'Bylinkářství'),
+      P('4A3', 'Přírodní suroviny v domácnosti', 'Bylinkářství'),
+      P('4A4', 'Pěstování bylinek', 'Bylinkářství'),
+      P('4A5', 'Léčivé přípravky z bylinek', 'Bylinkářství'),
+      P('4A6', 'Léčivé rostliny', 'Bylinkářství')
+    ];
+    var nq = norm(q);
+    var results = nq ? ALL.filter(function (p) { return norm(p.name).indexOf(nq) > -1 || norm(p.code) === nq || norm(p.code).indexOf(nq) === 0; }) : [];
+    var n = results.length;
+    var countLabel = n === 1 ? '1 pero' : (n >= 2 && n <= 4 ? n + ' pera' : n + ' per');
+    var chips = ['běh', 'čaj', 'foto', 'hvězdy'].map(function (label) {
+      var on = norm(label) === nq;
+      return { label: label, on: on ? 'true' : 'false', bg: on ? '#FCEBD9' : '#FFFFFF', bd: on ? '#E07B1F' : '#DEDDD2', fg: on ? '#7A3D0C' : '#1F3A1A',
+        pick: function () { self.setState({ q: label }); } };
+    });
+    return {
+      q: q, hasQ: !!q,
+      onQ: function (e) { self.setState({ q: e && e.target ? e.target.value : '' }); },
+      clear: function () { self.setState({ q: '' }); },
+      chips: chips,
+      results: results, countLabel: countLabel,
+      hasResults: n > 0, noResults: !!nq && n === 0, isIdle: !nq
+    };
+  }
+}
+</script>
+</body>
+</html>
