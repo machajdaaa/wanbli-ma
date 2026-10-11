@@ -327,6 +327,31 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
 - **R30 – Text „Zapomněl/a jsi heslo?“** vede na `/forgot-password`
   s neutrálním „Obnovu hesla připravujeme“ – nevymýšlí se postup (např.
   „obnoví vedoucí“), který nikdo nepotvrdil.
+- **R31 – Pozdrav bez 5. pádu (fáze 4).** Design má „Ahoj, Jakube!“
+  (vokativ). Spolehlivé skloňování libovolných jmen klient neumí, proto
+  „Ahoj, {křestní jméno}!“ v 1. pádu (bez jména přezdívka). Řešení později:
+  pole `vocative` z backendu nebo knihovna na české skloňování.
+- **R32 – Menu příspěvku bez skloňování a rodu (fáze 4).** Design má
+  „Přestat sledovat Terezu“ a „Její pera už neuvidíš“ – obojí vyžaduje
+  4. pád jména a znalost rodu. Použito neutrálně: „Přestat sledovat“ /
+  „Pera z tohoto profilu už na Domů neuvidíš“. Když autora nesleduji
+  (feed celé Ligy), nabídne se místo toho „Sledovat“.
+- **R33 – Nahlášení příspěvku (fáze 4).** Endpoint chybí. Protože jde
+  o bezpečnostní funkci, aplikace **nepředstírá**, že nahlášení odeslala –
+  ukáže „Nahlašování zatím nefunguje. Když tě něco trápí, řekni to vedoucímu
+  oddílu.“ Skrytí příspěvku funguje lokálně (do obnovení feedu).
+- **R34 – Upravit příspěvek** vede na placeholder `/upload` (formulář
+  není navržený). Smazání má potvrzovací krok přímo v bottom sheetu,
+  chyba → toast se „Zkusit znovu“.
+- **R35 – Prázdný feed má přednost (fáze 4).** Když nejsou žádné příspěvky,
+  ukáže se jen prázdný stav 1c (i v režimu celé Ligy) – karta 1b
+  „nikoho nesleduješ“ se zobrazuje jen nad skutečnými příspěvky.
+- **R36 – `ActivityCard` smazána už ve fázi 4** (místo fáze 9) – po
+  nahrazení `PostCard` nikde nebyla použitá. Fotky „+N“ v mřížce 3+ jsou jen
+  informace (`role="img"`), detail fotek ani příspěvku není navržený.
+- **R37 – Varianty karty na `/dev/ui`.** Rozložení 2 a 3+ fotek ze
+  skutečného API zatím nevznikne (jen jedna `imageUrl`), proto jsou všechny
+  varianty z `KartaPera.dc.html` k vidění v katalogu.
 
 ## 6. Fáze a výstup
 

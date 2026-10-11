@@ -7,7 +7,7 @@ import { PostService } from './post.service';
 import { toPerson } from './mappers';
 import { HomeFeedMode, PageVm, PersonVm, PhotoVm, PostCardVm } from '../models/view-models';
 import { PagedResponseOfPostResponse, PostResponse } from '../api/generated/models';
-import { getFeed$Json, GetFeed$Json$Params } from '../api/generated/fn/feed/get-feed-json';
+import { getFeed$Json } from '../api/generated/fn/feed/get-feed-json';
 import { getOrganisationFeed$Json } from '../api/generated/fn/organisations/get-organisation-feed-json';
 import { POST_FEATHER_SAMPLES, postFeatherSample } from '../mocks/posts.mock';
 
@@ -80,11 +80,6 @@ export class FeedService {
         }),
       })),
     );
-  }
-
-  /** @deprecated Raw API page for the legacy HomePage; removed when Home moves to PostCard (phase 4). */
-  getFeed(params?: GetFeed$Json$Params): Observable<PagedResponseOfPostResponse> {
-    return this.api.call(getFeed$Json, params ?? {});
   }
 
   private toPage(res: PagedResponseOfPostResponse, meId: number): PageVm<PostCardVm> {

@@ -173,3 +173,11 @@
  * at runtime, so the plain forms of its pressed-state classes must exist.
  */
 @source inline("bg-primary-pressed shadow-pressed translate-y-px bg-surface-pressed border-border-strong decoration-primary-pressed bg-danger-surface border-danger-border-pressed text-danger-pressed");
+
+/*
+ * Top padding of a screen: 60 px in the design (390 px phone incl. status
+ * bar), or the safe area + 16 px when the notch is taller.
+ */
+@utility pt-screen {
+  padding-top: max(3.75rem, calc(var(--ion-safe-area-top, 0px) + 1rem));
+}

@@ -20,6 +20,10 @@ import { TextInputComponent } from '../../shared/design-system/text-input/text-i
 import { ToastComponent } from '../../shared/design-system/toast/toast.component';
 import { ToastService } from '../../shared/design-system/toast/toast.service';
 import { ToggleComponent } from '../../shared/design-system/toggle/toggle.component';
+import { PostCardComponent } from '../../shared/components/post-card/post-card.component';
+import { PostMenuSheetComponent } from '../../shared/components/post-menu-sheet/post-menu-sheet.component';
+import { PostCardVm } from '../../core/models/view-models';
+import { POST_FEATHER_SAMPLES } from '../../core/mocks/posts.mock';
 
 /**
  * Design-system catalog — every component in every state on one page, to
@@ -49,6 +53,8 @@ import { ToggleComponent } from '../../shared/design-system/toggle/toggle.compon
     TextInputComponent,
     ToastComponent,
     ToggleComponent,
+    PostCardComponent,
+    PostMenuSheetComponent,
   ],
   templateUrl: './dev-ui.page.html',
 })
@@ -107,6 +113,44 @@ export class DevUiPage {
   protected readonly toggleOff = signal(false);
   protected readonly notifications = signal(true);
   protected readonly sheetOpen = signal(false);
+
+  // KartaPera.dc.html variants: GC + time + 1 photo, two metrics + 2 photos,
+  // no metric ("Splněno") + liked, count + 5 photos, own post.
+  protected readonly postVariants: { label: string; post: PostCardVm }[] = [
+    { label: 'Grand challenge · čas · 1 fotka', post: this.samplePost(0, 'Tereza Svobodová', 0, 1, 24, false, false, 'Choltice, Pardubický kraj') },
+    { label: 'Vzdálenost + čas · 2 fotky', post: this.samplePost(1, 'Matěj Dvořák', 2, 2, 17, false, false, 'Holice, Pardubický kraj') },
+    { label: 'Bez výkonu · Splněno · olajkováno', post: this.samplePost(2, 'Anežka Kučerová', 30, 0, 12, true, false, null) },
+    { label: 'Počet · 3+ fotky', post: this.samplePost(3, 'Eliška Černá', 50, 5, 31, false, false, 'Heřmanův Městec, Pardubický kraj') },
+    { label: 'Vlastní příspěvek', post: this.samplePost(7, 'Jakub Novák', 26, 1, 14, false, true, null) },
+  ];
+  protected readonly menuPost = signal<PostCardVm | null>(null);
+
+  private samplePost(
+    sample: number,
+    name: string,
+    hoursAgo: number,
+    photos: number,
+    likes: number,
+    liked: boolean,
+    own: boolean,
+    place: string | null,
+  ): PostCardVm {
+    const s = POST_FEATHER_SAMPLES[sample];
+    return {
+      id: -100 - sample,
+      author: { id: sample + 1, name, nickname: null, avatarUrl: null, isMe: own },
+      place,
+      createdAt: new Date(Date.now() - hoursAgo * 3600 * 1000).toISOString(),
+      feather: s.feather,
+      isGrandChallenge: s.isGrandChallenge,
+      metrics: s.metrics,
+      photos: Array.from({ length: photos }, () => ({ url: null })),
+      content: null,
+      likeCount: likes,
+      likedByMe: liked,
+      isOwn: own,
+    };
+  }
 
   protected showSuccessToast(): void {
     this.toasts.success('Profil je uložený');

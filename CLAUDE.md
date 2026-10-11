@@ -85,7 +85,7 @@ Děti plní „orlí pera“, sdílejí je, sledují se a dávají si „pírka�
 - `src/app/nav/` — shell se 4 taby (`nav.routes.ts`)
 - `src/app/pages/` — jednotlivé stránky navěšené na taby (home, group, profile, eagle-feathers)
 - `src/app/shared/design-system/` — čisté UI primitivy bez byznys logiky podle `Main.dc.html`: `Button`, `TextInput`, `SearchInput`, `SegmentedControl`, `Avatar`, `Badge`, `LightTag`, `ProgressBar`, `Toggle`, `SettingsGroup`/`SettingsRow`, `BottomSheet`, `Toast` (+ `ToastService`), `EmptyState`, `Skeleton`, `Icon` (sada ikon v `icon/icons.ts`), mapa světel `lights.ts`. Postavené na **nativních** `button`/`input`/`a` stylovaných Tailwindem; Ionic jen tam, kde přidává chování (`BottomSheet` = inline `ion-modal`). Všechny stavy jsou vidět na `/dev/ui` (jen dev build).
-- `src/app/shared/components/` — složitější, feature-specific komponenty, které skládají primitivy z `design-system/` (`ActivityCardComponent`, `DailyChallengeCardComponent`)
+- `src/app/shared/components/` — složitější, feature-specific komponenty, které skládají primitivy z `design-system/` (`PostCardComponent` – pírko řeší sama přes `PostService`; `PostMenuSheetComponent` – jedna instance na obrazovku, otevírá se nastavením `[(post)]`, vrací `hidden`/`deleted`; `DailyChallengeCardComponent`)
 - `android/`, `ios/` — generované native projekty, needitovat bez konkrétního důvodu (viz Native projekty níže)
 
 Nová jednoduchá, znovupoužitelná UI komponenta (bez byznys logiky) patří do
@@ -163,6 +163,7 @@ vždy přes `environment.apiUrl`.
   Konfigurace v `core/i18n/i18n.config.ts` (`provideI18n()`); překlady se
   načtou v app initializeru, takže `TranslocoService.translate()` funguje
   synchronně.
+- Jména se neskloňují (žádný vokativ ani 4. pád, žádné rodové tvary „její/jeho“) – texty formulovat tak, aby fungovaly s 1. pádem jména (redesign-plan R31, R32).
 - Čísla a data česky přes pipes ze `shared/pipes/`: `relativeTime`
   („dnes 9:00“, „včera 17:40“, „středa 16:05“, „4. 10. 14:30“), `decimal`
   („11,25“), `plural:'feathers'` („1 pero / 2 pera / 5 per“, klíče

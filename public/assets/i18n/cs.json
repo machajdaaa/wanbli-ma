@@ -12,7 +12,8 @@
     "save": "Uložit",
     "ok": "OK",
     "more": "více",
-    "soon": "Brzy"
+    "soon": "Brzy",
+    "genericError": "Něco se pokazilo. Zkus to znovu."
   },
   "nav": {
     "label": "Hlavní navigace",
@@ -35,6 +36,57 @@
       "title": "Obnovu hesla připravujeme",
       "text": "Zatím ji v aplikaci nejde udělat. Brzy to tu půjde."
     }
+  },
+  "home": {
+    "greeting": "Ahoj, {{name}}!",
+    "searchPeople": "Hledat kamarády",
+    "dailyChallenge": "Daily challenge",
+    "goForIt": "Do toho!",
+    "challengeUnavailable": "Tohle pero teď nejde otevřít.",
+    "fromFriends": "Od kamarádů",
+    "fromLeague": "Z celé Ligy",
+    "noFollowingLabel": "Nikoho nesleduješ",
+    "noFollowingTitle": "Tady jsou pera z celé Ligy",
+    "noFollowingText": "Zatím nikoho nesleduješ. Přidej si kamarády a uvidíš hlavně jejich pera.",
+    "findFriends": "Najít kamarády",
+    "emptyTitle": "Zatím tu je ticho",
+    "emptyText": "Až někdo, koho sleduješ, získá orlí pero, uvidíš ho tady. Nebo buď první a splň dnešní výzvu.",
+    "errorTitle": "Pera se nepodařilo načíst",
+    "errorText": "Zkontroluj připojení a zkus to znovu.",
+    "refreshFailed": "Nepodařilo se načíst nová pera."
+  },
+  "post": {
+    "more": "Další možnosti",
+    "like": "Dát pírko, má {{count}}",
+    "unlike": "Odebrat pírko, má {{count}}",
+    "likeFailed": "Pírko se nepodařilo uložit.",
+    "photoAlt": "Fotka k peru {{n}}",
+    "morePhotos": "Další fotky: {{count}}"
+  },
+  "postMenu": {
+    "label": "Možnosti příspěvku",
+    "ownPost": "Tvůj příspěvek",
+    "profile": "Zobrazit profil",
+    "unfollow": "Přestat sledovat",
+    "unfollowHint": "Pera z tohoto profilu už na Domů neuvidíš",
+    "follow": "Sledovat",
+    "followHint": "Pera z tohoto profilu uvidíš na Domů",
+    "followed": "Sleduješ nového kamaráda",
+    "unfollowed": "Už nesleduješ",
+    "hide": "Skrýt tento příspěvek",
+    "hidden": "Příspěvek je skrytý",
+    "report": "Nahlásit příspěvek",
+    "reportHint": "Podívá se na to vedoucí tvého oddílu",
+    "reportUnavailable": "Nahlašování zatím nefunguje. Když tě něco trápí, řekni to vedoucímu oddílu.",
+    "edit": "Upravit příspěvek",
+    "editHint": "Fotky a výkon",
+    "delete": "Smazat příspěvek",
+    "deleteHint": "Pero ti ve sbírce zůstane",
+    "deleteConfirmTitle": "Opravdu smazat příspěvek?",
+    "deleteConfirm": "Smazat",
+    "deleting": "Mažu…",
+    "deleted": "Příspěvek je smazaný",
+    "deleteFailed": "Příspěvek se nepodařilo smazat"
   },
   "time": {
     "today": "dnes {{time}}",
@@ -60,6 +112,12 @@
       "few": "{{count}} lidé",
       "many": "{{count}} člověka",
       "other": "{{count}} lidí"
+    },
+    "likes": {
+      "one": "{{count}} pírko",
+      "few": "{{count}} pírka",
+      "many": "{{count}} pírka",
+      "other": "{{count}} pírek"
     }
   },
   "ds": {
