@@ -5,7 +5,7 @@ import { IconComponent } from '../icon/icon.component';
 
 let nextId = 0;
 
-export type TextInputType = 'text' | 'email' | 'password' | 'tel' | 'url';
+export type TextInputType = 'text' | 'email' | 'password' | 'tel' | 'url' | 'date';
 
 const FIELD =
   'w-full rounded-12 bg-surface-raised text-text type-body-l outline-none ' +
@@ -63,6 +63,8 @@ const FIELD =
           [attr.autocomplete]="autocomplete()"
           [attr.inputmode]="inputMode()"
           [attr.maxlength]="maxLength()"
+          [attr.min]="min()"
+          [attr.max]="max()"
           [attr.aria-invalid]="error() ? true : null"
           [attr.aria-describedby]="describedBy()"
           (input)="handleInput($event)"
@@ -85,7 +87,16 @@ const FIELD =
     @if (error()) {
       <span [id]="inputId + '-error'" class="type-caption text-danger">{{ error() }}</span>
     } @else if (hint()) {
-      <span [id]="inputId + '-hint'" class="type-caption text-text-muted">{{ hint() }}</span>
+      <span
+        [id]="inputId + '-hint'"
+        class="inline-flex items-center gap-1.5 type-caption"
+        [class]="hintSuccess() ? 'text-success-text' : 'text-text-muted'"
+      >
+        @if (hintSuccess()) {
+          <app-icon name="check" [size]="14" [strokeWidth]="2.5" />
+        }
+        {{ hint() }}
+      </span>
     }
   `,
 })
@@ -98,6 +109,11 @@ export class TextInputComponent implements ControlValueAccessor {
   readonly inputMode = input<string | null>(null);
   readonly placeholder = input<string | null>(null);
   readonly hint = input<string | null>(null);
+  /** Hint met (e.g. "Aspoň 8 znaků" once the password is long enough): green with a check. */
+  readonly hintSuccess = input(false);
+  /** min / max for type="date" ("YYYY-MM-DD"). */
+  readonly min = input<string | null>(null);
+  readonly max = input<string | null>(null);
   /** Error message; when set the field is marked invalid. */
   readonly error = input<string | null>(null);
   readonly maxLength = input<number | null>(null);

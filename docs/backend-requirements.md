@@ -6,7 +6,7 @@ v `src/app/core/api/generated`) zatím nevrací. Každý řádek odpovídá zna�
 a mapují se ve službách v `src/app/core/services/`. Když backend data doplní,
 stačí změnit mapování ve službě a smazat mock; komponenty se nemění.
 
-Stav k 11. 10. 2026 (fáze 3 redesignu). Priorita: **P1** = bez toho je
+Stav k 11. 10. 2026 (aktualizováno ve fázi 8 redesignu). Priorita: **P1** = bez toho je
 obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drobnost.
 
 ## Příspěvky a feed
@@ -62,7 +62,9 @@ obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drob
 
 | MOCK | Potřeba | Obrazovka | Dnes v API | Návrh | P |
 |---|---|---|---|---|---|
-| – | Přihlášení e-mailem | Přihlášení | jen `nickname` | přijímat e-mail i přezdívku | P3 |
+| – | Přihlášení e-mailem | Přihlášení | jen `nickname`; pole se proto jmenuje „Přezdívka“ | přijímat e-mail i přezdívku | P3 |
+| – | Lokalizované chyby validace | Registrace, úprava profilu | `ProblemDetails.errors` s texty serveru | vracet kódy chyb (`nickname_taken`, `email_invalid`…), klient je přeloží | P3 |
+| – | Text podmínek používání a ochrany údajů | Registrace, Nastavení | nic | URL nebo endpoint s textem | P2 |
 | – | Výběr oddílu při registraci | Registrace | pozvánky (`organisation-invites`), seznam oddílů není | rozhodnout tok (pozvánka vs. výběr); případně `GET /api/organisations` (veřejný seznam) | P2 |
-| – | Souhlas rodiče pod 15 let | Registrace | nic | `parentEmail` v `RegisterRequest` + potvrzovací e-mail | P2 |
+| – | Souhlas rodiče pod 15 let | Registrace | nic; UI jen radí registrovat se s rodičem | `parentEmail` v `RegisterRequest` + potvrzovací e-mail; účet dítěte do potvrzení omezený. **Právní požadavek** (GDPR čl. 8, v ČR hranice 15 let) | P1 |
 | – | Hodnoty enumu `Gender` | Registrace | `0 \| 1 \| 2` bez názvů | potvrdit význam (klient: 0 = neuvedeno, 1 = kluk, 2 = holka) nebo přidat `x-enum-varnames` | P3 |

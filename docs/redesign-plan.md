@@ -408,6 +408,30 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   skupiny“, ať je jasné, že se hledá jen tam.
 - **R54 – Odhlášení** je bez potvrzovacího dialogu (není navržený),
   `AuthService.logout()` přesměruje na `/login`.
+- **R55 – Datum narození přes nativní `<input type="date">` (fáze 8).**
+  Na iOS/Androidu otevře systémový výběr data (kolečka / kalendář), je
+  přístupný a formát řídí jazyk systému. `ion-datetime` by přidal vlastní
+  vzhled, který design nemá. `max` = dnešek, datum v budoucnu nebo
+  nesmyslné se odmítne u pole.
+- **R56 – Registrace (doplňuje R10).** Jméno a Příjmení vedle sebe (2 sloupce),
+  pohlaví jako segmentovaný výběr Kluk / Holka / Neuvádím (výchozí
+  Neuvádím → `Gender.Unknown`), jedno pole hesla se zobrazením hesla
+  (odešle se i jako `passwordConfirm`), nápověda „Aspoň 8 znaků“ zezelená
+  s fajfkou. Výběr oddílu je MOCK a neodesílá se. Souhlas s podmínkami je
+  povinný checkbox; text podmínek zatím neexistuje, proto není odkazem.
+  Úspěšná registrace → Domů (bez sledovaných = stav 1b).
+- **R57 – Mladší 15 let (fáze 8).** Design slibuje „pošleme e-mail rodiči“
+  – API to neumí, takže aplikace to neslibuje: „Registraci udělej spolu
+  s rodičem. Potvrzení rodiče e-mailem připravujeme.“ Pozor: v ČR je hranice
+  pro souhlas se zpracováním osobních údajů dítěte 15 let (GDPR čl. 8,
+  zákon 110/2019 Sb.) – souhlas rodiče je tedy **právní požadavek**,
+  ne jen UX. Zapsáno v backend-requirements jako P1.
+- **R58 – Chyby přihlášení a registrace (fáze 8).** Špatné údaje (400/401)
+  → u pole Heslo „Přezdívka nebo heslo nesedí“, smaže se při dalším psaní.
+  Síť / 5xx → toast se „Zkusit znovu“. Validační chyby serveru
+  (`ProblemDetails.errors`) se přiřadí k polím, ale s vlastní českou hláškou
+  „Zkontroluj tento údaj“ (texty serveru nejsou lokalizované). Žádný
+  AlertController.
 
 ## 6. Fáze a výstup
 

@@ -4,11 +4,6 @@ import { environment } from '../environments/environment';
 import { PlaceholderData } from './pages/placeholder/placeholder.page';
 
 const placeholder = () => import('./pages/placeholder/placeholder.page').then((m) => m.PlaceholderPage);
-const soon = (fallback: string): PlaceholderData => ({
-  titleKey: 'placeholder.soon.title',
-  textKey: 'placeholder.soon.text',
-  fallback,
-});
 
 // Design-system catalog; dev builds only, no auth so it works without the backend.
 const devRoutes: Routes = environment.production
@@ -30,12 +25,11 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => import('./auth/login/login.page').then((m) => m.LoginPage),
   },
-  // Phase 8 replaces these two with real screens.
   {
     path: 'register',
-    loadComponent: placeholder,
-    data: soon('/login'),
+    loadComponent: () => import('./auth/register/register.page').then((m) => m.RegisterPage),
   },
+  // No password reset endpoint yet — informational page.
   {
     path: 'forgot-password',
     loadComponent: placeholder,
