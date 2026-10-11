@@ -1,0 +1,45 @@
+<ion-content>
+  <main class="flex flex-col gap-6 px-4 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))] pb-10">
+    <div class="flex">
+      <app-back-button fallback="/nav/home" />
+    </div>
+
+    @switch (status()) {
+      @case ('loading') {
+        <div class="-mt-8 flex flex-col items-center gap-3" aria-busy="true" [attr.aria-label]="'common.loading' | transloco">
+          <div class="size-24 rounded-[30px] bg-track"></div>
+          <div class="h-7 w-48 rounded-full bg-track"></div>
+          <app-skeleton variant="post-card" class="mt-4 w-full" />
+        </div>
+      }
+      @case ('error') {
+        <section class="flex flex-col items-center gap-3 px-4 pt-6 text-center" role="alert">
+          <h2 class="type-h3 text-text">{{ 'profile.userErrorTitle' | transloco }}</h2>
+          <app-button variant="secondary" (click)="load()">{{ 'common.retry' | transloco }}</app-button>
+        </section>
+      }
+      @case ('ready') {
+        @if (profile(); as profile) {
+          <app-profile-header class="-mt-8" [profile]="profile" />
+          <app-follow-button class="-mt-2" [userId]="profile.person.id" (changed)="onFollowChanged($event)" />
+
+          <section class="flex flex-col gap-3">
+            <h2 class="type-h3 text-text">{{ 'profile.collection' | transloco }}</h2>
+            <app-collection-progress [collection]="profile.collection" />
+          </section>
+
+          <section class="flex flex-col gap-3">
+            <h2 class="type-h3 text-text">{{ 'profile.posts' | transloco }}</h2>
+            @for (post of posts(); track post.id) {
+              <app-post-card [post]="post" (menu)="menuPost.set($event)" />
+            } @empty {
+              <p class="type-body text-text-muted">{{ 'profile.noPostsOther' | transloco }}</p>
+            }
+          </section>
+        }
+      }
+    }
+  </main>
+
+  <app-post-menu-sheet [(post)]="menuPost" (hidden)="removePost($event)" (deleted)="removePost($event)" />
+</ion-content>

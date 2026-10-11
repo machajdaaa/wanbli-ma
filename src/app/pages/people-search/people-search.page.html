@@ -1,0 +1,71 @@
+<ion-content>
+  <header class="flex items-center gap-1.5 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))] pr-4 pb-2 pl-2.5">
+    <app-back-button fallback="/nav/home" class="ml-1" />
+    <app-search-input
+      class="flex-1"
+      [label]="'people.searchLabel' | transloco"
+      [placeholder]="'people.searchPlaceholder' | transloco"
+      [(value)]="query"
+    />
+  </header>
+
+  <main class="flex flex-col gap-2 px-4 pt-4 pb-10">
+    @switch (status()) {
+      @case ('loading') {
+        <div aria-busy="true" [attr.aria-label]="'common.loading' | transloco">
+          <app-skeleton variant="list-row" />
+          <app-skeleton variant="list-row" />
+          <app-skeleton variant="list-row" />
+        </div>
+      }
+      @case ('error') {
+        <section class="flex flex-col items-center gap-3 px-4 pt-6 text-center" role="alert">
+          <h2 class="type-h3 text-text">{{ 'people.errorTitle' | transloco }}</h2>
+          <app-button variant="secondary" (click)="load()">{{ 'common.retry' | transloco }}</app-button>
+        </section>
+      }
+      @case ('ready') {
+        @if (!hasGroup()) {
+          <app-empty-state [title]="'people.noGroupTitle' | transloco" [text]="'people.noGroupText' | transloco" />
+        } @else {
+          <h1 class="mb-1 type-h3 text-text">
+            {{ (query().trim() ? 'people.resultsTitle' : 'people.suggestionsTitle') | transloco }}
+          </h1>
+          @if (results().length) {
+            <ul class="flex flex-col overflow-hidden rounded-16 border border-border bg-surface-raised" aria-live="polite">
+              @for (row of results(); track row.person.id; let last = $last) {
+                <li class="flex min-h-[68px] items-center gap-3 pr-3 pl-3.5" [class.border-b]="!last" [class.border-border-subtle]="!last">
+                  <app-avatar [size]="40" [name]="row.person.name" [imageUrl]="row.person.avatarUrl" [seed]="row.person.id" />
+                  <a [routerLink]="['/users', row.person.id]" class="flex min-w-0 flex-1 flex-col gap-px py-3 text-text">
+                    <span class="truncate type-label">{{ row.person.name }}</span>
+                    <span class="inline-flex items-center gap-1 type-caption text-text-muted">
+                      @if (row.groupName) {
+                        <span class="truncate">{{ row.groupName }}</span>
+                        <span aria-hidden="true">·</span>
+                      }
+                      <app-icon name="feather" [size]="12" />
+                      <span class="shrink-0">{{ row.featherCount | plural: 'feathers' }}</span>
+                    </span>
+                  </a>
+                  <app-follow-button size="sm" [userId]="row.person.id" />
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="flex flex-col items-center gap-1.5 px-6 py-12 text-center" aria-live="polite">
+              <span class="mb-1.5 flex size-16 items-center justify-center rounded-full bg-surface text-icon-inactive">
+                <app-icon name="search" [size]="28" />
+              </span>
+              <h2 class="font-display text-[1.25rem] leading-[26px] font-extrabold text-text">
+                {{ (query().trim() ? 'people.noResultsTitle' : 'people.emptyGroupTitle') | transloco }}
+              </h2>
+              <p class="type-body text-text-muted">
+                {{ (query().trim() ? 'people.noResultsText' : 'people.emptyGroupText') | transloco }}
+              </p>
+            </div>
+          }
+        }
+      }
+    }
+  </main>
+</ion-content>

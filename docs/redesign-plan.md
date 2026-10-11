@@ -386,6 +386,28 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   obrázek, blok se proto nezobrazí (R5); karta je připravená ho ukázat,
   jakmile `AnnouncementVm.info` naplní backend. Autor oznámení je vždy
   označen „Vedoucí“ (oznámení vytváří jen vedoucí v administraci).
+- **R49 – Profil se načítá při každém vstupu** (`ionViewWillEnter`), aby se
+  po návratu z úpravy profilu ukázaly změny. Statistiky „Sledující /
+  Sleduji“ nejsou odkazy – seznamy sledujících nejsou navržené.
+- **R50 – Sledovat / Sleduješ** je sdílená `FollowButtonComponent`
+  nad `PeopleService.followingIds`, takže tlačítka pro stejného člověka
+  (hledání, cizí profil, menu příspěvku) jsou vždy v souladu. Přepnutí je
+  optimistické, počet sledujících na cizím profilu se upraví hned.
+- **R51 – Cizí profil s vlastním id** přesměruje na tab Profil. Skupina
+  cizího uživatele se nezobrazuje (API ji nevrací, nevymýšlí se – R5).
+  Bio, počet per a sbírka cizího uživatele jsou MOCK.
+- **R52 – Úprava profilu:** Jméno a Příjmení zvlášť (API), přezdívka 2–30
+  znaků, bio max. 150 znaků s počítadlem (ukládá se jen v zařízení – MOCK).
+  Chyby u polí po opuštění pole nebo po pokusu o uložení; chyba serveru →
+  toast se „Zkusit znovu“, 409 → „Tahle přezdívka už je obsazená“. Změna
+  fotky ukáže, že zatím nejde (chybí upload endpoint). Po uložení toast
+  a návrat zpět.
+- **R53 – Hledání lidí** filtruje členy vlastní skupiny na klientu (bez
+  diakritiky, podle jména i přezdívky), řazeno podle počtu per (MOCK).
+  Nadpis „Návrhy ze tvé skupiny“ se při hledání změní na „Výsledky ze tvé
+  skupiny“, ať je jasné, že se hledá jen tam.
+- **R54 – Odhlášení** je bez potvrzovacího dialogu (není navržený),
+  `AuthService.logout()` přesměruje na `/login`.
 
 ## 6. Fáze a výstup
 

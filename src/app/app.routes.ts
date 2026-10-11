@@ -54,30 +54,25 @@ export const routes: Routes = [
     loadComponent: placeholder,
     data: { titleKey: 'placeholder.upload.title', textKey: 'placeholder.upload.text' } satisfies PlaceholderData,
   },
-  // Phase 7 replaces these placeholders with the real screens.
   {
     path: 'search',
     canActivate: [authGuard],
-    loadComponent: placeholder,
-    data: soon('/nav/home'),
+    loadComponent: () => import('./pages/people-search/people-search.page').then((m) => m.PeopleSearchPage),
   },
   {
     path: 'users/:id',
     canActivate: [authGuard],
-    loadComponent: placeholder,
-    data: soon('/nav/home'),
+    loadComponent: () => import('./pages/user-profile/user-profile.page').then((m) => m.UserProfilePage),
   },
   {
     path: 'settings',
     canActivate: [authGuard],
-    loadComponent: placeholder,
-    data: soon('/nav/profile'),
+    loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPage),
   },
   {
     path: 'profile/edit',
     canActivate: [authGuard],
-    loadComponent: placeholder,
-    data: soon('/nav/profile'),
+    loadComponent: () => import('./pages/profile-edit/profile-edit.page').then((m) => m.ProfileEditPage),
   },
 
   {
