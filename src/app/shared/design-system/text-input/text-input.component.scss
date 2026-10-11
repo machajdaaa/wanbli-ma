@@ -14,11 +14,11 @@
 
 .app-text-input {
   --background: none;
-  --border-color: var(--wanbli-color-input-border);
-  --border-radius: var(--wanbli-radius-md);
+  --border-color: var(--wanbli-color-border);
+  --border-radius: var(--wanbli-radius-12);
   --border-width: 1px;
-  --color: var(--wanbli-color-text-dark);
-  --highlight-color-focused: var(--wanbli-color-text-dark);
+  --color: var(--wanbli-color-text);
+  --highlight-color-focused: var(--wanbli-color-text);
   --highlight-height: 2px;
   --padding-top: 0.75rem;
   --padding-bottom: 0.75rem;
@@ -26,6 +26,6 @@
   --padding-end: 1rem;
 
   width: 100%;
-  font-family: var(--wanbli-font-family);
+  font-family: var(--wanbli-font-text);
   font-size: 1rem;
 }

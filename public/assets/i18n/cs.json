@@ -1,0 +1,43 @@
+{
+  "app": {
+    "title": "Orlí pera"
+  },
+  "common": {
+    "back": "Zpět",
+    "cancel": "Zrušit",
+    "close": "Zavřít",
+    "retry": "Zkusit znovu",
+    "loading": "Načítám…",
+    "saving": "Ukládám…",
+    "save": "Uložit",
+    "ok": "OK",
+    "more": "více",
+    "soon": "Brzy"
+  },
+  "time": {
+    "today": "dnes {{time}}",
+    "yesterday": "včera {{time}}",
+    "weekday": "{{day}} {{time}}",
+    "dateTime": "{{date}} {{time}}"
+  },
+  "plural": {
+    "feathers": {
+      "one": "{{count}} pero",
+      "few": "{{count}} pera",
+      "many": "{{count}} pera",
+      "other": "{{count}} per"
+    },
+    "members": {
+      "one": "{{count}} člen",
+      "few": "{{count}} členové",
+      "many": "{{count}} člena",
+      "other": "{{count}} členů"
+    },
+    "people": {
+      "one": "{{count}} člověk",
+      "few": "{{count}} lidé",
+      "many": "{{count}} člověka",
+      "other": "{{count}} lidí"
+    }
+  }
+}

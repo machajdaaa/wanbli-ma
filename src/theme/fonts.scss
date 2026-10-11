@@ -4,23 +4,10 @@
  * Variable fonts only (one file covers the whole weight range instead of
  * bundling a dozen static cuts per family). Files live in
  * public/assets/fonts/, served as-is from /assets/fonts/.
+ *
+ * Inter – all UI and body text. Baloo 2 – headings and metric numbers
+ * (700 for H2/H3, 800 for Display/H1/Metric).
  */
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('/assets/fonts/nunito/Nunito-Variable.ttf') format('truetype-variations');
-  font-weight: 200 1000;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Nunito';
-  src: url('/assets/fonts/nunito/Nunito-Italic-Variable.ttf') format('truetype-variations');
-  font-weight: 200 1000;
-  font-style: italic;
-  font-display: swap;
-}
 
 @font-face {
   font-family: 'Inter';
@@ -38,11 +25,10 @@
   font-display: swap;
 }
 
-/* Baloo 2: static ExtraBold cut only, we don't use any other weight */
 @font-face {
   font-family: 'Baloo 2';
-  src: url('/assets/fonts/baloo/Baloo2-ExtraBold.ttf') format('truetype');
-  font-weight: 800;
+  src: url('/assets/fonts/baloo/Baloo2-Variable.ttf') format('truetype-variations');
+  font-weight: 400 800;
   font-style: normal;
   font-display: swap;
 }

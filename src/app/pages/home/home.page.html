@@ -1,9 +1,19 @@
-<div class="page flex flex-col gap-4 overflow-y-auto">
-  <app-daily-challenge-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-</div>
+<ion-content>
+  <div class="page flex flex-col gap-4">
+    <app-daily-challenge-card />
+    @if (isLoading()) {
+      <p class="type-body text-text-muted">Načítání…</p>
+    } @else if (hasError()) {
+      <p class="type-body text-text-muted">Feed se nepodařilo načíst.</p>
+    } @else {
+      @for (post of posts(); track post.id) {
+        <app-activity-card [post]="post" />
+      }
+    }
+  </div>
+
+  <ion-infinite-scroll threshold="25%" [disabled]="!hasNextPage()" (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" loadingText="Načítání dalších…">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>

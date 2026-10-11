@@ -1,9 +1,9 @@
 .daily-challenge-card {
   position: relative;
   overflow: hidden;
-  background: var(--wanbli-daily-challenge-card-bg);
-  border-radius: var(--wanbli-radius-lg);
-  border: var(--wanbli-border-width-sm) solid var(--wanbli-daily-challenge-card-border);
+  background: var(--wanbli-gradient-sky);
+  border-radius: var(--wanbli-radius-24);
+  border: var(--wanbli-border-1) solid var(--wanbli-color-border-sky);
   padding: var(--wanbli-space-5);
   width: 100%;
   height: fit-content;

@@ -1,107 +1,288 @@
 /*
- * Wanbli design tokens
+ * Wanbli design tokens (UI name "Orlí pera")
  * ----------------------------------------------------------------------------
- * Custom CSS variables for the app's own design system, kept separate from
- * Ionic's --ion-color-* theming. Ionic components are restyled to match this
- * palette (see src/app/shared/design-system) rather than kept purely structural —
- * they read these tokens through their own CSS custom properties / shadow
- * parts instead of hardcoded values, same as fully custom components do.
+ * Single source of truth for visual values. Source: design/screens/Main.dc.html
+ * (design system v1, light mode) plus values used inline in the other screens.
  *
- * Categories below are the usual buckets for a design system. Active tokens
- * are real CSS custom properties; commented-out lines are placeholders for
- * categories we don't have values for yet — fill them in as specs arrive
- * instead of hardcoding the value in a component.
+ * Two layers:
+ *   1. Palette  – raw colors named after the design (`forest-900`, `orange-500`).
+ *                 Never referenced directly by components.
+ *   2. Semantic – what a value is for (`--wanbli-color-text`, `--wanbli-color-surface`).
+ *                 Components and Tailwind (@theme in global.scss) use these.
+ *
+ * Dark mode (not implemented yet) will only override the semantic layer, e.g.
+ * under `:root[data-theme='dark'] { --wanbli-color-bg: var(--wanbli-palette-…); }`.
+ * Hence: no hex values outside this file.
  */
 
 :root {
-  /* ---- Colors: brand / action ---- */
-  --wanbli-color-cta-bg: #D9791A;
-  --wanbli-color-cta-border: #E98929;
-  --wanbli-color-cta-text: #F1F1E7;
+  /* ======================================================================
+   * 1. Palette
+   * ==================================================================== */
 
-  /* ---- Colors: borders / dividers ---- */
-  --wanbli-color-input-border: #1D3B19;
-  --wanbli-color-card-border: #D6D7D7;
-  --wanbli-color-daily-challenge-card-border: #C5D7D6;
-  --wanbli-color-eagle-feathers-card-border: #C5D7D6;
-  --wanbli-color-nav-border: #D9D9D9;
-  --wanbli-color-nav-divider: rgba(29, 59, 25, 0.1);
-  --wanbli-border-first-place: #FFD700;
-  --wanbli-border-second-place: #C0C0C0;
-  --wanbli-border-third-place: #CE8946;
-  --wanbli-border-rest-places: #D6D7D7;
+  /* Forest green */
+  --wanbli-palette-forest-900: #1f3a1a; /* headings, text, numbers */
+  --wanbli-palette-forest-700: #1e4019; /* dark banners */
+  --wanbli-palette-forest-600: #2e5527; /* ring on dark banner */
+  --wanbli-palette-forest-500: #5e6b57; /* secondary text */
+  --wanbli-palette-forest-300: #9aa392; /* inactive icons */
+  --wanbli-palette-forest-100: #c9d2c4; /* secondary text on dark banner */
 
-  /* ---- Colors: text ---- */
-  --wanbli-color-text-dark: #1D3B19;
-  --wanbli-color-text-dark-70: rgba(29, 59, 25, 0.7);
-  --wanbli-color-text-light: #F1F1E7;
-  --wanbli-color-text-accent: #F3800E;
+  /* Orange */
+  --wanbli-palette-orange-800: #7a3d0c; /* text on orange-100 */
+  --wanbli-palette-orange-700: #a9531a; /* orange text on light backgrounds (AA, not in design) */
+  --wanbli-palette-orange-600: #c9661a; /* pressed, borders */
+  --wanbli-palette-orange-500: #e07b1f; /* primary action */
+  --wanbli-palette-orange-200: #f1c9a2; /* disabled toggle track */
+  --wanbli-palette-orange-100: #fcebd9; /* subtle highlight */
 
-  /* ---- Colors: state (success/error/warning/info) ---- */
-  /* --wanbli-color-success: ...; */
-  /* --wanbli-color-error: ...; */
-  /* --wanbli-color-warning: ...; */
+  /* Neutrals */
+  --wanbli-palette-white: #ffffff;
+  --wanbli-palette-cream-50: #f7f6f2; /* screen background */
+  --wanbli-palette-cream-100: #f0efe6; /* cards */
+  --wanbli-palette-cream-150: #f3f2eb; /* disabled secondary surface */
+  --wanbli-palette-cream-200: #ecebe3; /* subtle dividers */
+  --wanbli-palette-cream-250: #eceae1; /* disabled primary surface */
+  --wanbli-palette-cream-300: #e6e5db; /* progress track */
+  --wanbli-palette-cream-350: #e4e3d8; /* pressed secondary surface */
+  --wanbli-palette-cream-320: #e5e3d8; /* disabled primary border */
+  --wanbli-palette-border: #deddd2; /* 1px borders */
+  --wanbli-palette-sage-300: #c6cbbd; /* photo placeholders, dashed outlines */
+  --wanbli-palette-sage-350: #bdc3b2; /* second photo placeholder */
+  --wanbli-palette-sage-400: #8c9585; /* disabled text, placeholder icon */
+  --wanbli-palette-sky-200: #c5d7d6; /* sky card border */
 
-  /* ---- Colors: backgrounds (page/card/overlay) ---- */
-  --wanbli-color-bg-app: #F7F7F5;
-  --wanbli-color-bg-card: #F1F1E7;
-  --wanbli-daily-challenge-card-bg: linear-gradient(135deg, #F1F1E7 0%, #AFD7DC 100%);
-  --wanbli-eagle-feathers-card-bg: #12360E;
-  --wanbli-color-bg-nav: #FFFFFF;
-  --wanbli-bg-first-place: #FFD70080;
-  --wanbli-bg-second-place:#C0C0C080;
-  --wanbli-bg-third-place:#CE894680;
-  --wanbli-bg-rest-places: #F1F1E7;
+  /* States */
+  --wanbli-palette-green-600: #3e8e41;
+  --wanbli-palette-green-700: #2b6a2e;
+  --wanbli-palette-green-100: #e2efe2;
+  --wanbli-palette-amber-500: #d99a1b;
+  --wanbli-palette-red-600: #c8442f;
+  --wanbli-palette-red-700: #a9371f;
+  --wanbli-palette-red-300: #e3a99d;
+  --wanbli-palette-red-200: #efc7bf;
+  --wanbli-palette-red-100: #fbe7e3;
+
+  /* Lights (1.–4. světlo): color = dot / progress, surface = tag background, text = tag text */
+  --wanbli-palette-light-1: #5b8c3a;
+  --wanbli-palette-light-1-surface: #e3ecda;
+  --wanbli-palette-light-1-text: #2f5a1a;
+  --wanbli-palette-light-2: #3d7ea6;
+  --wanbli-palette-light-2-surface: #dce9f1;
+  --wanbli-palette-light-2-text: #1f4e6b;
+  --wanbli-palette-light-3: #b5523b;
+  --wanbli-palette-light-3-surface: #f3e0da;
+  --wanbli-palette-light-3-text: #7a2e1e;
+  --wanbli-palette-light-4: #d4a017;
+  --wanbli-palette-light-4-surface: #f6eccb;
+  --wanbli-palette-light-4-text: #6b4f00;
+
+  /* Grand challenge */
+  --wanbli-palette-gold-100: #fcefb4;
+  --wanbli-palette-gold-300: #e9c75a;
+  --wanbli-palette-gold-600: #b88a0e;
+  --wanbli-palette-gold-900: #5a4200;
+
+  /* Medals (fill / edge) */
+  --wanbli-palette-medal-gold: #ffe87f;
+  --wanbli-palette-medal-gold-edge: #e8c400;
+  --wanbli-palette-medal-silver: #e0e0e0;
+  --wanbli-palette-medal-silver-edge: #bdbdbd;
+  --wanbli-palette-medal-bronze: #e4c3a2;
+  --wanbli-palette-medal-bronze-edge: #c98a4f;
+
+  /* Avatar tints (initials background), picked deterministically by user id */
+  --wanbli-palette-tint-1: #dde8d2;
+  --wanbli-palette-tint-2: #d6e6ef;
+  --wanbli-palette-tint-3: #f1dcd5;
+  --wanbli-palette-tint-4: #f4e8c1;
+  --wanbli-palette-tint-5: #e2e5da;
+
+  /* Sky gradient stops (daily challenge, empty state) */
+  --wanbli-palette-sky-a: #f1f1e7;
+  --wanbli-palette-sky-b: #dbe9e3;
+  --wanbli-palette-sky-c: #c1dfdf;
+
+  /* ======================================================================
+   * 2. Semantic
+   * ==================================================================== */
+
+  /* Backgrounds & surfaces */
+  --wanbli-color-bg: var(--wanbli-palette-cream-50);
+  --wanbli-color-surface: var(--wanbli-palette-cream-100);
+  --wanbli-color-surface-raised: var(--wanbli-palette-white);
+  --wanbli-color-surface-pressed: var(--wanbli-palette-cream-350);
+  --wanbli-color-surface-disabled: var(--wanbli-palette-cream-150);
+  --wanbli-color-surface-dark: var(--wanbli-palette-forest-700);
+  --wanbli-color-placeholder: var(--wanbli-palette-sage-300);
+  --wanbli-color-placeholder-alt: var(--wanbli-palette-sage-350);
+  --wanbli-color-track: var(--wanbli-palette-cream-300);
+
+  /* Borders */
+  --wanbli-color-border: var(--wanbli-palette-border);
+  --wanbli-color-border-subtle: var(--wanbli-palette-cream-200);
+  --wanbli-color-border-strong: var(--wanbli-palette-sage-300);
+  --wanbli-color-border-sky: var(--wanbli-palette-sky-200);
+
+  /* Text */
+  --wanbli-color-text: var(--wanbli-palette-forest-900);
+  --wanbli-color-text-muted: var(--wanbli-palette-forest-500);
+  --wanbli-color-text-disabled: var(--wanbli-palette-sage-400);
+  --wanbli-color-text-on-dark: var(--wanbli-palette-white);
+  --wanbli-color-text-on-dark-muted: var(--wanbli-palette-forest-100);
+  --wanbli-color-text-accent: var(--wanbli-palette-orange-700);
+  --wanbli-color-icon-inactive: var(--wanbli-palette-forest-300);
+
+  /* Primary action (orange) */
+  --wanbli-color-primary: var(--wanbli-palette-orange-500);
+  --wanbli-color-primary-pressed: var(--wanbli-palette-orange-600);
+  --wanbli-color-primary-border: var(--wanbli-palette-orange-600);
+  --wanbli-color-primary-subtle: var(--wanbli-palette-orange-100);
+  --wanbli-color-primary-subtle-text: var(--wanbli-palette-orange-800);
+  --wanbli-color-on-primary: var(--wanbli-palette-white);
+  --wanbli-color-primary-disabled: var(--wanbli-palette-cream-250);
+  --wanbli-color-primary-disabled-border: var(--wanbli-palette-cream-320);
+  --wanbli-color-toggle-disabled: var(--wanbli-palette-orange-200);
+
+  /* States */
+  --wanbli-color-success: var(--wanbli-palette-green-600);
+  --wanbli-color-success-surface: var(--wanbli-palette-green-100);
+  --wanbli-color-success-text: var(--wanbli-palette-green-700);
+  --wanbli-color-warning: var(--wanbli-palette-amber-500);
+  --wanbli-color-danger: var(--wanbli-palette-red-600);
+  --wanbli-color-danger-pressed: var(--wanbli-palette-red-700);
+  --wanbli-color-danger-surface: var(--wanbli-palette-red-100);
+  --wanbli-color-danger-border: var(--wanbli-palette-red-200);
+  --wanbli-color-danger-border-pressed: var(--wanbli-palette-red-300);
+
+  /* Lights */
+  --wanbli-color-light-1: var(--wanbli-palette-light-1);
+  --wanbli-color-light-1-surface: var(--wanbli-palette-light-1-surface);
+  --wanbli-color-light-1-text: var(--wanbli-palette-light-1-text);
+  --wanbli-color-light-2: var(--wanbli-palette-light-2);
+  --wanbli-color-light-2-surface: var(--wanbli-palette-light-2-surface);
+  --wanbli-color-light-2-text: var(--wanbli-palette-light-2-text);
+  --wanbli-color-light-3: var(--wanbli-palette-light-3);
+  --wanbli-color-light-3-surface: var(--wanbli-palette-light-3-surface);
+  --wanbli-color-light-3-text: var(--wanbli-palette-light-3-text);
+  --wanbli-color-light-4: var(--wanbli-palette-light-4);
+  --wanbli-color-light-4-surface: var(--wanbli-palette-light-4-surface);
+  --wanbli-color-light-4-text: var(--wanbli-palette-light-4-text);
+
+  /* Grand challenge */
+  --wanbli-color-gc-surface: var(--wanbli-palette-gold-100);
+  --wanbli-color-gc-text: var(--wanbli-palette-gold-900);
+  --wanbli-color-gc-star: var(--wanbli-palette-gold-600);
+  --wanbli-color-gc-outline: var(--wanbli-palette-gold-300);
+
+  /* Medals */
+  --wanbli-color-medal-gold: var(--wanbli-palette-medal-gold);
+  --wanbli-color-medal-gold-edge: var(--wanbli-palette-medal-gold-edge);
+  --wanbli-color-medal-silver: var(--wanbli-palette-medal-silver);
+  --wanbli-color-medal-silver-edge: var(--wanbli-palette-medal-silver-edge);
+  --wanbli-color-medal-bronze: var(--wanbli-palette-medal-bronze);
+  --wanbli-color-medal-bronze-edge: var(--wanbli-palette-medal-bronze-edge);
+
+  /* Badges */
+  --wanbli-color-leader: var(--wanbli-palette-forest-700);
+  --wanbli-color-you: var(--wanbli-palette-orange-600);
+
+  /* Avatar tints */
+  --wanbli-color-tint-1: var(--wanbli-palette-tint-1);
+  --wanbli-color-tint-2: var(--wanbli-palette-tint-2);
+  --wanbli-color-tint-3: var(--wanbli-palette-tint-3);
+  --wanbli-color-tint-4: var(--wanbli-palette-tint-4);
+  --wanbli-color-tint-5: var(--wanbli-palette-tint-5);
+
+  /* Overlays */
+  --wanbli-color-scrim: rgba(20, 36, 16, 0.48); /* behind bottom sheets */
+  --wanbli-color-photo-overlay: rgba(31, 58, 26, 0.62); /* "+N" over a photo */
+  --wanbli-color-on-dark-subtle: rgba(255, 255, 255, 0.12); /* toast action */
+  --wanbli-color-glass: rgba(255, 255, 255, 0.6); /* back button on tinted header */
+
+  /* Gradients */
+  --wanbli-gradient-sky: linear-gradient(
+    165deg,
+    var(--wanbli-palette-sky-a) 25%,
+    var(--wanbli-palette-sky-b) 60%,
+    var(--wanbli-palette-sky-c) 100%
+  );
+  /* Fade from transparent to the screen background under the floating navbar */
+  --wanbli-gradient-navbar-fade: linear-gradient(
+    180deg,
+    rgba(247, 246, 242, 0) 0%,
+    rgba(247, 246, 242, 0.92) 55%,
+    var(--wanbli-color-bg) 100%
+  );
+
+  /* ---- Shadows ---- */
+  --wanbli-shadow-navbar: 0 12px 32px rgba(31, 58, 26, 0.14), 0 2px 6px rgba(31, 58, 26, 0.08);
+  --wanbli-shadow-fab: 0 0 0 6px var(--wanbli-color-bg), 0 10px 24px rgba(224, 123, 31, 0.45),
+    0 0 36px rgba(224, 123, 31, 0.35);
+  --wanbli-shadow-cta: 0 8px 20px rgba(224, 123, 31, 0.28);
+  --wanbli-shadow-toast: 0 8px 24px rgba(31, 58, 26, 0.25);
+  --wanbli-shadow-sheet: 0 -8px 32px rgba(20, 36, 16, 0.18);
+  --wanbli-shadow-knob: 0 1px 3px rgba(31, 58, 26, 0.3);
+  --wanbli-shadow-pressed: inset 0 2px 0 rgba(0, 0, 0, 0.12);
+  --wanbli-shadow-focus: 0 0 0 4px var(--wanbli-color-primary-subtle);
 
   /* ---- Radius ---- */
-  --wanbli-radius-md: 0.625rem;
-  --wanbli-radius-lg: 1.25rem;
+  --wanbli-radius-8: 0.5rem; /* badges, tiles */
+  --wanbli-radius-12: 0.75rem; /* buttons, photos, inputs */
+  --wanbli-radius-16: 1rem; /* cards */
+  --wanbli-radius-24: 1.5rem; /* banners, bottom sheet */
+  --wanbli-radius-28: 1.75rem; /* tinted detail headers */
+  --wanbli-radius-full: 999px; /* pills, navbar */
 
   /* ---- Border width ---- */
-  --wanbli-border-width-sm: 1px;
-  --wanbli-border-width-md: 2px;
+  --wanbli-border-1: 1px;
+  --wanbli-border-1-5: 1.5px;
+  --wanbli-border-2: 2px;
 
-  /* ---- Typography: font family ---- */
-  --wanbli-font-family: 'Nunito', sans-serif; /* UI elements (buttons, inputs) */
-  --wanbli-font-family-text: 'Inter', sans-serif; /* Body/paragraph text */
-  --wanbli-font-family-heading: 'Baloo 2', sans-serif; /* Headings/display, ExtraBold only */
+  /* ---- Spacing (4 px grid) ---- */
+  --wanbli-space-1: 0.25rem; /* 4  icon ↔ text in a badge */
+  --wanbli-space-2: 0.5rem; /* 8  between photos */
+  --wanbli-space-3: 0.75rem; /* 12 between cards */
+  --wanbli-space-4: 1rem; /* 16 screen edge, card padding */
+  --wanbli-space-5: 1.25rem; /* 20 */
+  --wanbli-space-6: 1.5rem; /* 24 between sections */
+  --wanbli-space-8: 2rem; /* 32 large offset */
+  --wanbli-space-10: 2.5rem; /* 40 */
 
-  /* ---- Typography: font size scale ---- */
-  --wanbli-font-size-12: 0.75rem;
-  --wanbli-font-size-14: 0.875rem;
-  --wanbli-font-size-15: 0.9375rem;
-  --wanbli-font-size-16: 1rem;
-  --wanbli-font-size-24: 1.5rem;
-  --wanbli-font-size-28: 1.75rem;
+  /* ---- Sizes ---- */
+  --wanbli-size-touch: 2.75rem; /* 44 minimum touch target */
+  --wanbli-size-control: 3rem; /* 48 button / input height */
+  --wanbli-size-navbar: 3.75rem; /* 60 floating navbar pill */
+  --wanbli-size-navbar-fab: 4rem; /* 64 center button */
+  --wanbli-size-navbar-area: 7.25rem; /* 116 navbar incl. bottom gap – content reserve */
 
-  /* ---- Typography: font weight ---- */
-  --wanbli-font-weight-regular: 400;
-  --wanbli-font-weight-medium: 500;
-  --wanbli-font-weight-bold: 700;
-  --wanbli-font-weight-extrabold: 800; /* Baloo 2 only */
+  /* ---- Typography: families ---- */
+  --wanbli-font-text: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --wanbli-font-display: 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
 
-  /* ---- Typography: line height ---- */
-  /* Paired 1:1 with the font-size scale above (line-height-N goes with font-size-N) */
-  --wanbli-line-height-12: 1rem;
-  --wanbli-line-height-14: 1.25rem;
-  --wanbli-line-height-15: 1.3125rem;
-  --wanbli-line-height-16: 1.375rem;
-  --wanbli-line-height-24: 1.875rem;
-  --wanbli-line-height-28: 2.125rem;
+  /* ---- Typography: scale (Main.dc.html → Typografie) ---- */
+  --wanbli-text-display: 800 2rem/2.375rem var(--wanbli-font-display); /* 32/38 */
+  --wanbli-text-h1: 800 1.625rem/2rem var(--wanbli-font-display); /* 26/32 */
+  --wanbli-text-h2: 700 1.375rem/1.75rem var(--wanbli-font-display); /* 22/28 */
+  --wanbli-text-h3: 700 1.125rem/1.5rem var(--wanbli-font-display); /* 18/24 */
+  --wanbli-text-metric: 800 2rem/2.25rem var(--wanbli-font-display); /* 32/36 */
+  --wanbli-text-body-l: 400 1rem/1.5rem var(--wanbli-font-text); /* 16/24 */
+  --wanbli-text-body: 400 0.875rem/1.25rem var(--wanbli-font-text); /* 14/20 */
+  --wanbli-text-label: 600 0.875rem/1.25rem var(--wanbli-font-text); /* 14/20 */
+  --wanbli-text-caption: 500 0.75rem/1rem var(--wanbli-font-text); /* 12/16 */
+  --wanbli-text-overline: 600 0.75rem/1rem var(--wanbli-font-text); /* 12/16, uppercase */
+  --wanbli-text-button: 600 1rem/1.25rem var(--wanbli-font-text); /* 16/20 */
 
-  /* ---- Spacing scale ---- */
-  --wanbli-space-1: 0.25rem;
-  --wanbli-space-2: 0.5rem;
-  --wanbli-space-3: 0.75rem;
-  --wanbli-space-4: 1rem;
-  --wanbli-space-5: 1.25rem;
-  --wanbli-space-6: 1.5rem;
+  --wanbli-tracking-display: -0.3px;
+  --wanbli-tracking-metric: -0.5px;
+  --wanbli-tracking-overline: 1.2px;
 
-  /* ---- Effects: transition timing ---- */
-  /* --wanbli-transition-fast: 0.15s ease; */
+  /* ---- Motion ---- */
+  --wanbli-transition-fast: 120ms ease-out;
+  --wanbli-transition-base: 200ms ease-out;
 
-  /* ---- Z-index scale ---- */
-  /* --wanbli-z-dropdown: 100; */
-  /* --wanbli-z-modal: 200; */
-  /* --wanbli-z-toast: 300; */
+  /* ---- Z-index ---- */
+  --wanbli-z-navbar: 10;
+  --wanbli-z-sticky: 5;
+  --wanbli-z-toast: 30;
 }
