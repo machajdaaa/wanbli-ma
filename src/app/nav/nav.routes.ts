@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
 import { NavPage } from './nav.page';
-import { PlaceholderData } from '../pages/placeholder/placeholder.page';
-
-const placeholder = () => import('../pages/placeholder/placeholder.page').then((m) => m.PlaceholderPage);
 
 // Screens inside a tab are children of that tab's path, so they stay in the
 // tab's navigation stack and keep the navbar.
@@ -22,21 +19,17 @@ export const routes: Routes = [
             path: '',
             loadComponent: () => import('../pages/eagle-feathers/eagle-feathers.page').then((m) => m.EagleFeathersPage),
           },
-          // Phase 5 replaces these placeholders with the real screens.
           {
             path: 'category/:light/:section',
-            loadComponent: placeholder,
-            data: { titleKey: 'placeholder.soon.title', textKey: 'placeholder.soon.text', fallback: '/nav/eagle-feathers' } satisfies PlaceholderData,
+            loadComponent: () => import('../pages/eagle-feathers/category/category.page').then((m) => m.CategoryPage),
           },
           {
             path: 'feather/:id',
-            loadComponent: placeholder,
-            data: { titleKey: 'placeholder.soon.title', textKey: 'placeholder.soon.text', fallback: '/nav/eagle-feathers' } satisfies PlaceholderData,
+            loadComponent: () => import('../pages/eagle-feathers/feather/feather.page').then((m) => m.FeatherPage),
           },
           {
             path: 'search',
-            loadComponent: placeholder,
-            data: { titleKey: 'placeholder.soon.title', textKey: 'placeholder.soon.text', fallback: '/nav/eagle-feathers' } satisfies PlaceholderData,
+            loadComponent: () => import('../pages/eagle-feathers/search/feather-search.page').then((m) => m.FeatherSearchPage),
           },
         ],
       },

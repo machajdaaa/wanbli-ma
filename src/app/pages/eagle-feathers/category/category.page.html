@@ -1,0 +1,94 @@
+<ion-content>
+  @if (status() === 'ready' && detail(); as detail) {
+    <header
+      class="flex flex-col gap-4 rounded-b-28 px-4 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))] pb-5"
+      [class]="styles()!.surface"
+    >
+      <app-back-button variant="glass" fallback="/nav/eagle-feathers" [label]="'feathers.backToCatalog' | transloco" />
+      <div class="flex items-center gap-3.5">
+        <div
+          class="flex size-16 shrink-0 items-center justify-center rounded-[20px] bg-white font-display text-[1.625rem] leading-none font-extrabold"
+          [class]="styles()!.text"
+        >
+          {{ detail.category.code }}
+        </div>
+        <div class="flex min-w-0 flex-col gap-0.5">
+          <span class="inline-flex items-center gap-1.5 type-overline" [class]="styles()!.text">
+            <span class="size-2 rounded-full" [class]="styles()!.bg"></span>
+            {{ 'ds.light.name' | transloco: { light: detail.category.light } }}
+          </span>
+          <h1 class="font-display text-[1.75rem] leading-8 font-extrabold text-text">{{ detail.category.name }}</h1>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex items-baseline justify-between gap-2">
+          <span class="font-display text-[1rem] leading-5 font-bold text-text">
+            {{ 'feathers.categoryDone' | transloco: { done: detail.category.done, total: detail.category.total } }}
+          </span>
+          <span class="inline-flex items-center gap-1 type-caption font-semibold" [class]="styles()!.text">
+            <app-icon name="star" [size]="12" class="text-gc-star" />
+            {{ 'feathers.gcCount' | transloco: { count: detail.gcDone } }}
+          </span>
+        </div>
+        <app-progress-bar
+          [light]="detail.category.light"
+          [onTint]="true"
+          [value]="detail.category.done"
+          [max]="detail.category.total"
+          [ariaLabel]="'feathers.categoryDone' | transloco: { done: detail.category.done, total: detail.category.total }"
+        />
+      </div>
+    </header>
+
+    <main class="flex flex-col gap-3 px-4 pt-4">
+      @if (detail.rules) {
+        <section class="flex flex-col gap-1.5 rounded-12 border border-border bg-surface-raised px-3.5 py-3">
+          <h2 class="inline-flex items-center gap-1.5 type-label text-text">
+            <app-icon name="document" [size]="16" />
+            {{ 'feathers.rules' | transloco }}
+          </h2>
+          <p
+            id="category-rules"
+            class="font-text text-[0.8125rem] leading-[19px] text-text-muted"
+            [class.line-clamp-3]="!rulesExpanded()"
+          >
+            {{ detail.rules }}
+          </p>
+          <button
+            type="button"
+            class="relative self-start font-text text-[0.8125rem] leading-[18px] font-semibold text-text underline decoration-primary decoration-2 underline-offset-4
+                   after:absolute after:-inset-y-3 after:inset-x-0 after:content-['']"
+            aria-controls="category-rules"
+            [attr.aria-expanded]="rulesExpanded()"
+            (click)="rulesExpanded.set(!rulesExpanded())"
+          >
+            {{ (rulesExpanded() ? 'feathers.rulesLess' : 'feathers.rulesAll') | transloco }}
+          </button>
+        </section>
+      }
+
+      <h2 class="mt-1 font-display text-[1.25rem] leading-[26px] font-bold text-text">{{ 'feathers.inCategory' | transloco }}</h2>
+      <ul class="flex flex-col gap-2.5">
+        @for (feather of detail.feathers; track feather.id) {
+          <li><app-feather-row [feather]="feather" /></li>
+        }
+      </ul>
+    </main>
+  } @else {
+    <main class="flex flex-col gap-4 px-4 pt-screen">
+      <app-back-button fallback="/nav/eagle-feathers" [label]="'feathers.backToCatalog' | transloco" />
+      @if (status() === 'loading') {
+        <div class="flex flex-col gap-2.5" aria-busy="true" [attr.aria-label]="'common.loading' | transloco">
+          <app-skeleton variant="list-row" />
+          <app-skeleton variant="list-row" />
+          <app-skeleton variant="list-row" />
+        </div>
+      } @else {
+        <section class="flex flex-col items-center gap-3 px-4 pt-10 text-center" role="alert">
+          <h2 class="type-h3 text-text">{{ 'feathers.categoryError' | transloco }}</h2>
+          <app-button variant="secondary" (click)="load()">{{ 'common.retry' | transloco }}</app-button>
+        </section>
+      }
+    </main>
+  }
+</ion-content>

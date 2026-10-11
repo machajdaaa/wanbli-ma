@@ -1,0 +1,94 @@
+<ion-content>
+  <header class="flex flex-col gap-3 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))] pr-4 pb-1 pl-2.5">
+    <div class="flex items-center gap-1.5">
+      <app-back-button fallback="/nav/eagle-feathers" [label]="'feathers.backToCatalog' | transloco" class="ml-1" />
+      <app-search-input
+        class="flex-1"
+        [label]="'feathers.searchLabel' | transloco"
+        [placeholder]="'feathers.searchPlaceholder' | transloco"
+        [(value)]="query"
+      />
+    </div>
+    <div class="flex items-center gap-2 overflow-x-auto pl-1.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <span class="shrink-0 type-caption text-text-muted">{{ 'feathers.tryChips' | transloco }}</span>
+      @for (chip of chips; track chip.key) {
+        <button
+          type="button"
+          class="h-9 shrink-0 rounded-full border px-3.5 font-text text-[0.8125rem] leading-[18px] font-semibold"
+          [class]="
+            normalizedQuery() === chip.key
+              ? 'border-primary bg-primary-subtle text-primary-subtle-text'
+              : 'border-border bg-surface-raised text-text'
+          "
+          [attr.aria-pressed]="normalizedQuery() === chip.key"
+          (click)="pickChip(chip.label)"
+        >
+          {{ chip.label }}
+        </button>
+      }
+    </div>
+  </header>
+
+  <main class="flex flex-col gap-2.5 px-4 pt-4">
+    @switch (state().kind) {
+      @case ('idle') {
+        <div class="flex flex-col items-center gap-1.5 px-6 pt-10 text-center">
+          <h2 class="font-display text-[1.25rem] leading-[26px] font-extrabold text-text">{{ 'feathers.searchIdleTitle' | transloco }}</h2>
+          <p class="type-body text-text-muted">{{ 'feathers.searchIdleText' | transloco }}</p>
+        </div>
+      }
+      @case ('error') {
+        <section class="flex flex-col items-center gap-3 px-6 pt-10 text-center" role="alert">
+          <h2 class="type-h3 text-text">{{ 'feathers.errorTitle' | transloco }}</h2>
+          <app-button variant="secondary" (click)="retrySearch()">{{ 'common.retry' | transloco }}</app-button>
+        </section>
+      }
+      @case ('loading') {
+        <p class="type-body text-text-muted" aria-live="polite">{{ 'common.loading' | transloco }}</p>
+      }
+      @case ('results') {
+        @if (results(); as results) {
+          @if (results.length) {
+            <p class="font-text text-[0.8125rem] leading-[18px] font-semibold text-text-muted" aria-live="polite">
+              {{ results.length | plural: 'feathers' }}
+            </p>
+            <ul class="flex flex-col overflow-hidden rounded-16 border border-border bg-surface-raised">
+              @for (r of results; track r.id; let last = $last) {
+                <li [class.border-b]="!last" [class.border-border-subtle]="!last">
+                  <a
+                    [routerLink]="['/nav/eagle-feathers/feather', r.id]"
+                    class="flex min-h-[72px] items-center gap-3 py-2.5 pr-2.5 pl-3 text-text"
+                  >
+                    <span
+                      class="flex size-12 shrink-0 items-center justify-center rounded-12 font-display text-[0.9375rem] leading-none font-extrabold"
+                      [class]="styles[r.light].surface + ' ' + styles[r.light].text"
+                      >{{ r.code }}</span
+                    >
+                    <span class="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <span class="font-text text-[0.9375rem] leading-5 font-bold">{{ r.name }}</span>
+                      <span class="type-caption text-text-muted">
+                        {{ 'ds.light.name' | transloco: { light: r.light } }} · {{ r.categoryName }}
+                      </span>
+                    </span>
+                    @if (r.deedDone) {
+                      <app-badge variant="deed-done" />
+                    }
+                    <app-icon name="chevron-right" [size]="20" class="text-icon-inactive" />
+                  </a>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="flex flex-col items-center gap-1.5 px-6 py-12 text-center" aria-live="polite">
+              <span class="mb-1.5 flex size-16 items-center justify-center rounded-full bg-surface text-icon-inactive">
+                <app-icon name="search" [size]="28" />
+              </span>
+              <h2 class="font-display text-[1.25rem] leading-[26px] font-extrabold text-text">{{ 'feathers.noResultsTitle' | transloco }}</h2>
+              <p class="type-body text-text-muted">{{ 'feathers.noResultsText' | transloco }}</p>
+            </div>
+          }
+        }
+      }
+    }
+  </main>
+</ion-content>

@@ -5,7 +5,7 @@ import { IconComponent } from '../icon/icon.component';
 import { IconName } from '../icon/icons';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'text' | 'destructive';
-export type ButtonSize = 'md' | 'sm';
+export type ButtonSize = 'lg' | 'md' | 'sm';
 
 const BASE =
   'relative inline-flex items-center justify-center gap-2 whitespace-nowrap select-none ' +
@@ -13,6 +13,8 @@ const BASE =
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-pressed';
 
 const SIZES: Record<ButtonSize, string> = {
+  // Sheet buttons and pinned CTAs (PeroDetail "Přidat splnění").
+  lg: 'h-[52px] px-5 rounded-12 text-[1rem] leading-5',
   md: 'h-12 px-5 rounded-12 text-[1rem] leading-5',
   // Banner CTAs ("Začít", "Do toho!") are 36 px tall in the design; the
   // ::after layer extends the touch target to 44 px.

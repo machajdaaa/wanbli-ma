@@ -1,0 +1,202 @@
+<ion-content>
+  @if (status() === 'ready' && detail(); as f) {
+    <header
+      class="flex flex-col gap-3.5 rounded-b-28 px-4 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))] pb-[22px]"
+      [class]="styles()!.surface"
+    >
+      <div class="flex items-center gap-2.5">
+        <app-back-button variant="glass" fallback="/nav/eagle-feathers" />
+        <span class="font-text text-[0.8125rem] leading-[18px] font-semibold" [class]="styles()!.text">
+          {{ 'ds.light.name' | transloco: { light: f.light } }} · {{ f.categoryCode }} {{ f.categoryName }}
+        </span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <span
+          class="inline-flex h-[26px] items-center self-start rounded-8 bg-white px-[9px] font-display text-[0.875rem] leading-none font-extrabold"
+          [class]="styles()!.text"
+          >{{ f.code }}</span
+        >
+        <h1 class="font-display text-[2rem] leading-9 font-extrabold text-text">{{ f.name }}</h1>
+        @if (f.measure) {
+          <span class="inline-flex h-[26px] items-center self-start rounded-8 bg-white/65 px-[9px] type-caption font-semibold text-text">
+            {{ f.measure }}
+          </span>
+        }
+      </div>
+    </header>
+
+    <main class="flex flex-col gap-6 px-4 pt-4 pb-[calc(var(--wanbli-space-10)+52px+var(--wanbli-space-8))]">
+      <!-- Your state -->
+      <section
+        class="flex flex-col overflow-hidden rounded-16 border border-border bg-surface-raised"
+        [attr.aria-label]="'feathers.yourState' | transloco"
+      >
+        <div class="flex items-center gap-3 border-b border-border-subtle p-3.5">
+          @if (f.deedDone) {
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-success text-white">
+              <app-icon name="check" [size]="18" [strokeWidth]="3" />
+            </span>
+          } @else {
+            <span class="size-9 shrink-0 rounded-full border-2 border-dashed border-border-strong"></span>
+          }
+          <div class="flex flex-1 flex-col gap-px">
+            <span class="font-text text-[1rem] leading-[22px] font-bold text-text">{{ 'ds.badge.deed' | transloco }}</span>
+            <span class="font-text text-[0.8125rem] leading-[18px] font-medium text-text-muted">
+              @if (f.deedDone) {
+                {{ 'feathers.doneOn' | transloco: { date: (f.deedDoneAt | date: 'd. M. y') } }}{{ f.deedResult ? ' · ' + f.deedResult : '' }}
+              } @else {
+                {{ 'feathers.notDone' | transloco }}
+              }
+            </span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3.5">
+          @if (f.gcDone) {
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-gc-surface text-gc-star">
+              <app-icon name="star" [size]="16" />
+            </span>
+          } @else {
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-gc-outline text-gc-star">
+              <app-icon name="star-outline" [size]="16" />
+            </span>
+          }
+          <div class="flex flex-1 flex-col gap-px">
+            <span class="font-text text-[1rem] leading-[22px] font-bold text-text">{{ 'ds.badge.grandChallenge' | transloco }}</span>
+            <span class="font-text text-[0.8125rem] leading-[18px] font-medium text-text-muted">
+              @if (f.gcDone) {
+                {{ 'feathers.doneOn' | transloco: { date: (f.gcDoneAt | date: 'd. M. y') } }}
+              } @else {
+                {{ 'feathers.notDone' | transloco }}
+              }
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Task -->
+      <section class="flex flex-col gap-2.5">
+        <h2 class="font-display text-[1.25rem] leading-[26px] font-bold text-text">{{ 'feathers.task' | transloco }}</h2>
+        <div class="flex flex-col gap-1.5 rounded-16 border border-border bg-surface p-3.5">
+          <app-badge variant="deed-done" class="self-start" [label]="'ds.badge.deed' | transloco" />
+          <p class="font-text text-[0.9375rem] leading-[22px] text-text">{{ f.deedText }}</p>
+        </div>
+        @if (f.gcText) {
+          <div class="flex flex-col gap-1.5 rounded-16 border border-border bg-surface p-3.5">
+            <app-badge variant="gc-done" class="self-start" />
+            <p class="font-text text-[0.9375rem] leading-[22px] text-text">{{ f.gcText }}</p>
+          </div>
+        }
+      </section>
+
+      <!-- Limits -->
+      @if (f.limits; as limits) {
+        <section class="flex flex-col gap-2.5">
+          <div class="flex items-baseline justify-between">
+            <h2 class="font-display text-[1.25rem] leading-[26px] font-bold text-text">{{ 'feathers.limits' | transloco }}</h2>
+            <span class="type-caption text-text-muted">{{ limits.unitLabel }}</span>
+          </div>
+          <div class="flex flex-col gap-2.5 rounded-16 border border-border bg-surface-raised p-3.5">
+            <app-segmented-control
+              size="sm"
+              mode="radiogroup"
+              [ariaLabel]="'feathers.gender' | transloco"
+              [options]="[
+                { value: 'men', label: 'feathers.men' | transloco },
+                { value: 'women', label: 'feathers.women' | transloco }
+              ]"
+              [(value)]="gender"
+            />
+            <table class="w-full border-collapse">
+              <caption class="sr-only">{{ 'feathers.limits' | transloco }}</caption>
+              <thead>
+                <tr class="font-text text-[0.6875rem] leading-[14px] font-semibold tracking-[0.8px] uppercase">
+                  <th scope="col" class="px-1 py-1.5 text-left text-text-muted">{{ 'feathers.age' | transloco }}</th>
+                  <th scope="col" class="px-1 py-1.5 text-right text-success-text">{{ 'ds.badge.deed' | transloco }}</th>
+                  <th scope="col" class="px-1 py-1.5 text-right text-gc-text">{{ 'feathers.gcShort' | transloco }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of limitRows(); track row.age) {
+                  <tr class="border-t border-border-subtle">
+                    <th scope="row" class="px-1 py-2.5 text-left type-label text-text">{{ row.age }}</th>
+                    <td class="px-1 py-2.5 text-right font-display text-[1.125rem] leading-[22px] font-bold text-text">{{ row.deed }}</td>
+                    <td class="px-1 py-2.5 text-right font-display text-[1.125rem] leading-[22px] font-bold text-gc-text">{{ row.gc }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </section>
+      }
+
+      <!-- Glossary -->
+      @if (f.terms.length) {
+        <section class="flex flex-col gap-2.5">
+          <h2 class="font-display text-[1.25rem] leading-[26px] font-bold text-text">{{ 'feathers.terms' | transloco }}</h2>
+          <dl class="flex flex-col overflow-hidden rounded-16 border border-border bg-surface-raised">
+            @for (term of f.terms; track term.term; let last = $last) {
+              <div class="flex flex-col gap-0.5 px-3.5 py-3" [class.border-b]="!last" [class.border-border-subtle]="!last">
+                <dt class="font-text text-[0.875rem] leading-5 font-bold text-text">{{ term.term }}</dt>
+                <dd class="font-text text-[0.8125rem] leading-[19px] text-text-muted">{{ term.definition }}</dd>
+              </div>
+            }
+          </dl>
+        </section>
+      }
+
+      <!-- Who in my group has it (MOCK) -->
+      @if (f.groupName) {
+        <section class="flex items-center gap-3 rounded-16 border border-border bg-surface-raised px-3.5 py-3">
+          @if (f.social.people.length) {
+            <div class="flex shrink-0">
+              @for (person of f.social.people; track person.id; let first = $first) {
+                <app-avatar [size]="32" [name]="person.name" [seed]="person.id" [ring]="true" [class.-ml-2]="!first" />
+              }
+            </div>
+          }
+          <div class="flex flex-1 flex-col gap-px">
+            @if (f.social.count) {
+              <span class="type-label text-text">{{ f.social.count | plural: 'groupHas' }}</span>
+              <span class="type-caption text-text-muted">
+                {{
+                  socialRest()
+                    ? ('feathers.socialNamesMore' | transloco: { names: socialNames(), rest: socialRest() })
+                    : socialNames()
+                }}
+              </span>
+            } @else {
+              <span class="type-label text-text">{{ 'feathers.socialNobody' | transloco }}</span>
+              <span class="type-caption text-text-muted">{{ 'feathers.socialBeFirst' | transloco }}</span>
+            }
+          </div>
+        </section>
+      }
+    </main>
+
+    <!-- CTA pinned above the navbar -->
+    <div
+      slot="fixed"
+      class="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(230px+var(--ion-safe-area-bottom,0px))] bg-[linear-gradient(180deg,transparent_0%,var(--wanbli-color-bg)_40%)]"
+      aria-hidden="true"
+    ></div>
+    <div slot="fixed" class="absolute inset-x-4 bottom-[calc(var(--wanbli-size-navbar-area)+var(--ion-safe-area-bottom,0px)+var(--wanbli-space-2))]">
+      <app-button size="lg" [block]="true" icon="feather" class="rounded-12 shadow-cta" (click)="openUpload()">
+        {{ (hasProgress() ? 'feathers.addCompletion' : 'feathers.startFeather') | transloco }}
+      </app-button>
+    </div>
+  } @else {
+    <main class="flex flex-col gap-4 px-4 pt-screen">
+      <app-back-button fallback="/nav/eagle-feathers" />
+      @if (status() === 'loading') {
+        <div class="flex flex-col gap-3" aria-busy="true" [attr.aria-label]="'common.loading' | transloco">
+          <app-skeleton variant="post-card" />
+        </div>
+      } @else {
+        <section class="flex flex-col items-center gap-3 px-4 pt-10 text-center" role="alert">
+          <h2 class="type-h3 text-text">{{ 'feathers.featherError' | transloco }}</h2>
+          <app-button variant="secondary" (click)="load()">{{ 'common.retry' | transloco }}</app-button>
+        </section>
+      }
+    </main>
+  }
+</ion-content>

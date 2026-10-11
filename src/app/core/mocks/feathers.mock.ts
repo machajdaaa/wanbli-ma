@@ -19,7 +19,7 @@ export interface FeatherExtra {
 // Ages as in the design (PeroDetail). Note: they start at 14 although the app
 // targets 8–15 — real age groups must come from the backend.
 const AGES = ['14–15 let', '16–17 let', '18–33 let', '34–49 let', '50 a více'];
-const seconds = (values: number[]) => values.map((v) => `${String(v).replace('.', ',')} s`);
+const seconds = (values: number[]) => values.map((v) => `${v.toFixed(1).replace('.', ',')} s`);
 
 export const FEATHER_EXTRAS: Record<string, FeatherExtra> = {
   '1A1': {

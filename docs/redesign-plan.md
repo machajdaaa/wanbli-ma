@@ -352,6 +352,23 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
 - **R37 – Varianty karty na `/dev/ui`.** Rozložení 2 a 3+ fotek ze
   skutečného API zatím nevznikne (jen jedna `imageUrl`), proto jsou všechny
   varianty z `KartaPera.dc.html` k vidění v katalogu.
+- **R38 – „Splněno 3 / 7“ místo „3 ze 7 per splněno“ (fáze 5).** Design
+  potřebuje předložku z/ze podle výslovnosti čísla a 2. pád „per/pera“ podle
+  celkového počtu – neutrální zápis platí pro každé číslo.
+- **R39 – „Ve tvé skupině ho má N lidí“ (fáze 5).** Design má „V Trilobitu
+  ho má 7 lidí“ – název oddílu natvrdo a v 6. pádě, který u libovolného názvu
+  skupiny neumíme vytvořit. Věta má plurálové tvary i se shodou slovesa
+  („má 1 člověk / mají 2 lidé / má 5 lidí“). Bez skupiny se karta skryje.
+- **R40 – CTA detailu pera:** „Přidat splnění“, když má uživatel Čin nebo
+  Grand challenge splněný, jinak „Začít s perem“. Obojí vede na `/upload`.
+  Tlačítko je připnuté nad navbarem (`slot="fixed"`), pod ním přechod.
+- **R41 – Ilustrace banneru Orlí pera** je SVG asset
+  (`public/assets/images/eagle-feathers-banner.svg`) převzatý z designu –
+  barvy ilustrace tak nejsou v kódu komponent.
+- **R42 – Hledání pera** filtruje cachovaný katalog s debounce 150 ms;
+  čipy se porovnávají bez diakritiky (čip „běh“ je aktivní i pro „beh“).
+- **R43 – Pravidla kategorie** jdou rozbalit na místě („Celá pravidla“ ↔
+  „Méně“), samostatná obrazovka pravidel není navržená.
 
 ## 6. Fáze a výstup
 
