@@ -6,13 +6,22 @@
  * the type scale is exposed as `type-*` utilities instead of global h1/p rules.
  */
 
-/* Core CSS required for Ionic components to work properly */
-@import "@ionic/angular/css/core.css";
+/*
+ * Cascade layers, lowest priority first. Ionic's global CSS goes into the
+ * `ionic` layer so Tailwind utilities (layer `utilities`, src/tailwind.css)
+ * always beat it — unlayered Ionic rules like `a { color: primary }` or
+ * `h2 { margin-top: 18px }` would otherwise override every utility class.
+ * Unlayered rules in this file (tokens, body, overlays) still win over both.
+ */
+@layer ionic, base, theme, utilities;
 
-/* Basic CSS for apps built with Ionic */
-@import "@ionic/angular/css/normalize.css";
-@import "@ionic/angular/css/structure.css";
-@import "@ionic/angular/css/typography.css";
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css" layer(ionic);
+
+/* Basic CSS for apps built with Ionic. typography.css is not imported: it
+ * styles h1–h6/p/a globally, which the type-* utilities replace. */
+@import "@ionic/angular/css/normalize.css" layer(ionic);
+@import "@ionic/angular/css/structure.css" layer(ionic);
 
 /*
  * Ionic's ion-* utility classes (padding, margin, display, text-alignment,
@@ -29,6 +38,7 @@
 
 @import './theme/tokens.scss';
 @import './theme/fonts.scss';
+@import './theme/overlays.scss';
 
 /* Tailwind (theme mapping + type-* utilities) lives in src/tailwind.css — plain CSS,
  * because Sass can't parse Tailwind's `--color-*: initial` syntax. */
@@ -50,16 +60,32 @@ body {
   background-color: var(--wanbli-color-bg);
 }
 
-/* Headings and paragraphs carry no visual opinion — use type-* utilities. */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  margin: 0;
-  font: inherit;
+/* Headings, paragraphs and links carry no visual opinion — use type-* and
+ * color utilities. In a layer so utilities can override it. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 0;
+    font: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+  }
 }
 
 ion-content {

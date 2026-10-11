@@ -78,7 +78,7 @@ Děti plní „orlí pera“, sdílejí je, sledují se a dávají si „pírka�
 - `src/app/auth/` — login/register stránka
 - `src/app/nav/` — shell se 4 taby (`nav.routes.ts`)
 - `src/app/pages/` — jednotlivé stránky navěšené na taby (home, group, profile, eagle-feathers)
-- `src/app/shared/design-system/` — Ionic komponenty restylované přes design tokeny; čisté UI primitivy bez byznys logiky (`ButtonComponent` → `ion-button`, `TextInputComponent` → `ion-input`)
+- `src/app/shared/design-system/` — čisté UI primitivy bez byznys logiky podle `Main.dc.html`: `Button`, `TextInput`, `SearchInput`, `SegmentedControl`, `Avatar`, `Badge`, `LightTag`, `ProgressBar`, `Toggle`, `SettingsGroup`/`SettingsRow`, `BottomSheet`, `Toast` (+ `ToastService`), `EmptyState`, `Skeleton`, `Icon` (sada ikon v `icon/icons.ts`), mapa světel `lights.ts`. Postavené na **nativních** `button`/`input`/`a` stylovaných Tailwindem; Ionic jen tam, kde přidává chování (`BottomSheet` = inline `ion-modal`). Všechny stavy jsou vidět na `/dev/ui` (jen dev build).
 - `src/app/shared/components/` — složitější, feature-specific komponenty, které skládají primitivy z `design-system/` (`ActivityCardComponent`, `DailyChallengeCardComponent`)
 - `android/`, `ios/` — generované native projekty, needitovat bez konkrétního důvodu (viz Native projekty níže)
 
@@ -128,8 +128,10 @@ vždy přes `environment.apiUrl`.
 
 - Tailwind utility třídy namísto Ionic utility CSS (`ion-padding`, `ion-margin-top` apod. — ty importy jsou v `global.scss` záměrně vypnuté). Výjimka: shadow-DOM Ionic komponenty, kam se Tailwind třída nedostane (např. `ion-content` padding přes `[--padding-*]` arbitrary values).
 - `src/theme/tokens.scss` je jediný zdroj pravdy pro vizuální hodnoty (`--wanbli-*` CSS custom properties — barvy, radius, typografie, spacing). Nehardcodovat barvy/rozměry v komponentách.
-- Ionic komponenty v `design-system/` se restylují přes jejich vlastní CSS custom properties (`--background`, `--border-color`, ...) a `::part()`, ne přepisováním shadow DOM selektorů.
-- Globální Ionic mode je `ios` (`src/main.ts`). Pokud konkrétní vzhled existuje jen v `md` módu (např. `ion-input fill="outline"` s floating labelem), vynutit `mode="md"` lokálně na té komponentě — neměnit globální mode.
+- Ionic komponenty (`ion-content`, `ion-modal`, `ion-tab-bar`…) se restylují přes jejich vlastní CSS custom properties (`--background`, ...) a `::part()`, ne přepisováním shadow DOM selektorů. Styly presented overlayů (`ion-modal` se přesouvá do rootu) patří do `src/theme/overlays.scss`.
+- Globální CSS Ionicu je v cascade layer `ionic` (nejnižší, `global.scss`), takže Tailwind utility ho vždy přebijí. Ionic `typography.css` se neimportuje. Neimportovat Ionic CSS bez `layer(ionic)`.
+- Tailwind generuje jen třídy nalezené v kódu jako literál – dynamické třídy skládat z celých názvů (viz `LIGHT_STYLES` v `lights.ts`), nikdy `'bg-light-' + n`. Angular binding `[class.h-[52px]]` neprojde parserem – třídy s `[]` skládat v `computed`.
+- Globální Ionic mode je `ios` (`src/main.ts`). Pokud konkrétní vzhled existuje jen v `md` módu, vynutit `mode="md"` lokálně na té komponentě — neměnit globální mode.
 - Tokeny mají dvě vrstvy: `--wanbli-palette-*` (surové barvy, nepoužívat
   v komponentách) a `--wanbli-color-*` / `--wanbli-radius-*` / … (sémantické).
   Dark mode později přepíše jen sémantickou vrstvu. Žádné hex hodnoty mimo
@@ -183,6 +185,7 @@ Capacitor pluginů v testech. Nový spec psát ve stejném minimálním duchu, p
   Transloco s reálným `cs.json`). Bez HttpClientu `should create` spadne
   na NG0201. Komponentu s `input.required()` nastavit přes
   `fixture.componentRef.setInput(...)` před `detectChanges()`.
+- Vizuální kontrolu při 390 px dělat přes emulaci zařízení (CDP `Emulation.setDeviceMetricsOverride`), ne `--window-size=390`: headless Chrome má minimální šířku okna ~500 px a snímek pak jen ořízne širší layout.
 - Karma spouští Chrome. Když Chrome není nainstalovaný (tenhle stroj má jen
   Brave): `CHROME_BIN="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" npm test -- --watch=false --browsers=ChromeHeadless`.
 - Na konci každé fáze redesignu musí projít `npm run lint`, `npm run build`

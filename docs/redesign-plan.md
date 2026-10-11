@@ -283,6 +283,30 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   dostaly ve fázi 1 jen přemapované tokeny a `type-*` třídy, aby nevypadaly
   rozbitě; jejich texty se převedou na Transloco až při přepisu
   v příslušné fázi (2–4, 8).
+- **R21 – Design-system komponenty na nativních prvcích (fáze 2).** `Button`,
+  `TextInput`, `Toggle`, `SegmentedControl` atd. renderují skutečné
+  `button`/`input`/`a` stylované Tailwindem místo restylovaných `ion-button`
+  / `ion-input`. Důvod: design má label nad polem a stavy, které Ionic
+  (floating label, shadow DOM) neumí bez boje se `::part`; nativní prvky jsou
+  i požadavek přístupnosti. Ionic zůstává tam, kde přidává chování –
+  `BottomSheet` je inline `ion-modal` (focus trap, Android back, zavření
+  tapnutím na pozadí, `aria-label` Ionic přenese do vnitřního dialogu).
+  `Button` s `link` renderuje `<a routerLink>`; během `loading` je nativně
+  disabled (žádný dvojí submit), ale vypadá normálně + spinner.
+- **R22 – Ionic globální CSS v cascade layer `ionic` (fáze 2).** Bez toho
+  neuvrstvené Ionic pravidla (`a { color: primary }`, `h2 { margin-top }`)
+  přebíjela všechny Tailwind utility. `typography.css` se neimportuje vůbec.
+- **R23 – Stav „stisknuto“ na `/dev/ui`** se zobrazuje přes `forceActive`
+  na `Button` (odstraní prefix `active:`); jinak je to `:active`. Focus stav
+  inputu se v katalogu ukazuje jen klepnutím. Ukázkové texty na `/dev/ui`
+  jsou natvrdo – je to vývojový nástroj, ne produktové UI.
+- **R24 – Toast** = vlastní `ToastService` + `<app-toast-host>` v `AppComponent`
+  (ne `ion-toast` – design má stavovou tečku a tmavou pilulku). Jeden toast
+  najednou, nad navbarem; úspěch zmizí po 3 s, chyba s akcí „Zkusit znovu“
+  zůstane do stisknutí. `role="status"` / `role="alert"`.
+- **R25 – Hit area.** Malá tlačítka z designu (36 px „Do toho!“/„Začít“,
+  `size="sm"`) mají vizuál 36 px, klikací plochu 44 px přes `::after`.
+  Akční tlačítko v toastu je 44 px místo 36 px.
 
 ## 6. Fáze a výstup
 

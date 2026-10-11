@@ -39,5 +39,26 @@
       "many": "{{count}} člověka",
       "other": "{{count}} lidí"
     }
+  },
+  "ds": {
+    "input": {
+      "showPassword": "Zobrazit heslo",
+      "hidePassword": "Skrýt heslo"
+    },
+    "search": {
+      "clear": "Vymazat hledání"
+    },
+    "badge": {
+      "grandChallenge": "Grand challenge",
+      "done": "Splněno",
+      "announcement": "Oznámení",
+      "leader": "Vedoucí",
+      "you": "Ty",
+      "deed": "Čin",
+      "notDone": "nesplněno"
+    },
+    "light": {
+      "name": "{{light}}. světlo"
+    }
   }
 }

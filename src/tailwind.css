@@ -48,6 +48,9 @@
   --color-icon-inactive: var(--wanbli-color-icon-inactive);
   --color-primary: var(--wanbli-color-primary);
   --color-primary-pressed: var(--wanbli-color-primary-pressed);
+  --color-primary-border: var(--wanbli-color-primary-border);
+  --color-primary-disabled: var(--wanbli-color-primary-disabled);
+  --color-primary-disabled-border: var(--wanbli-color-primary-disabled-border);
   --color-primary-subtle: var(--wanbli-color-primary-subtle);
   --color-primary-subtle-text: var(--wanbli-color-primary-subtle-text);
   --color-on-primary: var(--wanbli-color-on-primary);
@@ -58,6 +61,9 @@
   --color-danger: var(--wanbli-color-danger);
   --color-danger-surface: var(--wanbli-color-danger-surface);
   --color-danger-border: var(--wanbli-color-danger-border);
+  --color-danger-pressed: var(--wanbli-color-danger-pressed);
+  --color-danger-border-pressed: var(--wanbli-color-danger-border-pressed);
+  --color-toggle-disabled: var(--wanbli-color-toggle-disabled);
   --color-light-1: var(--wanbli-color-light-1);
   --color-light-1-surface: var(--wanbli-color-light-1-surface);
   --color-light-1-text: var(--wanbli-color-light-1-text);
@@ -88,6 +94,9 @@
   --color-tint-4: var(--wanbli-color-tint-4);
   --color-tint-5: var(--wanbli-color-tint-5);
   --color-scrim: var(--wanbli-color-scrim);
+  --color-photo-overlay: var(--wanbli-color-photo-overlay);
+  --color-on-dark-subtle: var(--wanbli-color-on-dark-subtle);
+  --color-glass: var(--wanbli-color-glass);
   --color-white: var(--wanbli-palette-white);
   --color-transparent: transparent;
   --color-current: currentColor;
@@ -118,6 +127,8 @@
   --shadow-toast: var(--wanbli-shadow-toast);
   --shadow-sheet: var(--wanbli-shadow-sheet);
   --shadow-focus: var(--wanbli-shadow-focus);
+  --shadow-pressed: var(--wanbli-shadow-pressed);
+  --shadow-knob: var(--wanbli-shadow-knob);
 }
 
 /* Type scale (Main.dc.html → Typografie). Color is set separately. */
@@ -156,3 +167,9 @@
   text-transform: uppercase;
 }
 
+
+/*
+ * ButtonComponent's `forceActive` (used by /dev/ui) strips the `active:` prefix
+ * at runtime, so the plain forms of its pressed-state classes must exist.
+ */
+@source inline("bg-primary-pressed shadow-pressed translate-y-px bg-surface-pressed border-border-strong decoration-primary-pressed bg-danger-surface border-danger-border-pressed text-danger-pressed");

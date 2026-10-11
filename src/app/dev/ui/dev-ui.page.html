@@ -1,0 +1,242 @@
+<ion-content>
+  <main class="flex flex-col gap-10 px-4 pt-14 pb-24">
+    <header class="flex flex-col gap-1">
+      <span class="type-overline text-text-muted">Jen pro vývoj · /dev/ui</span>
+      <h1 class="type-display text-text">Design systém</h1>
+      <p class="type-body text-text-muted">Všechny komponenty a stavy z Main.dc.html na jednom místě.</p>
+    </header>
+
+    <!-- Typography -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Typografie</h2>
+      @for (row of typeScale; track row.cls) {
+        <div class="flex flex-col gap-0.5 border-b border-border pb-2">
+          <span class="type-caption text-text-muted">{{ row.name }}</span>
+          <span [class]="row.cls">{{ row.sample }}</span>
+        </div>
+      }
+    </section>
+
+    <!-- Buttons -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Tlačítka</h2>
+      @for (variant of variants; track variant) {
+        <div class="flex flex-col gap-2 rounded-16 border border-border bg-surface-raised p-4">
+          <span class="type-label text-text">{{ variantNames[variant] }}</span>
+          <div class="grid grid-cols-2 items-center gap-3">
+            <app-button [variant]="variant">{{ variantLabels[variant] }}</app-button>
+            <app-button [variant]="variant" [forceActive]="true">{{ variantLabels[variant] }}</app-button>
+            <app-button [variant]="variant" [disabled]="true">{{ variantLabels[variant] }}</app-button>
+            <app-button [variant]="variant" [loading]="true">{{ variant === 'destructive' ? 'Odhlašuji…' : 'Načítám…' }}</app-button>
+          </div>
+          <span class="type-caption text-text-muted">default · stisknuto · disabled · loading</span>
+        </div>
+      }
+      <div class="flex flex-wrap items-center gap-3">
+        <app-button size="sm">Do toho!</app-button>
+        <app-button icon="user-plus">Sledovat</app-button>
+        <app-button [block]="true">Najít kamarády</app-button>
+      </div>
+    </section>
+
+    <!-- Inputs -->
+    <section class="flex flex-col gap-4">
+      <h2 class="type-h2 text-text">Input</h2>
+      <app-text-input label="Jméno" autocomplete="name" [(ngModel)]="name" />
+      <app-text-input
+        label="Přezdívka · nápověda"
+        hint="Uvidí ji ostatní u tvých per a v žebříčku."
+        [(ngModel)]="nickname"
+      />
+      <app-text-input label="Přezdívka · chyba" error="Tahle přezdívka už je obsazená." [(ngModel)]="nickname" />
+      <app-text-input label="Heslo" type="password" autocomplete="new-password" [(ngModel)]="password" />
+      <app-text-input
+        label="Bio"
+        [multiline]="true"
+        [maxLength]="150"
+        [showCounter]="true"
+        [(ngModel)]="bio"
+      />
+      <app-search-input label="Hledat lidi" placeholder="Hledej kamarády" [(value)]="query" />
+      <span class="type-caption text-text-muted">Focus stav: klepni do pole.</span>
+    </section>
+
+    <!-- Segmented control -->
+    <section class="flex flex-col gap-4">
+      <h2 class="type-h2 text-text">Segmentovaný přepínač</h2>
+      <app-segmented-control
+        ariaLabel="Obsah skupiny"
+        [options]="[
+          { value: 'posts', label: 'Příspěvky' },
+          { value: 'announcements', label: 'Oznámení' },
+          { value: 'leaderboard', label: 'Žebříček' }
+        ]"
+        [(value)]="groupTab"
+      />
+      <app-segmented-control
+        ariaLabel="Pohlaví"
+        mode="radiogroup"
+        size="sm"
+        [options]="[
+          { value: 'm', label: 'Muži' },
+          { value: 'f', label: 'Ženy' }
+        ]"
+        [(value)]="gender"
+      />
+      <div class="h-40 overflow-y-auto rounded-16 border border-border">
+        <app-segmented-control
+          ariaLabel="Lepkavá varianta"
+          [sticky]="true"
+          [options]="[
+            { value: 'posts', label: 'Příspěvky' },
+            { value: 'announcements', label: 'Oznámení' }
+          ]"
+          [(value)]="groupTab"
+        />
+        <p class="p-4 type-body text-text-muted">
+          Lepkavá varianta – posuň obsah. Přilepí se nahoru na bílém podkladu s 1px spodní linkou. Lorem ipsum
+          dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+          aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+        </p>
+      </div>
+    </section>
+
+    <!-- Avatars -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Avatar · squircle</h2>
+      <div class="flex flex-wrap items-end gap-4">
+        @for (size of avatarSizes; track size; let i = $index) {
+          <app-avatar [size]="size" name="Tereza Svobodová" [seed]="i" />
+        }
+        <app-avatar [size]="56" />
+      </div>
+    </section>
+
+    <!-- Badges & light tags -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Odznaky a štítky světel</h2>
+      <div class="flex flex-wrap gap-2">
+        @for (badge of badges; track badge) {
+          <app-badge [variant]="badge" />
+        }
+      </div>
+      <div class="flex flex-wrap gap-2">
+        @for (light of lights; track light) {
+          <app-light-tag [light]="light" [label]="lightSamples[light - 1]" />
+        }
+      </div>
+      <div class="flex flex-wrap gap-2">
+        @for (light of lights; track light) {
+          <app-light-tag [light]="light" variant="code" [label]="light + 'A1'" />
+        }
+      </div>
+    </section>
+
+    <!-- Progress -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Progress</h2>
+      @for (light of lights; track light) {
+        <div class="flex flex-col gap-1.5">
+          <div class="flex justify-between type-caption">
+            <span class="font-semibold text-text">{{ light }}. světlo</span>
+            <span class="text-text-muted">{{ light * 5 }}/24</span>
+          </div>
+          <app-progress-bar [light]="light" [value]="light * 5" [max]="24" [ariaLabel]="light + '. světlo'" />
+        </div>
+      }
+      <div class="rounded-16 bg-light-1-surface p-4">
+        <app-progress-bar [light]="1" [value]="3" [max]="7" [onTint]="true" ariaLabel="Na tintu" />
+      </div>
+      <app-progress-bar [light]="2" [value]="2" [max]="9" [height]="6" ariaLabel="Výška 6" />
+    </section>
+
+    <!-- Toggle -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Přepínač</h2>
+      <div class="flex items-center gap-8">
+        <app-toggle ariaLabel="Zapnuto" [(checked)]="toggleOn" />
+        <app-toggle ariaLabel="Vypnuto" [(checked)]="toggleOff" />
+        <app-toggle ariaLabel="Zapnuto, nedostupné" [checked]="true" [disabled]="true" />
+        <app-toggle ariaLabel="Vypnuto, nedostupné" [disabled]="true" />
+      </div>
+    </section>
+
+    <!-- Settings rows -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Řádek nastavení</h2>
+      <app-settings-group title="Skupina řádků">
+        <app-settings-row icon="profile" label="Navigace" link="/dev/ui" />
+        <app-settings-row icon="globe" label="S hodnotou" value="Čeština" link="/dev/ui" />
+        <app-settings-row icon="bell" kind="toggle" label="S přepínačem" [(checked)]="notifications" />
+        <app-settings-row icon="moon" kind="toggle" label="Neaktivní" [soon]="true" />
+        <app-settings-row icon="info" kind="static" label="Verze aplikace" value="1.0.0" />
+        <app-settings-row icon="logout" kind="destructive" label="Destruktivní" />
+      </app-settings-group>
+    </section>
+
+    <!-- Bottom sheet & toast -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Bottom sheet a toast</h2>
+      <div class="flex flex-wrap gap-3">
+        <app-button variant="secondary" (click)="sheetOpen.set(true)">Otevřít menu</app-button>
+        <app-button variant="secondary" (click)="showSuccessToast()">Toast úspěch</app-button>
+        <app-button variant="secondary" (click)="showErrorToast()">Toast chyba</app-button>
+      </div>
+      <app-toast kind="success" message="Profil je uložený" />
+      <app-toast kind="error" message="Nepovedlo se to uložit" [hasAction]="true" />
+
+      <app-bottom-sheet ariaLabel="Možnosti příspěvku" [(open)]="sheetOpen">
+        <div class="flex items-center gap-3 border-b border-border-subtle px-1 pb-3">
+          <app-avatar name="Tereza Svobodová" [seed]="0" />
+          <div class="flex flex-col">
+            <span class="type-label text-text">Tereza Svobodová</span>
+            <span class="type-caption text-text-muted">Běh na 100 m · dnes 9:00</span>
+          </div>
+        </div>
+        <button type="button" class="flex min-h-14 items-center gap-3.5 px-1 text-left text-text" (click)="sheetOpen.set(false)">
+          <span class="flex size-9 items-center justify-center rounded-[10px] bg-surface"><app-icon name="profile" [size]="20" /></span>
+          <span class="font-text text-[1rem] font-medium leading-[22px]">Zobrazit profil</span>
+        </button>
+        <button
+          type="button"
+          class="flex min-h-[60px] items-center gap-3.5 border-t border-border-subtle px-1 text-left text-danger"
+          (click)="sheetOpen.set(false)"
+        >
+          <span class="flex size-9 items-center justify-center rounded-[10px] bg-danger-surface"><app-icon name="flag" [size]="20" /></span>
+          <span class="font-text text-[1rem] font-semibold leading-[22px]">Nahlásit příspěvek</span>
+        </button>
+      </app-bottom-sheet>
+    </section>
+
+    <!-- Empty state -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Prázdný stav</h2>
+      <app-empty-state
+        title="Zatím tu je ticho"
+        text="Až někdo, koho sleduješ, získá orlí pero, uvidíš ho tady."
+        actionLabel="Najít kamarády"
+      />
+    </section>
+
+    <!-- Skeleton -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Skeleton</h2>
+      <app-skeleton variant="post-card" />
+      <app-skeleton variant="list-row" />
+      <app-skeleton variant="list-row" />
+    </section>
+
+    <!-- Icons -->
+    <section class="flex flex-col gap-3">
+      <h2 class="type-h2 text-text">Ikony · lineární 2 px</h2>
+      <div class="grid grid-cols-5 gap-x-2 gap-y-4 text-text">
+        @for (icon of iconNames; track icon) {
+          <div class="flex flex-col items-center gap-1.5">
+            <app-icon [name]="icon" [class]="icon.startsWith('feather') ? 'text-primary' : ''" />
+            <span class="text-center text-[0.6875rem] leading-[14px] text-text-muted">{{ icon }}</span>
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+</ion-content>

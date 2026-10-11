@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { AuthService } from './core/services/auth.service';
+import { ToastHostComponent } from './shared/design-system/toast/toast.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  imports: [IonApp, IonRouterOutlet],
+  imports: [IonApp, IonRouterOutlet, ToastHostComponent],
 })
 export class AppComponent implements OnInit {
   private platform = inject(Platform);
