@@ -16,9 +16,10 @@ ion-tab-bar {
   left: var(--wanbli-space-4);
   right: var(--wanbli-space-4);
   bottom: calc(var(--wanbli-space-6) + var(--ion-safe-area-bottom, 0px));
-  height: var(--wanbli-size-navbar);
+  // Ionic forces box-sizing: content-box (!important inside its shadow DOM wins
+  // over ours), so the 1 px border is subtracted to keep the pill 60 px tall.
+  height: calc(var(--wanbli-size-navbar) - 2 * var(--wanbli-border-1));
   padding: 0 var(--wanbli-space-2);
-  box-sizing: border-box !important;
   border: var(--wanbli-border-1) solid var(--wanbli-color-border-subtle);
   border-radius: var(--wanbli-radius-full);
   box-shadow: var(--wanbli-shadow-navbar);
@@ -35,6 +36,11 @@ ion-tab-button {
   --padding-end: 0;
   --app-icon-accent: var(--wanbli-color-primary-subtle);
 
+  // The host is display: block by default, so the 56×44 pill inside wouldn't
+  // center vertically — make it a flex container.
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1 1 0;
   height: 100%;
   max-width: none;
