@@ -72,6 +72,18 @@ describe('EagleFeatherService', () => {
     expect(lights[3].categories[0].name).toBe('Bylinkářství');
   });
 
+  it('loads the catalog in pages of at most 100 (backend limit) and follows all pages', async () => {
+    const result = firstValueFrom(service.search('beh'));
+    const first = http.expectOne((r) => r.url === `${ROOT}/api/eagle-feathers` && r.params.get('Page') === '1');
+    expect(first.request.params.get('PageSize')).toBe('100');
+    first.flush({ ...page([CATALOG[0]]), totalPages: 2, hasNextPage: true });
+    const second = http.expectOne((r) => r.url === `${ROOT}/api/eagle-feathers` && r.params.get('Page') === '2');
+    expect(second.request.params.get('PageSize')).toBe('100');
+    second.flush({ ...page([CATALOG[1]]), page: 2, totalPages: 2, hasNextPage: false });
+    http.expectOne((r) => r.url === `${ROOT}/api/user/eagle-feathers`).flush(page([]));
+    expect((await result).map((f) => f.code)).toEqual(['1A1', '1A2']);
+  });
+
   it('searches by name without diacritics and by code prefix', async () => {
     const byName = firstValueFrom(service.search('bylinkove'));
     flushCatalogAndProgress([]);

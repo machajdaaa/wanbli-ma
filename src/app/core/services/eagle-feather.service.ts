@@ -173,7 +173,7 @@ export class EagleFeatherService {
 
   private catalog(): Observable<CatalogFeather[]> {
     if (!this.catalog$) {
-      this.catalog$ = this.api.allPages(getEagleFeathers$Json, {}, 200).pipe(
+      this.catalog$ = this.api.allPages(getEagleFeathers$Json, {}).pipe(
         map((items) =>
           items
             .map((f) => this.normalize(f))

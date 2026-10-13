@@ -202,6 +202,10 @@ Capacitor pluginů v testech. Nový spec psát ve stejném minimálním duchu, p
 
 ## Gotchas
 
+- Stránkované endpointy přijímají `PageSize` jen 1–100 (jinak 400
+  s validační chybou). Celé seznamy načítat přes `ApiClient.allPages()`,
+  který limit hlídá (`MAX_PAGE_SIZE`).
+
 - Backend běží na Renderu na free tieru — po delší nečinnosti může první
   request trvat desítky sekund (cold start). Vypadá to jako timeout/bug, není.
 - Scaffoldované stránky/komponenty (Ionic/Angular generátor) mívají prázdný
