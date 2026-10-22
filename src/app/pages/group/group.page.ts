@@ -113,9 +113,12 @@ export class GroupPage {
     { value: 'leaderboard', label: this.transloco.translate('group.tabs.leaderboard') },
   ]);
   protected readonly panelIds = ['group-panel-posts', 'group-panel-announcements', 'group-panel-leaderboard'];
-  /** Podium in visual order 2–1–3. */
+  /**
+   * Podium in visual order 2–1–3. Medals follow the podium place, the number
+   * shown is the rank (equal for ties).
+   */
   protected readonly podium = computed(() => {
-    const p = this.leaderboard()?.podium ?? [];
+    const p = (this.leaderboard()?.podium ?? []).map((row, i) => ({ row, place: i + 1 }));
     return [p[1], p[0], p[2]].filter(Boolean);
   });
   protected readonly showPinnedRow = computed(

@@ -204,8 +204,9 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   `/settings`, `/profile/edit`, `/upload`) – mají tlačítko Zpět. Drží se tím
   zadaných rout a Ionic stack navigace; navbar v `CiziProfil` designu
   se nepřenáší.
-- **R3 – Katalog per** se načte jednou přes `get-eagle-feathers`
-  (stránkovaně do vyčerpání) a cachuje v `EagleFeatherService`; z něj se
+- **R3 – Katalog per** se načte jednou přes `get-all-eagle-feathers`
+  (`/eagle-feathers/all`, jeden request; do 22. 10. 2026 stránkovaně po 100)
+  a cachuje v `EagleFeatherService`; z něj se
   počítají počty v kategoriích, progres po světlech a klientské hledání.
   Volat `…/sections/{section}` pro ~95 kategorií by znamenalo ~95 requestů.
   Detail kategorie a pera se přesto čte z vlastních endpointů (čerstvá data).
@@ -318,12 +319,13 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   dodá přihlášeného uživatele (případně ho načte) – služby z něj berou id
   a `organisationId`.
 - **R28 – Fotky u skutečných příspěvků (fáze 3).** Jen skutečný `imageUrl`;
-  šedé placeholder dlaždice (z designu) mají jen čistě mockované příspěvky
-  (`FeedService.userPosts`), aby skutečný příspěvek nenaznačoval fotky,
+  šedé placeholder dlaždice (z designu) mají jen ukázkové karty na `/dev/ui`
+  (od 22. 10. 2026 jsou i příspěvky na profilech skutečné), aby skutečný příspěvek nenaznačoval fotky,
   které nemá (navazuje na R5).
-- **R29 – Daily challenge určuje pero kódem** (`featherCode: '1A1'`) a na id
-  se převede přes katalog až při „Do toho!“ – mock tak nezávisí na id
-  v databázi.
+- **R29 – Daily challenge** (od 22. 10. 2026 z `GET /api/challenges/current`)
+  nese `eagleFeatherId`, „Do toho!“ otevře detail pera přímo. Když výzva
+  není (404) nebo nejde načíst, karta se na Domů nezobrazí. Původně mock
+  s kódem pera převáděným přes katalog.
 - **R30 – Text „Zapomněl/a jsi heslo?“** vede na `/forgot-password`
   s neutrálním „Obnovu hesla připravujeme“ – nevymýšlí se postup (např.
   „obnoví vedoucí“), který nikdo nepotvrdil.
@@ -374,9 +376,12 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   Přepnutí tabu ve sticky stavu posune obsah tak, aby nový tab začínal
   hned pod taby. Každý tab se načte až při prvním otevření.
 - **R45 – Vlastní řádek žebříčku** je zvýrazněný (oranžový, „Ty“) a připne
-  se nad navbar, jen když jeho místo v seznamu není na obrazovce. Celý
-  žebříček je zatím MOCK – ukázkové osoby (záporná id) nejdou otevřít,
-  vlastní řádek vede na můj profil.
+  se nad navbar, jen když jeho místo v seznamu není na obrazovce. Žebříček
+  je od 22. 10. 2026 skutečný (`/organisations/{id}/leaderboard`, celý přes
+  `allPages`); řádek otevře profil, vlastní řádek vede na můj profil. API
+  vrací jen přezdívku, ne jméno. Při shodě bodů mají dva lidé stejné
+  `rank` – medaile a výška stupně na pódiu jdou podle pozice (1.–3. místo
+  v pořadí), číslo ukazuje `rank`. Prázdný žebříček = empty state.
 - **R46 – „více“ u popisu skupiny** se zobrazí jen tehdy, když popis
   skutečně přeteče 3 řádky (měřeno po vykreslení); rozbalí se na místě.
 - **R47 – Cover skupiny** je ilustrace z designu jako SVG asset
@@ -394,8 +399,10 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   (hledání, cizí profil, menu příspěvku) jsou vždy v souladu. Přepnutí je
   optimistické, počet sledujících na cizím profilu se upraví hned.
 - **R51 – Cizí profil s vlastním id** přesměruje na tab Profil. Skupina
-  cizího uživatele se nezobrazuje (API ji nevrací, nevymýšlí se – R5).
-  Bio, počet per a sbírka cizího uživatele jsou MOCK.
+  ani bio cizího uživatele se nezobrazují (API je nevrací, nevymýšlí se –
+  R5; ukázkové bio bylo 22. 10. 2026 odstraněno). Počet per a počty
+  sledujících jsou z `UserProfileResponse`, sbírka z
+  `/users/{id}/eagle-feathers` (jen dokončené – R8).
 - **R52 – Úprava profilu:** Jméno a Příjmení zvlášť (API), přezdívka 2–30
   znaků, bio max. 150 znaků s počítadlem (ukládá se jen v zařízení – MOCK).
   Chyby u polí po opuštění pole nebo po pokusu o uložení; chyba serveru →
@@ -403,7 +410,8 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   fotky ukáže, že zatím nejde (chybí upload endpoint). Po uložení toast
   a návrat zpět.
 - **R53 – Hledání lidí** filtruje členy vlastní skupiny na klientu (bez
-  diakritiky, podle jména i přezdívky), řazeno podle počtu per (MOCK).
+  diakritiky, podle jména i přezdívky), řazeno podle počtu per (počty
+  z žebříčku skupiny; kdo v něm není, má 0).
   Nadpis „Návrhy ze tvé skupiny“ se při hledání změní na „Výsledky ze tvé
   skupiny“, ať je jasné, že se hledá jen tam.
 - **R54 – Odhlášení** je bez potvrzovacího dialogu (není navržený),
@@ -440,6 +448,28 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
   (`ProblemDetails.errors`) se přiřadí k polím, ale s vlastní českou hláškou
   „Zkontroluj tento údaj“ (texty serveru nejsou lokalizované). Žádný
   AlertController.
+- **R60 – Připnutí výzvy se nepoužívá (22. 10. 2026).** API umí
+  `pin`/`unpin` a `pinnedCount`, ale design ani koncept připnutí nemají;
+  „Do toho!“ dál jen otevře pero. Doplní se, až bude navržené.
+- **R61 – Soukromý profil (22. 10. 2026).** V Nastavení → Soukromí nahradil
+  neaktivní řádek „Kdo vidí moje pera – Celá Liga“ přepínač „Soukromý
+  profil“ s vysvětlivkou (ukládá `isPrivate` přes `PUT /api/user`,
+  optimisticky, při chybě vrátí a ukáže toast). Cizí soukromý profil, který
+  nesleduju: hlavička se jménem a tlačítkem Sledovat, počty, které API
+  skryje, jako „–“, místo sbírky a příspěvků empty state „Soukromý profil“.
+  Po sledování se obsah ukáže až po novém otevření profilu (neověřeno, jestli
+  sledování soukromého profilu potřebuje schválení). `PUT /api/user` posílá
+  vždy celý profil – úprava profilu proto posílá i aktuální `isPrivate`.
+- **R62 – Pero u příspěvku z autorových záznamů (22. 10. 2026).**
+  `PostResponse` má jen `userEagleFeatherId`; `EagleFeatherService.postFeathers`
+  načte `/users/{autor}/eagle-feathers` (jeden sdílený request na autora za
+  relaci, i pro paralelně načítané feedy; neúspěch se neopakuje; znovu jen
+  jednou, když příspěvek odkazuje na záznam, který v seznamu není – nový
+  příspěvek) a dohledá pero v katalogu. U mých příspěvků se použijí moje
+  záznamy (`/user/eagle-feathers`), které už má načtené postup. Skutečné pero nemá výkon (API ho neukládá) → karta ukazuje
+  „Splněno“, ne ukázkovou metriku. Ukázkové pero (MOCK, R5) zůstává jen
+  jako záloha, když záznam autora nejde přečíst (např. soukromý profil).
+  Profily mají u příspěvků nekonečný scroll (stránky po 20).
 
 ## 6. Fáze a výstup
 
@@ -457,7 +487,7 @@ Design × koncept × API. U každého je navržené výchozí řešení (R = roz
 
 Každá fáze končí `npm run lint`, `npm run build` a `npm test` bez chyb.
 
-## 7. Stav po dokončení (11. 10. 2026)
+## 7. Stav po dokončení (11. 10. 2026, aktualizováno 22. 10. 2026)
 
 Všechny obrazovky z designu jsou hotové (kromě nenavržených: nahrání pera,
 detail příspěvku, dark mode). Lint, build a 38 unit testů procházejí.
@@ -467,17 +497,16 @@ Vizuálně ověřeno při 390 px proti `design/` s mockovanými odpověďmi API;
 | Obrazovka | Skutečná data z API | Ukázková data (MOCK) / skryto |
 |---|---|---|
 | Přihlášení, registrace | přihlášení, registrace (všechna pole `RegisterRequest`) | výběr oddílu (neodesílá se); souhlas rodiče jen jako rada |
-| Domů | feed, pírka (odeslání), režim sleduju / celá Liga, mazání | pero + výkon u příspěvku, „lajkl jsem“, denní výzva; místo skryto |
+| Domů | feed, pírka (odeslání), režim sleduju / celá Liga, mazání, pero u příspěvku (R62), denní výzva | výkon u příspěvku (skutečná pera ukazují „Splněno“), „lajkl jsem“; pero jen jako záloha; místo skryto |
 | Orlí pera | katalog, kategorie, pera, texty úkolů, můj postup | názvy kategorií, pravidla, co se měří, limity, slovníček, kdo ze skupiny pero má |
-| Skupina | hlavička, feed skupiny, oznámení (název, text, autor) | žebříček celý; cover = ilustrace; kdy/kde/vstupné/věk skryto |
-| Můj profil | jméno, přezdívka, skupina, počty sledujících, počet per, sbírka | bio (jen v zařízení), moje příspěvky |
-| Cizí profil | jméno, fotka, počty sledujících, sledovat / přestat | bio, počet per, sbírka, příspěvky; skupina skryta |
-| Hledání lidí | členové vlastní skupiny, sledování | počty per; hledá se jen ve skupině |
-| Nastavení | odhlášení, osobní údaje → úprava profilu | notifikace jen v zařízení; ostatní „Brzy“ |
+| Skupina | hlavička, feed skupiny, oznámení (název, text, autor), žebříček | cover = ilustrace; kdy/kde/vstupné/věk skryto |
+| Můj profil | jméno, přezdívka, skupina, statistiky (`/users/{id}/stats`), sbírka, moje příspěvky | bio (jen v zařízení) |
+| Cizí profil | jméno, fotka, počty, sbírka, příspěvky, sledovat / přestat, soukromý profil | bio a skupina skryté |
+| Hledání lidí | členové vlastní skupiny, sledování, počty per | hledá se jen ve skupině |
+| Nastavení | odhlášení, osobní údaje → úprava profilu, soukromý profil | notifikace jen v zařízení; ostatní „Brzy“ |
 | Úprava profilu | jméno, příjmení, přezdívka | bio; změna fotky nedostupná |
 
 Otevřené body pro tebe: kontrast oranžových tlačítek (známý dluh, O1),
-souhlas rodiče pod 15 let (právní, R57), ukázkový žebříček s cizími jmény
-(R45), skloňování jmen (R31/R32), věkové kategorie limitů pro 8–13 let
+souhlas rodiče pod 15 let (právní, R57), skloňování jmen (R31/R32), věkové kategorie limitů pro 8–13 let
 (§4.6), testovací účet pro ověření proti backendu.
 

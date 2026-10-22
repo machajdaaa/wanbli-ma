@@ -28,10 +28,20 @@
       </app-settings-group>
     </div>
 
-    <app-settings-group [title]="'settings.privacy' | transloco">
-      <app-settings-row icon="eye" [label]="'settings.whoSees' | transloco" [value]="'settings.wholeLeague' | transloco" [soon]="true" />
-      <app-settings-row icon="block" [label]="'settings.blocked' | transloco" [soon]="true" />
-    </app-settings-group>
+    <div class="flex flex-col gap-2">
+      <app-settings-group [title]="'settings.privacy' | transloco">
+        <app-settings-row
+          icon="eye"
+          kind="toggle"
+          [label]="'settings.privateProfile' | transloco"
+          [checked]="isPrivate()"
+          [disabled]="savingPrivate()"
+          (checkedChange)="setPrivate($event)"
+        />
+        <app-settings-row icon="block" [label]="'settings.blocked' | transloco" [soon]="true" />
+      </app-settings-group>
+      <p class="px-4 type-caption text-text-muted">{{ 'settings.privateProfileHint' | transloco }}</p>
+    </div>
 
     <app-settings-group [title]="'settings.about' | transloco">
       <app-settings-row icon="document" [label]="'settings.terms' | transloco" [soon]="true" />

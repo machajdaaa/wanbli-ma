@@ -26,7 +26,9 @@ import { ButtonComponent } from '../../design-system/button/button.component';
         <h2 class="font-display text-[1.5625rem] leading-[1.625rem] font-extrabold tracking-[-0.3px]">
           {{ challenge().title }}
         </h2>
-        <p class="font-text text-[0.875rem] leading-[1.0625rem] text-text-muted">{{ challenge().text }}</p>
+        @if (challenge().text) {
+          <p class="font-text text-[0.875rem] leading-[1.0625rem] text-text-muted">{{ challenge().text }}</p>
+        }
         <app-button size="sm" class="mt-1.5" (click)="go.emit(challenge())">{{ 'home.goForIt' | transloco }}</app-button>
       </div>
     </section>

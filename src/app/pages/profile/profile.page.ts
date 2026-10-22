@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonContent, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/angular/standalone';
+import {
+  InfiniteScrollCustomEvent,
+  IonContent,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherCustomEvent,
+} from '@ionic/angular/standalone';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { switchMap } from 'rxjs';
 import { PostCardVm, ProfileVm } from '../../core/models/view-models';
@@ -27,6 +35,8 @@ type Status = 'loading' | 'error' | 'ready';
   templateUrl: './profile.page.html',
   imports: [
     IonContent,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
     IonRefresher,
     IonRefresherContent,
     RouterLink,
@@ -47,7 +57,10 @@ export class ProfilePage {
   protected readonly status = signal<Status>('loading');
   protected readonly profile = signal<ProfileVm | null>(null);
   protected readonly posts = signal<PostCardVm[]>([]);
+  protected readonly hasNextPage = signal(false);
   protected readonly menuPost = signal<PostCardVm | null>(null);
+
+  private page = 0;
 
   ionViewWillEnter(): void {
     this.load();
@@ -61,12 +74,14 @@ export class ProfilePage {
         switchMap((profile) => {
           this.profile.set(profile);
           this.status.set('ready');
-          return this.feed.userPosts(profile.person);
+          return this.feed.userPosts(profile.person.id, 1);
         }),
       )
       .subscribe({
         next: (page) => {
           this.posts.set(page.items);
+          this.hasNextPage.set(page.hasNextPage);
+          this.page = 1;
           onDone?.();
         },
         error: () => {
@@ -78,6 +93,21 @@ export class ProfilePage {
 
   protected onRefresh(event: RefresherCustomEvent): void {
     this.load(() => event.target.complete());
+  }
+
+  protected onInfinite(event: InfiniteScrollCustomEvent): void {
+    const profile = this.profile();
+    if (!profile) return void event.target.complete();
+    this.feed.userPosts(profile.person.id, this.page + 1).subscribe({
+      next: (page) => {
+        this.posts.update((current) => [...current, ...page.items.filter((p) => !current.some((c) => c.id === p.id))]);
+        this.hasNextPage.set(page.hasNextPage);
+        this.page = page.page;
+        event.target.complete();
+      },
+      // A failed next page just stops this attempt; scrolling again retries it.
+      error: () => event.target.complete(),
+    });
   }
 
   protected removePost(post: PostCardVm): void {

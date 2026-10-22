@@ -61,5 +61,11 @@
     }
   </main>
 
+  @if (hasNextPage()) {
+    <ion-infinite-scroll (ionInfinite)="onInfinite($event)">
+      <ion-infinite-scroll-content />
+    </ion-infinite-scroll>
+  }
+
   <app-post-menu-sheet [(post)]="menuPost" (hidden)="removePost($event)" (deleted)="removePost($event)" />
 </ion-content>

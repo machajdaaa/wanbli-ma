@@ -52,7 +52,7 @@ describe('EagleFeatherService', () => {
   afterEach(() => http.verify());
 
   function flushCatalogAndProgress(progress: UserEagleFeatherResponse[]): void {
-    http.expectOne((r) => r.url === `${ROOT}/api/eagle-feathers`).flush(page(CATALOG));
+    http.expectOne(`${ROOT}/api/eagle-feathers/all`).flush(CATALOG);
     http.expectOne((r) => r.url === `${ROOT}/api/user/eagle-feathers`).flush(page(progress));
   }
 
@@ -72,18 +72,6 @@ describe('EagleFeatherService', () => {
     expect(lights[3].categories[0].name).toBe('Bylinkářství');
   });
 
-  it('loads the catalog in pages of at most 100 (backend limit) and follows all pages', async () => {
-    const result = firstValueFrom(service.search('beh'));
-    const first = http.expectOne((r) => r.url === `${ROOT}/api/eagle-feathers` && r.params.get('Page') === '1');
-    expect(first.request.params.get('PageSize')).toBe('100');
-    first.flush({ ...page([CATALOG[0]]), totalPages: 2, hasNextPage: true });
-    const second = http.expectOne((r) => r.url === `${ROOT}/api/eagle-feathers` && r.params.get('Page') === '2');
-    expect(second.request.params.get('PageSize')).toBe('100');
-    second.flush({ ...page([CATALOG[1]]), page: 2, totalPages: 2, hasNextPage: false });
-    http.expectOne((r) => r.url === `${ROOT}/api/user/eagle-feathers`).flush(page([]));
-    expect((await result).map((f) => f.code)).toEqual(['1A1', '1A2']);
-  });
-
   it('searches by name without diacritics and by code prefix', async () => {
     const byName = firstValueFrom(service.search('bylinkove'));
     flushCatalogAndProgress([]);
@@ -92,5 +80,47 @@ describe('EagleFeatherService', () => {
     // Catalog and progress are cached — no new requests.
     expect((await firstValueFrom(service.search('1a'))).map((f) => f.code)).toEqual(['1A1', '1A2']);
     expect(await firstValueFrom(service.search('  '))).toEqual([]);
+  });
+
+  it('resolves post feathers through the author\'s feather records, once per author', async () => {
+    const posts = [
+      { authorId: 7, userEagleFeatherId: 11 }, // GC of feather 1
+      { authorId: 7, userEagleFeatherId: 30 }, // deed of feather 3
+      { authorId: 8, userEagleFeatherId: 99 }, // record not readable
+    ];
+    const result = firstValueFrom(service.postFeathers(posts));
+    http.expectOne(`${ROOT}/api/eagle-feathers/all`).flush(CATALOG);
+    http
+      .expectOne((r) => r.url === `${ROOT}/api/users/7/eagle-feathers`)
+      .flush(page([record(1, true, true), record(3, false)]));
+    http
+      .expectOne((r) => r.url === `${ROOT}/api/users/8/eagle-feathers`)
+      .flush(null, { status: 403, statusText: 'Forbidden' });
+    const feathers = await result;
+
+    expect(feathers.get(11)?.feather.code).toBe('1A1');
+    expect(feathers.get(11)?.isGrandChallenge).toBeTrue();
+    expect(feathers.get(30)?.feather.name).toBe('Bylinkové čaje');
+    expect(feathers.has(99)).toBeFalse();
+
+    // Author 7 is cached — no new request for a known record; author 8 failed and isn't retried.
+    expect((await firstValueFrom(service.postFeathers([posts[0], posts[2]]))).get(11)?.feather.code).toBe('1A1');
+  });
+
+  it('shares one request per author between parallel callers and refetches a missing record only once', async () => {
+    const post = { authorId: 7, userEagleFeatherId: 20 }; // not in the author's list
+    const first = firstValueFrom(service.postFeathers([post]));
+    const second = firstValueFrom(service.postFeathers([post]));
+    http.expectOne(`${ROOT}/api/eagle-feathers/all`).flush(CATALOG);
+    http.expectOne((r) => r.url === `${ROOT}/api/users/7/eagle-feathers`).flush(page([record(1, true)]));
+    expect((await first).size).toBe(0);
+    expect((await second).size).toBe(0);
+
+    // A later load tries once more (it may be a new post)…
+    const retry = firstValueFrom(service.postFeathers([post]));
+    http.expectOne((r) => r.url === `${ROOT}/api/users/7/eagle-feathers`).flush(page([record(1, true)]));
+    expect((await retry).size).toBe(0);
+    // …and then never again.
+    expect((await firstValueFrom(service.postFeathers([post]))).size).toBe(0);
   });
 });

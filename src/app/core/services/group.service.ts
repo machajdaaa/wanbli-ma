@@ -5,8 +5,8 @@ import { AuthService } from './auth.service';
 import { toPerson } from './mappers';
 import { AnnouncementVm, GroupVm, LeaderboardRowVm, LeaderboardVm, PageVm } from '../models/view-models';
 import { getOrganisation$Json } from '../api/generated/fn/organisations/get-organisation-json';
+import { getOrganisationLeaderboard$Json } from '../api/generated/fn/organisations/get-organisation-leaderboard-json';
 import { getAnnouncements$Json } from '../api/generated/fn/announcements/get-announcements-json';
-import { LEADERBOARD_MOCK_COUNTS, LEADERBOARD_MOCK_MY_RANK, LEADERBOARD_MOCK_NAMES } from '../mocks/people.mock';
 
 export const ANNOUNCEMENTS_PAGE_SIZE = 20;
 
@@ -63,31 +63,31 @@ export class GroupService {
     );
   }
 
-  /**
-   * MOCK(leaderboard): no endpoint (proposed GET /api/organisations/{id}/leaderboard).
-   * Sample names and counts; the current user is placed at a fixed rank with
-   * their real name.
-   */
+  /** The whole group leaderboard by approved feather count (one feather = one point). */
   leaderboard(): Observable<LeaderboardVm> {
     return this.auth.ensureCurrentUser().pipe(
-      map((me) => {
-        const rows: LeaderboardRowVm[] = LEADERBOARD_MOCK_COUNTS.map((featherCount, i) => {
-          const rank = i + 1;
-          const isMe = rank === LEADERBOARD_MOCK_MY_RANK;
-          return {
-            rank,
-            featherCount,
-            person: isMe
-              ? toPerson(me, me.id)
-              : { id: -rank, name: LEADERBOARD_MOCK_NAMES[i], nickname: null, avatarUrl: null, isMe: false },
-          };
-        });
-        return {
-          podium: rows.slice(0, 3),
-          rows: rows.slice(3),
-          me: rows.find((r) => r.person.isMe) ?? null,
-        };
-      }),
+      switchMap((me) =>
+        me.organisationId == null
+          ? of([])
+          : this.api.allPages(getOrganisationLeaderboard$Json, { id: me.organisationId }).pipe(
+              map((entries) =>
+                entries
+                  .sort((a, b) => a.rank - b.rank)
+                  .map(
+                    (e): LeaderboardRowVm => ({
+                      rank: e.rank,
+                      featherCount: e.approvedFeatherCount,
+                      person: toPerson({ id: e.userId, nickname: e.nickname, profilePicture: e.profilePicture }, me.id),
+                    }),
+                  ),
+              ),
+            ),
+      ),
+      map((rows) => ({
+        podium: rows.slice(0, 3),
+        rows: rows.slice(3),
+        me: rows.find((r) => r.person.isMe) ?? null,
+      })),
     );
   }
 }

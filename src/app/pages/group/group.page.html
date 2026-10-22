@@ -148,11 +148,15 @@
               }
               @case ('ready') {
                 @if (leaderboard(); as board) {
+                  @if (!board.podium.length) {
+                    <app-empty-state [title]="'group.noLeaderboardTitle' | transloco" [text]="'group.noLeaderboardText' | transloco" />
+                  } @else {
                   <h2 class="px-1 type-overline text-text-muted">{{ 'group.totalFeathers' | transloco }}</h2>
                   <ol [attr.aria-label]="'group.podium' | transloco" class="my-2 grid grid-cols-3 items-end gap-2">
-                    @for (row of podium(); track row.rank) {
+                    @for (slot of podium(); track slot.row.person.id) {
+                      @let row = slot.row;
                       <li class="flex flex-col items-center gap-1.5 text-center" [attr.data-own-row]="row.person.isMe ? '' : null">
-                        @if (row.rank === 1) {
+                        @if (slot.place === 1) {
                           <svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true" class="fill-medal-gold stroke-medal-gold-edge">
                             <path d="M2 6l6 5 6-9 6 9 6-5-2 13H4z" stroke-width="2" stroke-linejoin="round" />
                           </svg>
@@ -164,9 +168,9 @@
                           [seed]="row.person.id"
                           class="rounded-[18px]"
                           [class]="
-                            row.rank === 1
+                            slot.place === 1
                               ? 'shadow-[0_0_0_3px_var(--wanbli-color-medal-gold-edge)]'
-                              : row.rank === 2
+                              : slot.place === 2
                                 ? 'shadow-[0_0_0_3px_var(--wanbli-color-medal-silver-edge)]'
                                 : 'shadow-[0_0_0_3px_var(--wanbli-color-medal-bronze-edge)]'
                           "
@@ -181,9 +185,9 @@
                         <div
                           class="mt-1 flex w-full justify-center rounded-t-16 rounded-b-[4px] border-2 pt-1.5 font-display font-extrabold text-text"
                           [class]="
-                            row.rank === 1
+                            slot.place === 1
                               ? 'h-[116px] border-medal-gold-edge bg-medal-gold text-[2.75rem] leading-[48px]'
-                              : row.rank === 2
+                              : slot.place === 2
                                 ? 'h-[88px] border-medal-silver-edge bg-medal-silver text-[2.25rem] leading-10'
                                 : 'h-[68px] border-medal-bronze-edge bg-medal-bronze text-[2rem] leading-9'
                           "
@@ -194,12 +198,13 @@
                     }
                   </ol>
                   <ol [attr.aria-label]="'group.otherRanks' | transloco" class="flex flex-col gap-2">
-                    @for (row of board.rows; track row.rank) {
+                    @for (row of board.rows; track row.person.id) {
                       <li [attr.data-own-row]="row.person.isMe ? '' : null">
                         <app-leaderboard-row [row]="row" />
                       </li>
                     }
                   </ol>
+                  }
                 }
               }
               @default {

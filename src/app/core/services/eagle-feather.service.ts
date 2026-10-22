@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, combineLatest, map, of, shareReplay, switchMap, throwError } from 'rxjs';
+import { Observable, catchError, combineLatest, forkJoin, map, of, shareReplay, switchMap, throwError } from 'rxjs';
 import { ApiClient } from './api-client';
 import { AuthService } from './auth.service';
 import { categoryCode, normalizeSearch, toLight } from './mappers';
@@ -10,15 +10,17 @@ import {
   CollectionLightVm,
   FeatherDetailVm,
   FeatherProgressVm,
+  FeatherRefVm,
   FeatherRowVm,
   LightCatalogVm,
   PersonVm,
 } from '../models/view-models';
-import { EagleFeatherResponse } from '../api/generated/models';
-import { getEagleFeathers$Json } from '../api/generated/fn/eagle-feathers/get-eagle-feathers-json';
+import { EagleFeatherResponse, UserEagleFeatherResponse } from '../api/generated/models';
+import { getAllEagleFeathers$Json } from '../api/generated/fn/eagle-feathers/get-all-eagle-feathers-json';
 import { getEagleFeathersBySection$Json } from '../api/generated/fn/eagle-feathers/get-eagle-feathers-by-section-json';
 import { getEagleFeatherById$Json } from '../api/generated/fn/eagle-feathers/get-eagle-feather-by-id-json';
 import { getMyUserEagleFeathers$Json } from '../api/generated/fn/user-eagle-feathers/get-my-user-eagle-feathers-json';
+import { getUserEagleFeathers$Json } from '../api/generated/fn/users/get-user-eagle-feathers-json';
 import { getOrganisation$Json } from '../api/generated/fn/organisations/get-organisation-json';
 import { CATEGORY_NAMES, CATEGORY_RULES } from '../mocks/categories.mock';
 import { FEATHER_EXTRAS, FEATHER_SOCIAL_NAMES, defaultFeatherExtra } from '../mocks/feathers.mock';
@@ -39,10 +41,19 @@ interface CatalogFeather {
 
 const NOT_DONE: FeatherProgressVm = { deedDone: false, deedDoneAt: null, gcDone: false, gcDoneAt: null };
 
+/** The feather a post is about, resolved from its `userEagleFeatherId`. */
+export interface PostFeatherVm {
+  feather: FeatherRefVm;
+  isGrandChallenge: boolean;
+}
+
+/** userEagleFeatherId → (eagleFeatherId, Čin / Grand challenge) for one user. */
+type UserFeatherLinks = Map<number, { eagleFeatherId: number; isGrandChallenge: boolean }>;
+
 /**
  * Eagle feather catalog and the user's progress.
  *
- * The whole catalog is fetched once (paged) and cached: category counts,
+ * The whole catalog is fetched once (`/eagle-feathers/all`) and cached: category counts,
  * progress per light and feather search are computed from it on the client
  * instead of one request per category (redesign-plan R3).
  */
@@ -52,23 +63,20 @@ export class EagleFeatherService {
   private auth = inject(AuthService);
 
   private catalog$: Observable<CatalogFeather[]> | null = null;
-  private progress$: Observable<Map<number, FeatherProgressVm>> | null = null;
+  private myRecords$: Observable<UserEagleFeatherResponse[]> | null = null;
+  /**
+   * Per author — posts only carry `userEagleFeatherId` (docs/backend-requirements.md).
+   * The request itself is cached, so parallel feeds share it; `links` holds
+   * the loaded result to decide synchronously whether a refetch is needed.
+   */
+  private linkRequests = new Map<number, Observable<UserFeatherLinks>>();
+  private links = new Map<number, UserFeatherLinks>();
+  /** Records already refetched once without being found — never refetched again. */
+  private missingLinks = new Set<number>();
 
   /** Catalog grouped by light → category, with the user's deed progress. */
   lights(): Observable<LightCatalogVm[]> {
-    return combineLatest([this.catalog(), this.progress()]).pipe(
-      map(([catalog, progress]) =>
-        LIGHTS.map((light) => {
-          const categories = this.categoriesOf(catalog.filter((f) => f.light === light), progress);
-          return {
-            light,
-            categories,
-            total: categories.reduce((sum, c) => sum + c.total, 0),
-            done: categories.reduce((sum, c) => sum + c.done, 0),
-          };
-        }),
-      ),
-    );
+    return combineLatest([this.catalog(), this.progress()]).pipe(map(([catalog, progress]) => this.lightsOf(catalog, progress)));
   }
 
   categoryDetail(light: Light, section: string): Observable<CategoryDetailVm> {
@@ -140,40 +148,58 @@ export class EagleFeatherService {
     );
   }
 
-  /** Catalog id for a feather code ("1A1"), or null when it isn't in the catalog. */
-  idForCode(code: string): Observable<number | null> {
-    return this.catalog().pipe(map((catalog) => catalog.find((f) => f.code === code.toUpperCase())?.id ?? null));
-  }
-
   /** "Moje sbírka": done deeds / all feathers per light. */
   myCollection(): Observable<CollectionLightVm[]> {
     return this.lights().pipe(map((lights) => lights.map(({ light, done, total }) => ({ light, done, total }))));
   }
 
-  /** Number of feathers in each light — used to scale mock collections of other users. */
-  totalsByLight(): Observable<Record<Light, number>> {
-    return this.catalog().pipe(
-      map((catalog) => {
-        const totals: Record<Light, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };
-        for (const f of catalog) totals[f.light]++;
-        return totals;
+  /** Someone else's collection, from their feather records. */
+  userCollection(userId: number): Observable<CollectionLightVm[]> {
+    return combineLatest([this.catalog(), this.userRecords(userId)]).pipe(
+      map(([catalog, records]) =>
+        this.lightsOf(catalog, toProgress(records)).map(({ light, done, total }) => ({ light, done, total })),
+      ),
+    );
+  }
+
+  /**
+   * Feathers of posts, keyed by `userEagleFeatherId`. The post only has that
+   * id, so each author's feather records are fetched — once per author for
+   * the session, shared by parallel callers. An author is fetched again only
+   * when a post refers to a record that isn't loaded yet (a new post), and
+   * only once per such record. My own posts use my progress records. Posts
+   * whose record can't be read (e.g. a private profile) are left out of the map.
+   */
+  postFeathers(posts: { authorId: number; userEagleFeatherId: number }[]): Observable<Map<number, PostFeatherVm>> {
+    const byAuthor = new Map<number, number[]>();
+    for (const p of posts) byAuthor.set(p.authorId, [...(byAuthor.get(p.authorId) ?? []), p.userEagleFeatherId]);
+    const requests = [...byAuthor.entries()].map(([authorId, ids]) =>
+      this.authorLinks(authorId, ids).pipe(map((links) => [authorId, links] as const)),
+    );
+    return combineLatest([this.catalog(), forkJoin(requests)]).pipe(
+      map(([catalog, links]) => {
+        const byId = new Map(catalog.map((f) => [f.id, f]));
+        const linksByAuthor = new Map(links);
+        const result = new Map<number, PostFeatherVm>();
+        for (const p of posts) {
+          const link = linksByAuthor.get(p.authorId)?.get(p.userEagleFeatherId);
+          const feather = link && byId.get(link.eagleFeatherId);
+          if (link && feather) result.set(p.userEagleFeatherId, { feather: this.toRef(feather), isGrandChallenge: link.isGrandChallenge });
+        }
+        return result;
       }),
     );
   }
 
-  /** Feathers the current user has (deed done) — the profile's "Orlí pera" stat. */
-  myFeatherCount(): Observable<number> {
-    return this.progress().pipe(map((progress) => [...progress.values()].filter((p) => p.deedDone).length));
-  }
 
   /** Re-fetch the user's progress (after adding a feather, later). */
   refreshProgress(): void {
-    this.progress$ = null;
+    this.myRecords$ = null;
   }
 
   private catalog(): Observable<CatalogFeather[]> {
     if (!this.catalog$) {
-      this.catalog$ = this.api.allPages(getEagleFeathers$Json, {}).pipe(
+      this.catalog$ = this.api.call(getAllEagleFeathers$Json, {}).pipe(
         map((items) =>
           items
             .map((f) => this.normalize(f))
@@ -189,37 +215,63 @@ export class EagleFeatherService {
     return this.catalog$;
   }
 
-  /**
-   * featherId → progress. Only completed records count (`isCompleted`);
-   * pending / rejected ones are not shown at all (redesign-plan R8).
-   */
+  /** The current user's progress, featherId → state (see toProgress). */
   private progress(): Observable<Map<number, FeatherProgressVm>> {
-    if (!this.progress$) {
-      this.progress$ = this.api.allPages(getMyUserEagleFeathers$Json, {}).pipe(
-        map((records) => {
-          const result = new Map<number, FeatherProgressVm>();
-          for (const r of records.filter((x) => x.isCompleted)) {
-            const state = { ...(result.get(r.eagleFeatherId) ?? NOT_DONE) };
-            const at = r.earnedAt ?? r.createdAt;
-            if (r.isGrandChallenge) {
-              state.gcDone = true;
-              state.gcDoneAt = at;
-            } else {
-              state.deedDone = true;
-              state.deedDoneAt = at;
-            }
-            result.set(r.eagleFeatherId, state);
-          }
-          return result;
-        }),
+    return this.myRecords().pipe(map(toProgress));
+  }
+
+  /** The current user's feather records — progress and the feathers of my own posts. */
+  private myRecords(): Observable<UserEagleFeatherResponse[]> {
+    if (!this.myRecords$) {
+      this.myRecords$ = this.api.allPages(getMyUserEagleFeathers$Json, {}).pipe(
         catchError((error) => {
-          this.progress$ = null;
+          this.myRecords$ = null;
           return throwError(() => error);
         }),
         shareReplay(1),
       );
     }
-    return this.progress$;
+    return this.myRecords$;
+  }
+
+  private authorLinks(authorId: number, needed: number[]): Observable<UserFeatherLinks> {
+    const cached = this.linkRequests.get(authorId);
+    const loaded = this.links.get(authorId);
+    // Not in `links` = in flight, or failed (cached as empty) → reuse the request.
+    const unknown = loaded ? needed.filter((id) => !loaded.has(id) && !this.missingLinks.has(id)) : [];
+    if (cached && !unknown.length) return cached;
+    unknown.forEach((id) => this.missingLinks.add(id));
+
+    const isMe = authorId === this.auth.currentUser()?.id;
+    if (isMe && unknown.length) this.refreshProgress();
+    const request = (isMe ? this.myRecords() : this.userRecords(authorId)).pipe(
+      map((records) => {
+        const links: UserFeatherLinks = new Map();
+        for (const r of records) links.set(r.id, { eagleFeatherId: r.eagleFeatherId, isGrandChallenge: r.isGrandChallenge });
+        this.links.set(authorId, links);
+        return links;
+      }),
+      catchError(() => of<UserFeatherLinks>(new Map())),
+      shareReplay(1),
+    );
+    this.linkRequests.set(authorId, request);
+    return request;
+  }
+
+  private userRecords(userId: number): Observable<UserEagleFeatherResponse[]> {
+    return this.api.allPages(getUserEagleFeathers$Json, { id: userId });
+  }
+
+  private lightsOf(catalog: CatalogFeather[], progress: Map<number, FeatherProgressVm>): LightCatalogVm[] {
+    return LIGHTS.map((light) => {
+      const categories = this.categoriesOf(catalog.filter((f) => f.light === light), progress);
+      return {
+        light,
+        categories,
+        total: categories.reduce((sum, c) => sum + c.total, 0),
+        done: categories.reduce((sum, c) => sum + c.done, 0),
+      };
+    });
   }
 
   private myGroupName(): Observable<string | null> {
@@ -267,7 +319,7 @@ export class EagleFeatherService {
     };
   }
 
-  private toRef(f: CatalogFeather) {
+  private toRef(f: CatalogFeather): FeatherRefVm {
     return {
       id: f.id,
       code: f.code,
@@ -300,4 +352,25 @@ export class EagleFeatherService {
     }));
     return { count, people };
   }
+}
+
+/**
+ * featherId → progress. Only completed records count (`isCompleted`);
+ * pending / rejected ones are not shown at all (redesign-plan R8).
+ */
+function toProgress(records: UserEagleFeatherResponse[]): Map<number, FeatherProgressVm> {
+  const result = new Map<number, FeatherProgressVm>();
+  for (const r of records.filter((x) => x.isCompleted)) {
+    const state = { ...(result.get(r.eagleFeatherId) ?? NOT_DONE) };
+    const at = r.earnedAt ?? r.createdAt;
+    if (r.isGrandChallenge) {
+      state.gcDone = true;
+      state.gcDoneAt = at;
+    } else {
+      state.deedDone = true;
+      state.deedDoneAt = at;
+    }
+    result.set(r.eagleFeatherId, state);
+  }
+  return result;
 }

@@ -4,13 +4,12 @@ import { ApiClient } from './api-client';
 import { AuthService } from './auth.service';
 import { normalizeSearch, toPerson } from './mappers';
 import { PersonRowVm } from '../models/view-models';
-import { mockFeatherCount } from '../mocks/people.mock';
 import { followUser$Json } from '../api/generated/fn/followers/follow-user-json';
 import { unfollowUser } from '../api/generated/fn/followers/unfollow-user';
 import { getFollowing$Json } from '../api/generated/fn/followers/get-following-json';
-import { getFollowers$Json } from '../api/generated/fn/followers/get-followers-json';
 import { getOrganisationMembers$Json } from '../api/generated/fn/organisations/get-organisation-members-json';
 import { getOrganisation$Json } from '../api/generated/fn/organisations/get-organisation-json';
+import { getOrganisationLeaderboard$Json } from '../api/generated/fn/organisations/get-organisation-leaderboard-json';
 
 /**
  * Following state and people lists. Who the current user follows is loaded
@@ -71,19 +70,11 @@ export class PeopleService {
     );
   }
 
-  /** Followers / following totals for any user. */
-  followCounts(userId: number): Observable<{ followers: number; following: number }> {
-    return forkJoin({
-      followers: this.api.call(getFollowers$Json, { id: userId, Page: 1, PageSize: 1 }).pipe(map((p) => p.totalCount)),
-      following: this.api.call(getFollowing$Json, { id: userId, Page: 1, PageSize: 1 }).pipe(map((p) => p.totalCount)),
-    });
-  }
-
   /**
    * "Návrhy ze tvé skupiny": members of the user's group except themselves,
    * optionally filtered by name on the client.
    * MOCK(people search): there's no user search endpoint, so search only
-   * covers the own group; MOCK(feather count) per member.
+   * covers the own group. Feather counts come from the group leaderboard.
    */
   groupSuggestions(query = ''): Observable<PersonRowVm[]> {
     return forkJoin([this.auth.ensureCurrentUser(), this.loadFollowing()]).pipe(
@@ -93,14 +84,17 @@ export class PeopleService {
         return forkJoin({
           members: this.api.allPages(getOrganisationMembers$Json, { id: orgId }),
           group: this.api.call(getOrganisation$Json, { id: orgId }),
+          counts: this.api
+            .allPages(getOrganisationLeaderboard$Json, { id: orgId })
+            .pipe(map((entries) => new Map(entries.map((e) => [e.userId, e.approvedFeatherCount])))),
         }).pipe(
-          map(({ members, group }) =>
+          map(({ members, group, counts }) =>
             members
               .filter((m) => m.id !== me.id)
               .map((m) => ({
                 person: toPerson(m, me.id),
                 groupName: group.name,
-                featherCount: mockFeatherCount(m.id),
+                featherCount: counts.get(m.id) ?? 0,
                 isFollowing: this.isFollowing(m.id),
               })),
           ),

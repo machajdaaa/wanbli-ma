@@ -1,8 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IonContent, NavController } from '@ionic/angular/standalone';
+import {
+  InfiniteScrollCustomEvent,
+  IonContent,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  NavController,
+} from '@ionic/angular/standalone';
 import { TranslocoPipe } from '@jsverse/transloco';
-import { switchMap } from 'rxjs';
+import { EMPTY, catchError, switchMap } from 'rxjs';
 import { PostCardVm, ProfileVm } from '../../core/models/view-models';
 import { AuthService } from '../../core/services/auth.service';
 import { FeedService } from '../../core/services/feed.service';
@@ -14,6 +20,7 @@ import { PostMenuSheetComponent } from '../../shared/components/post-menu-sheet/
 import { ProfileHeaderComponent } from '../../shared/components/profile-header/profile-header.component';
 import { BackButtonComponent } from '../../shared/design-system/back-button/back-button.component';
 import { ButtonComponent } from '../../shared/design-system/button/button.component';
+import { EmptyStateComponent } from '../../shared/design-system/empty-state/empty-state.component';
 import { SkeletonComponent } from '../../shared/design-system/skeleton/skeleton.component';
 
 type Status = 'loading' | 'error' | 'ready';
@@ -29,6 +36,9 @@ type Status = 'loading' | 'error' | 'ready';
   templateUrl: './user-profile.page.html',
   imports: [
     IonContent,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
+    EmptyStateComponent,
     TranslocoPipe,
     CollectionProgressComponent,
     FollowButtonComponent,
@@ -50,8 +60,11 @@ export class UserProfilePage {
   protected readonly status = signal<Status>('loading');
   protected readonly profile = signal<ProfileVm | null>(null);
   protected readonly posts = signal<PostCardVm[]>([]);
+  protected readonly hasNextPage = signal(false);
   protected readonly menuPost = signal<PostCardVm | null>(null);
   protected readonly userId = Number(this.params.get('id'));
+
+  private page = 0;
 
   constructor() {
     this.load();
@@ -77,9 +90,25 @@ export class UserProfilePage {
 
   /** Keeps the follower counter in sync with the follow button. */
   protected onFollowChanged(following: boolean): void {
-    this.profile.update((p) =>
-      p ? { ...p, stats: { ...p.stats, followers: Math.max(0, p.stats.followers + (following ? 1 : -1)) } } : p,
-    );
+    this.profile.update((p) => {
+      const followers = p?.stats.followers;
+      return p && followers != null
+        ? { ...p, stats: { ...p.stats, followers: Math.max(0, followers + (following ? 1 : -1)) } }
+        : p;
+    });
+  }
+
+  protected onInfinite(event: InfiniteScrollCustomEvent): void {
+    this.feed.userPosts(this.userId, this.page + 1).subscribe({
+      next: (page) => {
+        this.posts.update((current) => [...current, ...page.items.filter((p) => !current.some((c) => c.id === p.id))]);
+        this.hasNextPage.set(page.hasNextPage);
+        this.page = page.page;
+        event.target.complete();
+      },
+      // A failed next page just stops this attempt; scrolling again retries it.
+      error: () => event.target.complete(),
+    });
   }
 
   protected removePost(post: PostCardVm): void {
@@ -93,11 +122,17 @@ export class UserProfilePage {
         switchMap((profile) => {
           this.profile.set(profile);
           this.status.set('ready');
-          return this.feed.userPosts(profile.person);
+          if (profile.locked) return EMPTY;
+          // Posts failing (e.g. the profile turned private) leave the list empty, not the page broken.
+          return this.feed.userPosts(profile.person.id, 1).pipe(catchError(() => EMPTY));
         }),
       )
       .subscribe({
-        next: (page) => this.posts.set(page.items),
+        next: (page) => {
+          this.posts.set(page.items);
+          this.hasNextPage.set(page.hasNextPage);
+          this.page = 1;
+        },
         error: () => {
           if (!this.profile()) this.status.set('error');
         },

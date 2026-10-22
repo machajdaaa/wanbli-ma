@@ -1,11 +1,12 @@
 import { FeatherRefVm, MetricVm } from '../models/view-models';
 
 /*
- * MOCK(post feather): PostResponse only carries `userEagleFeatherId` — no
- * feather name/code/light, no grand-challenge flag, no metrics, a single
- * `imageUrl`. Until the backend adds them (docs/backend-requirements.md),
- * each real post gets one of these samples picked deterministically by post id.
- * Samples are the posts shown in design/screens (KartaPera, Domu, Skupina…).
+ * MOCK(post feather): PostResponse only carries `userEagleFeatherId`. The
+ * feather is resolved through the author's feather records
+ * (EagleFeatherService.postFeathers); these samples are the fallback when that
+ * record can't be read (docs/backend-requirements.md, redesign-plan R62), and
+ * the cards on /dev/ui. Picked deterministically by post id. Samples are the
+ * posts shown in design/screens (KartaPera, Domu, Skupina…).
  */
 export interface PostFeatherSample {
   feather: FeatherRefVm;

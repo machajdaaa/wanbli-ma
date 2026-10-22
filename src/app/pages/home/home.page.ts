@@ -15,7 +15,6 @@ import { forkJoin } from 'rxjs';
 import { DailyChallengeVm, HomeFeedMode, PostCardVm } from '../../core/models/view-models';
 import { AuthService } from '../../core/services/auth.service';
 import { ChallengeService } from '../../core/services/challenge.service';
-import { EagleFeatherService } from '../../core/services/eagle-feather.service';
 import { FeedService } from '../../core/services/feed.service';
 import { DailyChallengeCardComponent } from '../../shared/components/daily-challenge-card/daily-challenge-card.component';
 import { PostCardComponent } from '../../shared/components/post-card/post-card.component';
@@ -58,7 +57,6 @@ export class HomePage {
   private auth = inject(AuthService);
   private feed = inject(FeedService);
   private challenges = inject(ChallengeService);
-  private feathers = inject(EagleFeatherService);
   private toasts = inject(ToastService);
   private transloco = inject(TranslocoService);
   private navCtrl = inject(NavController);
@@ -79,7 +77,7 @@ export class HomePage {
   private page = 0;
 
   constructor() {
-    this.challenges.today().subscribe((c) => this.challenge.set(c));
+    this.challenges.current().subscribe((c) => this.challenge.set(c));
     this.load();
   }
 
@@ -124,13 +122,7 @@ export class HomePage {
   }
 
   protected openChallenge(challenge: DailyChallengeVm): void {
-    this.feathers.idForCode(challenge.featherCode).subscribe({
-      next: (id) =>
-        id != null
-          ? this.navCtrl.navigateForward(['/nav/eagle-feathers/feather', id])
-          : this.toasts.error(this.transloco.translate('home.challengeUnavailable')),
-      error: () => this.toasts.error(this.transloco.translate('common.genericError')),
-    });
+    this.navCtrl.navigateForward(['/nav/eagle-feathers/feather', challenge.featherId]);
   }
 
   protected removePost(post: PostCardVm): void {

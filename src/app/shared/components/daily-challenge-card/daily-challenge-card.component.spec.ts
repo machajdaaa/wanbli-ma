@@ -13,7 +13,7 @@ describe('DailyChallengeCardComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DailyChallengeCardComponent);
-    fixture.componentRef.setInput('challenge', { title: 'Stovka', text: 'Uběhni stovku.', featherCode: '1A1' });
+    fixture.componentRef.setInput('challenge', { id: 1, title: 'Stovka', text: 'Uběhni stovku.', featherId: 1 });
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -6,23 +6,22 @@ v `src/app/core/api/generated`) zatím nevrací. Každý řádek odpovídá zna�
 a mapují se ve službách v `src/app/core/services/`. Když backend data doplní,
 stačí změnit mapování ve službě a smazat mock; komponenty se nemění.
 
-Stav k 11. 10. 2026 (konec redesignu, fáze 9). Priorita: **P1** = bez toho je
+Stav k 22. 10. 2026 (po napojení nových endpointů – viz „Hotovo“ na konci).
+Priorita: **P1** = bez toho je
 obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drobnost.
 
 ## Příspěvky a feed
 
 | MOCK | Potřeba | Obrazovka | Dnes v API | Návrh | P |
 |---|---|---|---|---|---|
-| `post feather` | Pero u příspěvku: id, kód, název, světlo, kategorie, Grand challenge | Karta pera (Domů, Skupina, Profil) | jen `userEagleFeatherId` | do `PostResponse` vnořený objekt `eagleFeather { id, code, name, light, section, categoryName }` + `isGrandChallenge` | P1 |
-| `post feather` | Výkon: 0–2 metriky (popisek, hodnota, jednotka) | Karta pera | nic | `metrics: [{ label, value, unit }]` u splnění pera (i pro „Splněno 12. 9. · 14,3 s“ v detailu pera) | P1 |
+| `post feather` | Pero u příspěvku: id, kód, název, světlo, kategorie, Grand challenge | Karta pera (Domů, Skupina, Profil) | jen `userEagleFeatherId`; klient ho dohledá přes `GET /api/users/{id}/eagle-feathers` autora (1 request na autora, cache). Mock jen když záznam nejde přečíst | do `PostResponse` vnořit `eagleFeatherId` + `isGrandChallenge` (ušetří requesty na autory, funguje i u soukromých profilů) | P2 |
+| `post feather` / `metrics` | Výkon: 0–2 metriky (popisek, hodnota, jednotka) | Karta pera | nic | `metrics: [{ label, value, unit }]` u splnění pera (i pro „Splněno 12. 9. · 14,3 s“ v detailu pera) | P2 |
 | – (skryto) | Místo na úrovni obce | Karta pera, oznámení | nic | `place: { municipality, region }` u příspěvku; nikdy adresa ani souřadnice | P2 |
 | – | Více fotek | Karta pera | jedna `imageUrl` | `imageUrls: string[]` | P2 |
 | `likedByMe` | Jestli jsem příspěvek olajkoval | Karta pera (pírko) | nic; stav se drží jen v relaci | `likedByMe: boolean` v `PostResponse`; `POST /likes` idempotentní (nebo 409 při duplicitě) | P1 |
 | – | Celé jméno autora | Karta pera | jen `nickname` | `firstName`, `lastName` v `PostAuthorResponse` – **rozhodnout, komu jméno ukazovat** (celá Liga vs. vlastní skupina, děti) | P2 |
 | – | Feed „celá Liga“, když nikoho nesleduju | Domů (stav 1b) | nevíme, co `/api/feed` vrací uživateli bez sledovaných | potvrdit chování, případně `GET /api/feed?scope=league` | P1 |
-| `user posts` | Příspěvky konkrétního uživatele | Můj profil, cizí profil | nic | `GET /api/users/{id}/posts` (stránkovaně) | P1 |
 | `hide post` | Skrýt / nahlásit příspěvek | Menu příspěvku | nic; skrytí jen lokálně do obnovení feedu, nahlášení UI poctivě označí jako nedostupné | `POST /api/posts/{id}/hide`, `POST /api/posts/{id}/report` (nahlášení jde vedoucímu oddílu) – **nahlašování je bezpečnostní funkce pro děti** | P1 |
-| `daily challenge` | Denní výzva (název, text, pero) | Domů | nic | `GET /api/challenges/today` → `{ title, text, eagleFeatherId }`; kdo ji vybírá (admin / los) je otevřené | P2 |
 
 ## Orlí pera
 
@@ -33,16 +32,16 @@ obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drob
 | `feather detail` | Co se měří, krátký cíl pro seznam | Detail kategorie, detail pera, hledání | jen texty `challenge`, `grandChallenge` | `measure: string`, `goal: string` u pera | P2 |
 | `feather detail` | Limity podle věku a pohlaví | Detail pera (tabulka) | nic | `limits: [{ ageFrom, ageTo, gender, deed, grandChallenge, unit }]`; věkové skupiny pro děti 8–15 (design má 14+) | P2 |
 | `feather detail` | Slovníček pojmů | Detail pera | nic | `terms: [{ term, definition }]` | P3 |
-| `feather social` | Kolik lidí ze skupiny pero má | Detail pera | nic | `GET /api/eagle-feathers/{id}/group-stats` → `{ count, people: PublicUser[3] }` | P2 |
+| `feather social` | Kolik lidí ze skupiny pero má | Detail pera | nic (z klienta by to bylo 1 request na člena skupiny) | `GET /api/eagle-feathers/{id}/group-stats` → `{ count, people: PublicUser[3] }` | P2 |
 | `metrics` | Výsledek u splněného Činu | Detail pera („Splněno 12. 9. · 14,3 s“) | jen `earnedAt` | `metrics[]` u `UserEagleFeatherResponse` (viz výkon výše) | P2 |
 | – | Formát `section` | všechny obrazovky per | neověřeno (`"A"`? `"1A"`?) | potvrdit; klient zvládne obojí (redesign-plan R7) | P3 |
-| – | Fulltext hledání per | Hledání pera | nic | zatím se filtruje celý katalog na klientu – OK do stovek per; později `GET /api/eagle-feathers?query=` | P3 |
+| – | Fulltext hledání per | Hledání pera | nic | zatím se filtruje celý katalog (`/eagle-feathers/all`) na klientu – OK do stovek per; později `GET /api/eagle-feathers?query=` | P3 |
 
 ## Skupina
 
 | MOCK | Potřeba | Obrazovka | Dnes v API | Návrh | P |
 |---|---|---|---|---|---|
-| `leaderboard` | Žebříček skupiny podle počtu per | Skupina → Žebříček | nic | `GET /api/organisations/{id}/leaderboard` → `[{ rank, user, featherCount }]` + vlastní řádek | P1 |
+| – | Celé jméno v žebříčku | Skupina → Žebříček | `LeaderboardEntryResponse` má jen `nickname` | `firstName`, `lastName` (stejné rozhodnutí o viditelnosti jako u autora příspěvku) | P3 |
 | – (skryto) | Oznámení: kdy, kde, vstupné, věk, obrázek | Skupina → Oznámení | jen `title`, `content`, autor (přezdívka) | rozšířit `AnnouncementResponse` o `startsAt`, `endsAt`, `place`, `price`, `minAge`, `imageUrl`, avatar a jméno autora | P2 |
 | – | Cover skupiny | Hlavička skupiny | jen `avatarUrl` | `coverUrl` (do té doby ilustrace z designu) | P3 |
 
@@ -50,13 +49,14 @@ obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drob
 
 | MOCK | Potřeba | Obrazovka | Dnes v API | Návrh | P |
 |---|---|---|---|---|---|
-| `bio` | Bio (max. 150 znaků) | Profil, úprava profilu, cizí profil | nic; vlastní bio se ukládá jen v zařízení | `bio` v `UserMeResponse`, `UpdateUserRequest`, `PublicUserResponse` | P2 |
-| `public profile` / `people stats` | Cizí profil: skupina, počet per, sbírka po světlech, bio | Cizí profil | jen jméno a fotka | rozšířit `PublicUserResponse` o `organisation { id, name }`, `featherCount`, `collection [{ light, done, total }]`, `isFollowedByMe` | P1 |
-| `feather count` | Počet per u člena skupiny | Hledání lidí, žebříček | nic | `featherCount` v `OrganisationMemberResponse` | P2 |
-| `people search` | Hledání lidí mimo vlastní skupinu | Hledání lidí | nic | `GET /api/users?query=` | P2 |
+| `bio` | Bio (max. 150 znaků) | Profil, úprava profilu, cizí profil | nic; vlastní bio se ukládá jen v zařízení, u cizích profilů je skryté | `bio` v `UserMeResponse`, `UpdateUserRequest`, `UserProfileResponse` | P2 |
+| – (skryto) | Skupina na cizím profilu | Cizí profil | `UserProfileResponse` skupinu nemá | `organisation { id, name }` | P2 |
+| – | Chování soukromého profilu | Cizí profil | `isPrivate`, počty jsou nullable; neověřeno, co vrací `/users/{id}/posts` a `/eagle-feathers` u soukromého profilu, a jestli sledování potřebuje schválení | potvrdit; klient: soukromý + nesleduju = „Soukromý profil“, sbírka a příspěvky se nenačítají (R61) | P2 |
+| – | Typy `UserProfileResponse` | Cizí profil | všechna pole volitelná (`id?`, `nickname?`…) | označit povinná pole jako `required` ve schématu | P3 |
+| `people search` | Hledání lidí mimo vlastní skupinu | Hledání lidí | nic (počty per u členů bere klient z žebříčku skupiny) | `GET /api/users?query=` | P2 |
 | – | Nahrání fotky | Úprava profilu (později pera) | nic | upload endpoint (presigned URL / multipart) | P2 |
 | – | Změna a obnova hesla | Nastavení, Přihlášení | nic | `POST /api/auth/change-password`, `/forgot-password`, `/reset-password` | P2 |
-| `notification settings` | Nastavení notifikací, soukromí, blokování | Nastavení | nic; přepínače jen lokálně | později, spolu s push notifikacemi | P3 |
+| `notification settings` | Nastavení notifikací, blokování | Nastavení | nic; přepínače notifikací jen lokálně (soukromý profil už přes `isPrivate`) | později, spolu s push notifikacemi | P3 |
 
 ## Přihlášení a registrace
 
@@ -72,16 +72,32 @@ obrazovka z velké části vymyšlená, **P2** = část obrazovky, **P3** = drob
 ## Shrnutí priorit
 
 **P1 – bez toho jsou obrazovky z velké části ukázkové nebo chybí důležitá funkce:**
-pero a výkon u příspěvku, `likedByMe`, chování feedu bez sledovaných,
-příspěvky uživatele, názvy kategorií, žebříček, rozšířený veřejný profil,
-nahlašování příspěvků, souhlas rodiče pod 15 let.
+`likedByMe`, chování feedu bez sledovaných, názvy kategorií, nahlašování
+příspěvků, souhlas rodiče pod 15 let.
 
-**P2:** místo, více fotek, jméno autora (rozhodnout viditelnost), denní výzva,
-limity / co se měří / kdo ze skupiny pero má, výsledek u splnění, rozšířená
-oznámení, bio, počty per členů, hledání lidí, upload fotek, změna a obnova
-hesla, tok vstupu do oddílu, texty podmínek.
+**P2:** pero u příspěvku přímo v `PostResponse`, výkon (metriky), místo,
+více fotek, jméno autora (rozhodnout viditelnost), limity / co se měří / kdo
+ze skupiny pero má, výsledek u splnění, rozšířená oznámení, bio, skupina na
+cizím profilu, chování soukromého profilu, hledání lidí, upload fotek, změna
+a obnova hesla, tok vstupu do oddílu, texty podmínek.
 
 **P3:** pravidla kategorie, slovníček, formát `section`, fulltext per,
-cover skupiny, notifikace/soukromí, přihlášení e-mailem, hodnoty `Gender`,
-lokalizované chyby validace.
+cover skupiny, jméno v žebříčku, povinná pole `UserProfileResponse`,
+notifikace, přihlášení e-mailem, hodnoty `Gender`, lokalizované chyby validace.
 
+## Hotovo (napojeno 22. 10. 2026)
+
+| Dřív MOCK | Endpoint | Kde v klientu |
+|---|---|---|
+| katalog po stránkách po 100 | `GET /api/eagle-feathers/all` | `EagleFeatherService.catalog()` |
+| `user posts` | `GET /api/users/{id}/posts` | `FeedService.userPosts()`, profily s nekonečným scrollem |
+| `daily challenge` | `GET /api/challenges/current` (404 = žádná výzva, karta se skryje) | `ChallengeService.current()` |
+| `leaderboard` | `GET /api/organisations/{id}/leaderboard` | `GroupService.leaderboard()` |
+| `feather count` | počty per z žebříčku | `PeopleService.groupSuggestions()` |
+| `public profile` / `people stats` | `GET /api/users/{id}` (`UserProfileResponse`), `GET /api/users/{id}/eagle-feathers` (sbírka) | `ProfileService.userProfile()` |
+| statistiky mého profilu | `GET /api/users/{id}/stats` | `ProfileService.myProfile()` |
+| soukromí „Kdo vidí moje pera“ | `isPrivate` v `PUT /api/user` | Nastavení → Soukromý profil |
+| `post feather` (částečně) | `GET /api/users/{id}/eagle-feathers` | `EagleFeatherService.postFeathers()` |
+
+Nepoužité: `POST /api/challenges/{id}/pin|unpin` a `pinnedCount` – připnutí
+výzvy není v designu ani konceptu (R60).

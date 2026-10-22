@@ -23,23 +23,35 @@
           <app-profile-header class="-mt-8" [profile]="profile" />
           <app-follow-button class="-mt-2" [userId]="profile.person.id" (changed)="onFollowChanged($event)" />
 
-          <section class="flex flex-col gap-3">
-            <h2 class="type-h3 text-text">{{ 'profile.collection' | transloco }}</h2>
-            <app-collection-progress [collection]="profile.collection" />
-          </section>
-
-          <section class="flex flex-col gap-3">
-            <h2 class="type-h3 text-text">{{ 'profile.posts' | transloco }}</h2>
-            @for (post of posts(); track post.id) {
-              <app-post-card [post]="post" (menu)="menuPost.set($event)" />
-            } @empty {
-              <p class="type-body text-text-muted">{{ 'profile.noPostsOther' | transloco }}</p>
+          @if (profile.locked) {
+            <app-empty-state [title]="'profile.privateTitle' | transloco" [text]="'profile.privateText' | transloco" />
+          } @else {
+            @if (profile.collection.length) {
+              <section class="flex flex-col gap-3">
+                <h2 class="type-h3 text-text">{{ 'profile.collection' | transloco }}</h2>
+                <app-collection-progress [collection]="profile.collection" />
+              </section>
             }
-          </section>
+
+            <section class="flex flex-col gap-3">
+              <h2 class="type-h3 text-text">{{ 'profile.posts' | transloco }}</h2>
+              @for (post of posts(); track post.id) {
+                <app-post-card [post]="post" (menu)="menuPost.set($event)" />
+              } @empty {
+                <p class="type-body text-text-muted">{{ 'profile.noPostsOther' | transloco }}</p>
+              }
+            </section>
+          }
         }
       }
     }
   </main>
+
+  @if (hasNextPage()) {
+    <ion-infinite-scroll (ionInfinite)="onInfinite($event)">
+      <ion-infinite-scroll-content />
+    </ion-infinite-scroll>
+  }
 
   <app-post-menu-sheet [(post)]="menuPost" (hidden)="removePost($event)" (deleted)="removePost($event)" />
 </ion-content>

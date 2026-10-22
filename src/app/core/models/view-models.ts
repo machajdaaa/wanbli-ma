@@ -140,10 +140,11 @@ export interface PageVm<T> {
 export type HomeFeedMode = 'following' | 'league';
 
 export interface DailyChallengeVm {
+  id: number;
   title: string;
-  text: string;
-  /** Feather to open from "Do toho!" ("1A1"); resolved to an id via the catalog. */
-  featherCode: string;
+  text: string | null;
+  /** Feather opened by "Do toho!". */
+  featherId: number;
 }
 
 /* ---------- Group ---------- */
@@ -205,9 +206,12 @@ export interface ProfileVm {
   lastName: string;
   group: { id: number; name: string } | null;
   bio: string | null;
-  stats: { feathers: number; followers: number; following: number };
+  /** null = hidden by the API (private profile). */
+  stats: { feathers: number | null; followers: number | null; following: number | null };
   collection: CollectionLightVm[];
   isFollowing: boolean;
+  /** Private profile the current user can't see into: collection and posts are hidden. */
+  locked: boolean;
 }
 
 export interface PersonRowVm {

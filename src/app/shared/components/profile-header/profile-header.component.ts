@@ -47,18 +47,18 @@ import { IconComponent } from '../../design-system/icon/icon.component';
       <div class="flex flex-col-reverse items-center border-r border-border px-2 py-3">
         <dt class="type-caption text-text-muted">{{ 'profile.feathers' | transloco }}</dt>
         <dd class="inline-flex items-center gap-1 font-display text-[1.625rem] leading-8 font-extrabold text-text">
-          <app-icon name="feather" [size]="20" class="text-primary" />{{ profile().stats.feathers }}
+          <app-icon name="feather" [size]="20" class="text-primary" />{{ profile().stats.feathers ?? '–' }}
         </dd>
       </div>
       <div class="flex flex-col-reverse items-center border-r border-border px-2 py-3">
         <dt class="type-caption text-text-muted">{{ 'profile.followers' | transloco }}</dt>
-        <dd class="font-display text-[1.625rem] leading-8 font-extrabold text-text">{{ profile().stats.followers }}</dd>
+        <dd class="font-display text-[1.625rem] leading-8 font-extrabold text-text">{{ profile().stats.followers ?? '–' }}</dd>
       </div>
       <div class="flex flex-col-reverse items-center px-2 py-3">
         <dt class="type-caption text-text-muted">
           {{ (profile().person.isMe ? 'profile.followingMe' : 'profile.followingOther') | transloco }}
         </dt>
-        <dd class="font-display text-[1.625rem] leading-8 font-extrabold text-text">{{ profile().stats.following }}</dd>
+        <dd class="font-display text-[1.625rem] leading-8 font-extrabold text-text">{{ profile().stats.following ?? '–' }}</dd>
       </div>
     </dl>
   `,
