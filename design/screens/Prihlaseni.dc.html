@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Přihlášení</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+  <section style="height: 300px; box-sizing: border-box; padding-top: 76px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px">
+    <img src="../assets/eagle-auth.png" alt="" style="width: 168px; height: 140px; margin-bottom: 10px">
+    <h1 style="margin: 0; font: 800 32px/36px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif; letter-spacing: -0.3px">Vítej zpátky!</h1>
+    <p style="margin: 0; font: 400 15px/20px Inter, system-ui, sans-serif; color: #5E6B57">Přihlas se a sbírej další pera.</p>
+  </section>
+
+  <form style="display: flex; flex-direction: column; gap: 16px; padding: 28px 16px 0">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="l-user" style="font: 600 14px/20px Inter, system-ui, sans-serif">E-mail nebo přezdívka</label>
+      <input id="l-user" autocomplete="username" value="kuba.novak@email.cz" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 1px solid #DEDDD2; background: #FFFFFF; color: #1F3A1A; font: 400 16px/20px Inter, system-ui, sans-serif">
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="l-pass" style="font: 600 14px/20px Inter, system-ui, sans-serif">Heslo</label>
+      <div style="display: flex; align-items: center; height: 48px; box-sizing: border-box; padding: 0 2px 0 14px; border-radius: 12px; border: 2px solid #E07B1F; box-shadow: 0 0 0 4px #FCEBD9; background: #FFFFFF">
+        <input id="l-pass" type="{{passType}}" autocomplete="current-password" value="sovaVnoci42" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; color: #1F3A1A; font: 400 16px/20px Inter, system-ui, sans-serif">
+        <button type="button" aria-label="{{eyeLabel}}" onClick="{{toggleEye}}" style="width: 44px; height: 44px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: #5E6B57; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <sc-if value="{{hidden}}" hint-placeholder-val="{{ true }}">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </sc-if>
+          <sc-if value="{{shown}}" hint-placeholder-val="{{ false }}">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path></svg>
+          </sc-if>
+        </button>
+      </div>
+    </div>
+    <a href="#" style="align-self: flex-end; display: inline-flex; align-items: center; height: 44px; margin: -12px -4px -8px 0; padding: 0 4px; color: #1F3A1A; font: 600 14px/20px Inter, system-ui, sans-serif; text-decoration: underline; text-decoration-color: #E07B1F; text-decoration-thickness: 2px; text-underline-offset: 4px">Zapomněl/a jsi heslo?</a>
+    <a href="Domu.dc.html" style="display: flex; align-items: center; justify-content: center; height: 52px; margin-top: 4px; border-radius: 12px; border: 1.5px solid #C9661A; background: #E07B1F; color: #FFFFFF; text-decoration: none; font: 600 16px/20px Inter, system-ui, sans-serif">Přihlásit se</a>
+  </form>
+
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 34px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">
+    Ještě nemáš účet?
+    <a href="Registrace.dc.html" style="display: inline-flex; align-items: center; height: 44px; color: #1F3A1A; font: 600 14px/20px Inter, system-ui, sans-serif; text-decoration: underline; text-decoration-color: #E07B1F; text-decoration-thickness: 2px; text-underline-offset: 4px">Zaregistruj se</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var show = !!(this.state && this.state.show);
+    return {
+      passType: show ? 'text' : 'password',
+      hidden: !show, shown: show,
+      eyeLabel: show ? 'Skrýt heslo' : 'Zobrazit heslo',
+      toggleEye: function () { self.setState({ show: !show }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

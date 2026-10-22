@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Nastavení</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1240px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+  <header style="display: flex; align-items: center; gap: 8px; padding: 52px 16px 8px">
+    <a href="Profil.dc.html" aria-label="Zpět" style="width: 44px; height: 44px; margin-left: -6px; border-radius: 50%; color: #1F3A1A; display: flex; align-items: center; justify-content: center">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+    </a>
+    <h1 style="margin: 0; font: 800 26px/32px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Nastavení</h1>
+  </header>
+
+  <main style="display: flex; flex-direction: column; gap: 24px; padding: 12px 16px 48px">
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; padding: 0 4px; font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Účet</h2>
+      <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+        <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A; border-bottom: 1px solid #ECEBE3">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Osobní údaje</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Změnit heslo</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; padding: 0 4px; font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Aplikace</h2>
+      <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 14px 14px 6px; font: 600 14px/20px Inter, system-ui, sans-serif">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>Notifikace
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 12px 0 40px; border-bottom: 1px solid #ECEBE3">
+          <label for="n1" style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Pírka k mým perům</label>
+          <button id="n1" type="button" role="switch" aria-checked="true" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #E07B1F; padding: 0; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 12px 0 40px; border-bottom: 1px solid #ECEBE3">
+          <label for="n2" style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Noví sledující</label>
+          <button id="n2" type="button" role="switch" aria-checked="true" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #E07B1F; padding: 0; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 12px 0 40px; border-bottom: 1px solid #ECEBE3">
+          <label for="n3" style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Oznámení ze skupiny</label>
+          <button id="n3" type="button" role="switch" aria-checked="true" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #E07B1F; padding: 0; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 12px 0 40px">
+          <label for="n4" style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Daily challenge</label>
+          <button id="n4" type="button" role="switch" aria-checked="false" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #C6CBBD; padding: 0; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; border-bottom: 1px solid #ECEBE3">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></span>
+          <label for="dm" style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Tmavý režim</label>
+          <button id="dm" type="button" role="switch" aria-checked="false" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #C6CBBD; padding: 0; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+        </div>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Jazyk</span>
+          <span style="font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Čeština</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; padding: 0 4px; font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Soukromí</h2>
+      <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+        <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A; border-bottom: 1px solid #ECEBE3">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Kdo vidí moje pera</span>
+          <span style="font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Celá Liga</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="m4.9 4.9 14.2 14.2"></path></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Zablokovaní lidé</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px">
+      <h2 style="margin: 0; padding: 0 4px; font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">O aplikaci</h2>
+      <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+        <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A; border-bottom: 1px solid #ECEBE3">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M16 13H8M16 17H8"></path></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Podmínky používání</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+        <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A; border-bottom: 1px solid #ECEBE3">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Ochrana osobních údajů</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </a>
+        <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 14px 0 14px">
+          <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg></span>
+          <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Verze aplikace</span>
+          <span style="font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">1.0.0</span>
+        </div>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+      <button type="button" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; border: 0; background: transparent; color: #C8442F; text-align: left">
+        <span style="width: 32px; height: 32px; border-radius: 9px; background: #FBE7E3; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg></span>
+        <span style="flex: 1; font: 600 16px/22px Inter, system-ui, sans-serif">Odhlásit se</span>
+      </button>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

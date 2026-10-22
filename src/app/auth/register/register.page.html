@@ -1,0 +1,131 @@
+<ion-content>
+  <div class="flex min-h-full flex-col px-4 pb-[calc(var(--wanbli-space-6)+var(--ion-safe-area-bottom,0px))]">
+    <header class="flex flex-col gap-1 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))]">
+      <app-back-button fallback="/login" class="-ml-2.5" [label]="'auth.backToLogin' | transloco" />
+      <div class="flex items-end justify-between gap-3">
+        <div class="flex flex-col gap-1 pt-1">
+          <h1 class="type-display text-text">{{ 'auth.registerTitle' | transloco }}</h1>
+          <p class="font-text text-[0.9375rem] leading-5 text-text-muted">{{ 'auth.registerText' | transloco }}</p>
+        </div>
+        <img src="/assets/images/eagle-auth.png" alt="" class="h-[70px] w-[84px] shrink-0" />
+      </div>
+    </header>
+
+    <form class="flex flex-col gap-4 pt-6" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="grid grid-cols-2 gap-3">
+        <app-text-input
+          formControlName="firstName"
+          autocomplete="given-name"
+          [label]="'editProfile.firstName' | transloco"
+          [error]="errorFor('firstName')"
+        />
+        <app-text-input
+          formControlName="lastName"
+          autocomplete="family-name"
+          [label]="'editProfile.lastName' | transloco"
+          [error]="errorFor('lastName')"
+        />
+      </div>
+      <app-text-input
+        formControlName="nickname"
+        autocomplete="nickname"
+        [label]="'editProfile.nickname' | transloco"
+        [hint]="'editProfile.nicknameHint' | transloco"
+        [error]="errorFor('nickname')"
+      />
+      <app-text-input
+        formControlName="email"
+        type="email"
+        autocomplete="email"
+        inputMode="email"
+        [label]="'auth.email' | transloco"
+        [error]="errorFor('email')"
+      />
+      <app-text-input
+        formControlName="birthDate"
+        type="date"
+        autocomplete="bday"
+        [max]="today"
+        [label]="'auth.birthDate' | transloco"
+        [error]="errorFor('birthDate')"
+      />
+
+      <div class="flex flex-col gap-1.5">
+        <span id="gender-label" class="type-label text-text">{{ 'auth.gender' | transloco }}</span>
+        <app-segmented-control
+          size="sm"
+          mode="radiogroup"
+          [ariaLabel]="'auth.gender' | transloco"
+          [options]="genderOptions()"
+          [value]="gender()"
+          (valueChange)="setGender($event)"
+        />
+      </div>
+
+      <app-text-input
+        formControlName="password"
+        type="password"
+        autocomplete="new-password"
+        [label]="'auth.password' | transloco"
+        [hint]="'auth.passwordHint' | transloco: { count: passwordMinLength }"
+        [hintSuccess]="passwordLongEnough()"
+        [error]="errorFor('password')"
+      />
+
+      <!-- MOCK(group picker): shown as designed, not sent to the API. -->
+      <div class="flex flex-col gap-1.5">
+        <label for="register-group" class="type-label text-text">{{ 'auth.group' | transloco }}</label>
+        <div class="relative">
+          <select
+            id="register-group"
+            formControlName="group"
+            class="h-12 w-full appearance-none rounded-12 border border-border bg-surface-raised pr-11 pl-3.5 type-body-l text-text outline-none
+                   focus:border-primary focus:shadow-[var(--wanbli-shadow-focus),inset_0_0_0_1px_var(--wanbli-color-primary)]"
+          >
+            @for (group of groups; track group) {
+              <option [value]="group">{{ group }}</option>
+            }
+            <option value="other">{{ 'auth.otherGroup' | transloco }}</option>
+          </select>
+          <app-icon name="chevron-down" [size]="20" class="pointer-events-none absolute top-3.5 right-3.5 text-text-muted" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label class="flex min-h-11 items-center gap-3 type-body text-text">
+          <input
+            type="checkbox"
+            formControlName="terms"
+            class="size-[22px] shrink-0 accent-primary"
+            [attr.aria-invalid]="errorFor('terms') ? true : null"
+            [attr.aria-describedby]="errorFor('terms') ? 'terms-error' : null"
+          />
+          <span>{{ 'auth.terms' | transloco }}</span>
+        </label>
+        @if (errorFor('terms'); as error) {
+          <span id="terms-error" class="type-caption text-danger">{{ error }}</span>
+        }
+      </div>
+
+      @if (underParentAge()) {
+        <div class="flex gap-3 rounded-12 bg-primary-subtle px-3.5 py-3" role="note">
+          <app-icon name="info" [size]="20" class="shrink-0 text-primary-subtle-text" />
+          <span class="type-body text-text">{{ 'auth.under15' | transloco }}</span>
+        </div>
+      }
+
+      <app-button type="submit" size="lg" [block]="true" [loading]="submitting()" class="mt-1">
+        {{ (submitting() ? 'auth.registering' : 'auth.register') | transloco }}
+      </app-button>
+    </form>
+
+    <p class="mt-auto flex items-center justify-center gap-1.5 pt-8 type-body text-text-muted">
+      {{ 'auth.haveAccount' | transloco }}
+      <a
+        routerLink="/login"
+        class="inline-flex h-11 items-center type-label text-text underline decoration-primary decoration-2 underline-offset-4"
+        >{{ 'auth.toLogin' | transloco }}</a
+      >
+    </p>
+  </div>
+</ion-content>

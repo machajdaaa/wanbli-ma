@@ -8,6 +8,7 @@ import { AppComponent } from './app/app.component';
 import { authInterceptor } from './app/core/interceptors/auth.interceptor';
 import { provideApiConfiguration } from './app/core/api/generated/api-configuration';
 import { environment } from './environments/environment';
+import { provideI18n } from './app/core/i18n/i18n.config';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -19,5 +20,6 @@ bootstrapApplication(AppComponent, {
       withInterceptors([authInterceptor])
     ),
     provideApiConfiguration(environment.apiUrl),
+    ...provideI18n(),
   ],
 }).catch((err) => console.error(err));

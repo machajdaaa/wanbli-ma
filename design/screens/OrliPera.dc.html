@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Orlí pera</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1180px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+  <main style="display: flex; flex-direction: column; gap: 28px; padding: 56px 0 140px">
+    <section aria-label="Orlí pera" style="position: relative; height: 160px; margin: 0 16px; box-sizing: border-box; border-radius: 16px; border: 1px solid #C5D7D6; background: #1E4019; overflow: hidden">
+      <svg width="200" height="158" viewBox="0 0 200 158" aria-hidden="true" style="position: absolute; top: 0; right: 0">
+        <path d="M14 170 C-6 168 -6 132 20 126 C20 106 38 96 56 102 C64 76 92 66 112 78 C118 42 150 18 180 26 C194 8 214 8 220 14 V170 Z" fill="#2C4F27"></path>
+        <circle cx="120" cy="78" r="62" fill="#BD9670"></circle>
+        <g transform="translate(118 80) rotate(35)" stroke="#142912" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 -54 C24 -42 28 -14 20 10 L12 8 L17 18 C12 32 6 42 0 50 C-8 44 -16 34 -20 22 L-12 18 L-21 12 C-26 -12 -20 -42 2 -54 Z" fill="#EFE8E8"></path>
+          <path d="M3 -30 C1 0 -3 34 -10 66" fill="none"></path>
+        </g>
+        <g fill="#F08A24" stroke="#142912" stroke-width="2.5" stroke-linejoin="round">
+          <path d="M76 41 Q79.5 51.5 90 55 Q79.5 58.5 76 69 Q72.5 58.5 62 55 Q72.5 51.5 76 41 Z"></path>
+          <path d="M170 40 Q172.5 47.5 180 50 Q172.5 52.5 170 60 Q167.5 52.5 160 50 Q167.5 47.5 170 40 Z"></path>
+          <path d="M150 100 Q153 109 162 112 Q153 115 150 124 Q147 115 138 112 Q147 109 150 100 Z"></path>
+        </g>
+      </svg>
+      <div style="position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 18px 0 0 20px; width: 190px">
+        <h1 style="margin: 0; font: 800 23px/28px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif; color: #FFFFFF">Orlí pera</h1>
+        <p style="margin: 0; font: 400 13px/17px Inter, system-ui, sans-serif; color: #C9D2C4">Plň challenge a získávej orlí pera</p>
+        <a href="VyhledaniPera.dc.html" style="margin-top: 12px; display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; border: 1.5px solid #C9661A; background: #E07B1F; color: #FFFFFF; text-decoration: none; font: 600 14px/20px Inter, system-ui, sans-serif">Začít</a>
+      </div>
+    </section>
+
+    <sc-for list="{{lights}}" as="l" hint-placeholder-count="4">
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <h2 style="margin: 0; padding: 0 16px 0 28px; font: 800 22px/28px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{l.name}}</h2>
+        <div style="display: flex; gap: 8px; padding: 0 16px; overflow-x: auto">
+          <sc-for list="{{l.subs}}" as="s" hint-placeholder-count="4">
+            <a href="{{s.href}}" style="flex: 0 0 178px; height: 128px; box-sizing: border-box; padding: 14px 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 12px; text-decoration: none; color: #1F3A1A">
+              <span style="width: 40px; height: 40px; border-radius: 50%; background: {{l.tint}}; color: {{l.dark}}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font: 800 14px/1 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">{{s.code}}</span>
+              <span style="font: 700 14px/18px Inter, system-ui, sans-serif; text-align: center">{{s.n}}</span>
+              <span style="width: 100%; display: flex; align-items: center; gap: 8px; margin-top: auto">
+                <span style="flex: 1; height: 6px; border-radius: 999px; background: #E2E1D6; overflow: hidden"><span style="display: block; height: 100%; width: {{s.pct}}; border-radius: 999px; background: {{l.color}}"></span></span>
+                <span style="font: 600 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{s.p}}</span>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+    </sc-for>
+  </main>
+
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 130px; background: linear-gradient(180deg, rgba(247,246,242,0) 0%, rgba(247,246,242,0.92) 55%, #F7F6F2 100%)"></div>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 116px">
+    <dc-import name="NavBar" active="pera" hint-size="390px,116px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var sub = function (code, n, done, all) { return { code: code, n: n, p: done + '/' + all, pct: Math.round(done / all * 100) + '%', href: code === '4A' ? 'KategorieDetail-4A.dc.html' : 'KategorieDetail.dc.html' }; };
+    var lights = [
+      { name: '1. světlo', color: '#5B8C3A', tint: '#E3ECDA', dark: '#2F5A1A', subs: [sub('1A', 'Atletika – běhy', 3, 7), sub('1C', 'Atletika – skoky', 1, 8), sub('1F', 'Cyklistika', 2, 9), sub('1H', 'Hody, vrhy a kopy', 1, 7), sub('1Q', 'Plavání a potápění', 0, 10)] },
+      { name: '2. světlo', color: '#3D7EA6', tint: '#DCE9F1', dark: '#1F4E6B', subs: [sub('2A', 'Astronomie', 1, 6), sub('2D', 'Historie', 2, 9), sub('2L', 'Příroda – dřeviny', 2, 12), sub('2Q', 'Příroda – ptáci', 0, 10)] },
+      { name: '3. světlo', color: '#B5523B', tint: '#F3E0DA', dark: '#7A2E1E', subs: [sub('3Z', 'Uzly a lana', 3, 10), sub('3R', 'Rozdělávání ohně', 0, 8), sub('3D', 'Hudba', 0, 6), sub('3BB', 'Výtvarné techniky', 0, 8)] },
+      { name: '4. světlo', color: '#D4A017', tint: '#F6ECCB', dark: '#6B4F00', subs: [sub('4K', 'Turistika', 2, 10), sub('4J', 'Táborové vaření', 1, 8), sub('4A', 'Bylinkářství', 0, 6), sub('4P', 'Zdravověda', 0, 9), sub('4O', 'Woodcraft', 0, 12)] }
+    ];
+    return { lights: lights };
+  }
+}
+</script>
+</body>
+</html>

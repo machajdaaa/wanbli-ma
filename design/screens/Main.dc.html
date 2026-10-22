@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Orlí pera – design systém</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1F3A1A}a:hover{color:#C9661A}
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 5800px; box-sizing: border-box; padding: 96px 80px 120px; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif; display: flex; flex-direction: column">
+
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 48px; padding-bottom: 64px">
+    <div style="display: flex; flex-direction: column; gap: 12px; max-width: 760px">
+      <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Orlí pera · design systém v1 · světlý režim</span>
+      <h1 style="margin: 0; font: 800 80px/80px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif; letter-spacing: -1.5px; color: #1F3A1A">Design systém</h1>
+      <p style="margin: 0; font: 400 18px/28px Inter, system-ui, sans-serif; color: #5E6B57; text-wrap: pretty">Lesní zelená, oranžový akcent a krémové karty. Hravé, ale ne dětinské – pro děti a teenagery z oddílů Ligy lesní moudrosti. Mobil 390 px, mřížka 4 px, karty bez stínu, jen 1px okraj.</p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px; padding: 20px 24px; background: #1E4019; border-radius: 24px; color: #FFFFFF">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: #E07B1F; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 5px #2E5527">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4c-7.5.3-12.6 5.2-13 12.5L7 20l3.4-.1C17.4 19.4 20.5 12 20 4Z"></path><path d="M3.5 20.5 15 9"></path></svg>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font: 800 22px/26px 'Baloo 2', system-ui, sans-serif">Pírko = hlavní symbol</span>
+        <span style="font: 500 14px/20px Inter, system-ui, sans-serif; color: #D5DCCF">Lajk, počet per, přidání pera</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 01 BARVY -->
+  <section style="display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; padding: 64px 0; border-top: 1px solid #DEDDD2">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; color: #5E6B57">01</span>
+      <h2 style="margin: 0; font: 800 36px/40px 'Baloo 2', system-ui, sans-serif">Barvy</h2>
+      <p style="margin: 0; font: 400 14px/22px Inter, system-ui, sans-serif; color: #5E6B57">Sytá barva světla jen jako tečka nebo progress bar. Štítek kategorie = světlá plocha světla + tmavý text a římská číslice.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 40px">
+      <sc-for list="{{colorGroups}}" as="g" hint-placeholder-count="6">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 18px/24px 'Baloo 2', system-ui, sans-serif">{{g.name}}</h3>
+          <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px">
+            <sc-for list="{{g.items}}" as="s" hint-placeholder-count="4">
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div style="height: 72px; border-radius: 12px; box-sizing: border-box; background: {{s.h}}; border: {{s.bw}} solid {{s.bd}}"></div>
+                <div style="display: flex; flex-direction: column; gap: 2px">
+                  <span style="font: 600 14px/20px Inter, system-ui, sans-serif">{{s.n}}</span>
+                  <span style="font: 500 12px/16px ui-monospace, 'SF Mono', Menlo, monospace; color: #5E6B57">{{s.hx}}</span>
+                  <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{s.u}}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- 02 TYPOGRAFIE -->
+  <section style="display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; padding: 64px 0; border-top: 1px solid #DEDDD2">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; color: #5E6B57">02</span>
+      <h2 style="margin: 0; font: 800 36px/40px 'Baloo 2', system-ui, sans-serif">Typografie</h2>
+      <p style="margin: 0; font: 400 14px/22px Inter, system-ui, sans-serif; color: #5E6B57">Baloo 2 pro nadpisy a čísla výkonů, Inter pro text a ovládání.</p>
+    </div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{typeRows}}" as="t" hint-placeholder-count="10">
+        <div style="display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 24px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid #DEDDD2">
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font: 600 14px/20px Inter, system-ui, sans-serif">{{t.name}}</span>
+            <span style="font: 500 12px/16px ui-monospace, 'SF Mono', Menlo, monospace; color: #5E6B57">{{t.spec}}</span>
+          </div>
+          <span style="font: {{t.font}}; letter-spacing: {{t.ls}}; text-transform: {{t.tt}}; color: {{t.color}}">{{t.sample}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- 03 ROZMĚRY A IKONY -->
+  <section style="display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; padding: 64px 0; border-top: 1px solid #DEDDD2">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; color: #5E6B57">03</span>
+      <h2 style="margin: 0; font: 800 36px/40px 'Baloo 2', system-ui, sans-serif">Rozměry a ikony</h2>
+      <p style="margin: 0; font: 400 14px/22px Inter, system-ui, sans-serif; color: #5E6B57">Mřížka 4 px. Okraj obrazovky 16, vnitřek karty 16, mezera mezi kartami 12. Dotykové plochy min. 44 px.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 16px">
+        <h3 style="margin: 0; font: 700 18px/24px 'Baloo 2', system-ui, sans-serif">Spacing</h3>
+        <sc-for list="{{spaces}}" as="sp" hint-placeholder-count="7">
+          <div style="display: flex; align-items: center; gap: 12px">
+            <span style="width: 28px; font: 600 12px/16px ui-monospace, Menlo, monospace; color: #5E6B57">{{sp.v}}</span>
+            <div style="height: 16px; width: {{sp.w}}; background: #E07B1F; border-radius: 4px"></div>
+            <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{sp.u}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 16px">
+        <h3 style="margin: 0; font: 700 18px/24px 'Baloo 2', system-ui, sans-serif">Radius</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 12px">
+          <sc-for list="{{radii}}" as="r" hint-placeholder-count="5">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <div style="height: 64px; background: #FFFFFF; border: 2px solid #1F3A1A; border-radius: {{r.v}}"></div>
+              <span style="font: 600 12px/16px Inter, system-ui, sans-serif">{{r.n}}</span>
+              <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">{{r.u}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 16px">
+        <h3 style="margin: 0; font: 700 18px/24px 'Baloo 2', system-ui, sans-serif">Ikony · lineární 2 px</h3>
+        <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px 8px; color: #1F3A1A">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; color: #E07B1F"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4c-7.5.3-12.6 5.2-13 12.5L7 20l3.4-.1C17.4 19.4 20.5 12 20 4Z"></path><path d="M3.5 20.5 15 9"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">pírko</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">domů</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">skupina</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">profil</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">hledat</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">oznámení</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">kdy</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">kde</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"></path><path d="M13 5v2M13 17v2M13 11v2"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">vstupné</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"></path><path d="M2 21h20M7 8v3M12 8v3M17 8v3"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">věk</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">nastavení</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">foťák</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6M22 11h-6"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">sledovat</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">zpět</span></div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><circle cx="5" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle></svg><span style="font: 500 11px/14px Inter, system-ui, sans-serif; color: #5E6B57">další</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 KOMPONENTY -->
+  <section style="display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; padding: 64px 0; border-top: 1px solid #DEDDD2">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; color: #5E6B57">04</span>
+      <h2 style="margin: 0; font: 800 36px/40px 'Baloo 2', system-ui, sans-serif">Komponenty</h2>
+      <p style="margin: 0; font: 400 14px/22px Inter, system-ui, sans-serif; color: #5E6B57">Navbar a karta pera jsou sdílené komponenty – úprava v jejich artboardu se propíše do všech obrazovek.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 56px">
+
+      <!-- Tlačítka -->
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Tlačítka</h3>
+        <div style="display: grid; grid-template-columns: 140px repeat(4, minmax(0, 1fr)); gap: 20px 16px; align-items: center; padding: 24px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+          <span></span>
+          <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Default</span>
+          <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Stisknuto</span>
+          <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Disabled</span>
+          <span style="font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Loading</span>
+
+          <span style="font: 600 14px/20px Inter, system-ui, sans-serif">Primární</span>
+          <button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #C9661A; background: #E07B1F; color: #FFFFFF; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start">Sledovat</button>
+          <button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #C9661A; background: #C9661A; color: #FFFFFF; font: 600 16px/20px Inter, system-ui, sans-serif; box-shadow: inset 0 2px 0 rgba(0,0,0,0.12); transform: translateY(1px); justify-self: start">Sledovat</button>
+          <button type="button" disabled="" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #E5E3D8; background: #ECEAE1; color: #8C9585; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start">Sledovat</button>
+          <button type="button" aria-busy="true" style="display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #C9661A; background: #E07B1F; color: #FFFFFF; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"></path></svg>Ukládám…</button>
+
+          <span style="font: 600 14px/20px Inter, system-ui, sans-serif">Sekundární</span>
+          <button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #DEDDD2; background: #F0EFE6; color: #1F3A1A; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start">Upravit profil</button>
+          <button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #C6CBBD; background: #E4E3D8; color: #1F3A1A; font: 600 16px/20px Inter, system-ui, sans-serif; transform: translateY(1px); justify-self: start">Upravit profil</button>
+          <button type="button" disabled="" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #E8E7DE; background: #F3F2EB; color: #8C9585; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start">Upravit profil</button>
+          <button type="button" aria-busy="true" style="display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #DEDDD2; background: #F0EFE6; color: #1F3A1A; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E07B1F" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"></path></svg>Načítám…</button>
+
+          <span style="font: 600 14px/20px Inter, system-ui, sans-serif">Textové</span>
+          <button type="button" style="height: 44px; padding: 0 12px; border-radius: 12px; border: 0; background: transparent; color: #1F3A1A; font: 600 16px/20px Inter, system-ui, sans-serif; text-decoration: underline; text-decoration-color: #E07B1F; text-decoration-thickness: 2px; text-underline-offset: 5px; justify-self: start">Více</button>
+          <button type="button" style="height: 44px; padding: 0 12px; border-radius: 12px; border: 0; background: #F0EFE6; color: #1F3A1A; font: 600 16px/20px Inter, system-ui, sans-serif; text-decoration: underline; text-decoration-color: #C9661A; text-decoration-thickness: 2px; text-underline-offset: 5px; justify-self: start">Více</button>
+          <button type="button" disabled="" style="height: 44px; padding: 0 12px; border-radius: 12px; border: 0; background: transparent; color: #8C9585; font: 600 16px/20px Inter, system-ui, sans-serif; text-decoration: underline; text-decoration-color: #C6CBBD; text-decoration-thickness: 2px; text-underline-offset: 5px; justify-self: start">Více</button>
+          <button type="button" aria-busy="true" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border-radius: 12px; border: 0; background: transparent; color: #1F3A1A; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#E07B1F" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"></path></svg>Načítám</button>
+
+          <span style="font: 600 14px/20px Inter, system-ui, sans-serif">Destruktivní</span>
+          <button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #EFC7BF; background: #FFFFFF; color: #C8442F; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start">Odhlásit se</button>
+          <button type="button" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #E3A99D; background: #FBE7E3; color: #A9371F; font: 600 16px/20px Inter, system-ui, sans-serif; transform: translateY(1px); justify-self: start">Odhlásit se</button>
+          <button type="button" disabled="" style="height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #E8E7DE; background: #F3F2EB; color: #8C9585; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start">Odhlásit se</button>
+          <button type="button" aria-busy="true" style="display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px; border-radius: 12px; border: 2px solid #EFC7BF; background: #FFFFFF; color: #C8442F; font: 600 16px/20px Inter, system-ui, sans-serif; justify-self: start"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.2-8.56"></path></svg>Odhlašuji…</button>
+        </div>
+      </div>
+
+      <!-- Přepínač, odznaky, štítky -->
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Segmentovaný přepínač</h3>
+          <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+            <div role="tablist" aria-label="Obsah skupiny" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; height: 52px; box-sizing: border-box; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 999px; max-width: 358px">
+              <button type="button" role="tab" aria-selected="true" style="border: 0; border-radius: 999px; background: #E07B1F; color: #FFFFFF; font: 600 14px/20px Inter, system-ui, sans-serif; box-shadow: 0 1px 0 #C9661A">Příspěvky</button>
+              <button type="button" role="tab" aria-selected="false" style="border: 0; border-radius: 999px; background: transparent; color: #1F3A1A; font: 600 14px/20px Inter, system-ui, sans-serif">Oznámení</button>
+              <button type="button" role="tab" aria-selected="false" style="border: 0; border-radius: 999px; background: transparent; color: #1F3A1A; font: 600 14px/20px Inter, system-ui, sans-serif">Žebříček</button>
+            </div>
+            <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">Výška 52, segment 44. Při scrollu se přilepí nahoru na bílém podkladu s 1px spodní linkou.</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Odznaky a štítky světel</h3>
+          <div style="display: flex; flex-direction: column; gap: 16px; padding: 24px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px 0 10px; border-radius: 7px; background: #FCEFB4; color: #5A4200; font: 800 12px/16px Inter, system-ui, sans-serif; letter-spacing: 0.8px; text-transform: uppercase"><svg width="13" height="13" viewBox="0 0 24 24" fill="#B88A0E" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"></path></svg>Grand challenge</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: 7px; background: #E2EFE2; color: #2B6A2E; font: 600 13px/18px Inter, system-ui, sans-serif"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Splněno</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: 7px; background: #FCEBD9; color: #7A3D0C; font: 600 13px/18px Inter, system-ui, sans-serif"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A3D0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>Oznámení</span>
+              <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 7px; background: #1E4019; color: #FFFFFF; font: 600 12px/16px Inter, system-ui, sans-serif">Vedoucí</span>
+              <span style="display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 7px; background: #C9661A; color: #FFFFFF; font: 700 12px/16px Inter, system-ui, sans-serif">Ty</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 7px; background: #E3ECDA; color: #2F5A1A; font: 600 13px/18px Inter, system-ui, sans-serif"><span style="font: 800 13px/1 'Baloo 2', system-ui, sans-serif">I</span>Atletika – běhy</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 7px; background: #DCE9F1; color: #1F4E6B; font: 600 13px/18px Inter, system-ui, sans-serif"><span style="font: 800 13px/1 'Baloo 2', system-ui, sans-serif">II</span>Historie</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 7px; background: #F3E0DA; color: #7A2E1E; font: 600 13px/18px Inter, system-ui, sans-serif"><span style="font: 800 13px/1 'Baloo 2', system-ui, sans-serif">III</span>Uzly a lana</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 7px; background: #F6ECCB; color: #6B4F00; font: 600 13px/18px Inter, system-ui, sans-serif"><span style="font: 800 13px/1 'Baloo 2', system-ui, sans-serif">IV</span>Turistika</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px; max-width: 358px">
+              <div style="display: flex; justify-content: space-between; font: 600 12px/16px Inter, system-ui, sans-serif"><span>1. světlo</span><span style="color: #5E6B57">7/24</span></div>
+              <div style="height: 8px; border-radius: 999px; background: #E6E5DB; overflow: hidden"><div style="width: 29%; height: 100%; border-radius: 999px; background: #5B8C3A"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Avatary, inputy -->
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Avatar · squircle</h3>
+          <div style="display: flex; align-items: flex-end; gap: 24px; padding: 24px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; flex-wrap: wrap">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><div style="width: 32px; height: 32px; border-radius: 10px; background: #DDE8D2; display: flex; align-items: center; justify-content: center; font: 700 13px/1 'Baloo 2', system-ui, sans-serif">TS</div><span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">32 · r10</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><div style="width: 40px; height: 40px; border-radius: 12px; background: #D6E6EF; display: flex; align-items: center; justify-content: center; font: 700 16px/1 'Baloo 2', system-ui, sans-serif">MD</div><span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">40 · r12</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><div style="width: 56px; height: 56px; border-radius: 18px; background: #F1DCD5; display: flex; align-items: center; justify-content: center; font: 700 22px/1 'Baloo 2', system-ui, sans-serif">EČ</div><span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">56 · r18</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><div style="width: 96px; height: 96px; border-radius: 30px; background: #F4E8C1; display: flex; align-items: center; justify-content: center; font: 800 36px/1 'Baloo 2', system-ui, sans-serif">JN</div><span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">96 · r30</span></div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px"><div style="width: 56px; height: 56px; border-radius: 18px; background: #C6CBBD; display: flex; align-items: center; justify-content: center; color: #6F7A67"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg></div><span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">bez fotky</span></div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Input</h3>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 24px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="ds-in1" style="font: 600 14px/20px Inter, system-ui, sans-serif">Jméno</label>
+              <input id="ds-in1" value="Jakub Novák" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 1px solid #DEDDD2; background: #FFFFFF; color: #1F3A1A; font: 400 16px/20px Inter, system-ui, sans-serif">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="ds-in2" style="font: 600 14px/20px Inter, system-ui, sans-serif">Přezdívka · focus</label>
+              <input id="ds-in2" value="Kuba" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 2px solid #E07B1F; box-shadow: 0 0 0 4px #FCEBD9; background: #FFFFFF; color: #1F3A1A; font: 400 16px/20px Inter, system-ui, sans-serif">
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="ds-in3" style="font: 600 14px/20px Inter, system-ui, sans-serif">Přezdívka · chyba</label>
+              <input id="ds-in3" value="Orel" aria-invalid="true" style="height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 2px solid #C8442F; background: #FFFFFF; color: #1F3A1A; font: 400 16px/20px Inter, system-ui, sans-serif">
+              <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #C8442F">Tahle přezdívka už je obsazená.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <label for="ds-in4" style="font: 600 14px/20px Inter, system-ui, sans-serif">Hledání</label>
+              <div style="display: flex; align-items: center; gap: 10px; height: 48px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 1px solid #DEDDD2; background: #FFFFFF; color: #5E6B57">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+                <input id="ds-in4" placeholder="Hledej kamarády" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; color: #1F3A1A; font: 400 16px/20px Inter, system-ui, sans-serif">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Přepínač, řádek nastavení -->
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Přepínač</h3>
+          <div style="display: flex; align-items: center; gap: 32px; padding: 24px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <button type="button" role="switch" aria-checked="true" aria-label="Zapnuto" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #E07B1F; padding: 0"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+              <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">Zapnuto</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <button type="button" role="switch" aria-checked="false" aria-label="Vypnuto" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #C6CBBD; padding: 0"><span style="position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+              <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">Vypnuto</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+              <button type="button" role="switch" aria-checked="true" aria-label="Zapnuto, nedostupné" disabled="" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #F1C9A2; padding: 0"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF"></span></button>
+              <span style="font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">Disabled</span>
+            </div>
+          </div>
+          <h3 style="margin: 16px 0 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Toast</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px">
+            <div role="status" style="display: flex; align-items: center; gap: 12px; max-width: 358px; box-sizing: border-box; min-height: 52px; padding: 8px 8px 8px 14px; border-radius: 16px; background: #1F3A1A; color: #FFFFFF; box-shadow: 0 8px 24px rgba(31,58,26,0.25)">
+              <span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; background: #3E8E41; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>
+              <span style="flex: 1; font: 500 14px/20px Inter, system-ui, sans-serif">Profil je uložený</span>
+              <button type="button" style="height: 36px; padding: 0 12px; border: 0; border-radius: 10px; background: rgba(255,255,255,0.12); color: #FFFFFF; font: 600 14px/20px Inter, system-ui, sans-serif">OK</button>
+            </div>
+            <div role="alert" style="display: flex; align-items: center; gap: 12px; max-width: 358px; box-sizing: border-box; min-height: 52px; padding: 8px 8px 8px 14px; border-radius: 16px; background: #1F3A1A; color: #FFFFFF; box-shadow: 0 8px 24px rgba(31,58,26,0.25)">
+              <span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; background: #C8442F; display: flex; align-items: center; justify-content: center; font: 800 15px/1 Inter, system-ui, sans-serif">!</span>
+              <span style="flex: 1; font: 500 14px/20px Inter, system-ui, sans-serif">Nepovedlo se to uložit</span>
+              <button type="button" style="height: 36px; padding: 0 12px; border: 0; border-radius: 10px; background: rgba(255,255,255,0.12); color: #FFFFFF; font: 600 14px/20px Inter, system-ui, sans-serif">Zkusit znovu</button>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Řádek nastavení</h3>
+          <div style="display: flex; flex-direction: column; gap: 8px; padding: 24px; background: #F7F6F2; border: 1px solid #DEDDD2; border-radius: 16px">
+            <span style="padding: 0 4px; font: 600 12px/16px Inter, system-ui, sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #5E6B57">Skupina řádků</span>
+            <div style="display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #DEDDD2; border-radius: 16px; overflow: hidden">
+              <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A; border-bottom: 1px solid #ECEBE3">
+                <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"></path></svg></span>
+                <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">Navigace</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+              </a>
+              <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #1F3A1A; border-bottom: 1px solid #ECEBE3">
+                <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
+                <span style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">S hodnotou</span>
+                <span style="font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Čeština</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9AA392" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+              </a>
+              <div style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; border-bottom: 1px solid #ECEBE3">
+                <span style="width: 32px; height: 32px; border-radius: 9px; background: #F0EFE6; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg></span>
+                <label for="ds-sw" style="flex: 1; font: 500 16px/22px Inter, system-ui, sans-serif">S přepínačem</label>
+                <button id="ds-sw" type="button" role="switch" aria-checked="true" style="position: relative; width: 52px; height: 32px; border-radius: 999px; border: 0; background: #E07B1F; padding: 0; flex-shrink: 0"><span style="position: absolute; top: 3px; left: 23px; width: 26px; height: 26px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,58,26,0.3)"></span></button>
+              </div>
+              <a href="#" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px 0 14px; text-decoration: none; color: #C8442F">
+                <span style="width: 32px; height: 32px; border-radius: 9px; background: #FBE7E3; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg></span>
+                <span style="flex: 1; font: 600 16px/22px Inter, system-ui, sans-serif">Destruktivní</span>
+              </a>
+            </div>
+            <span style="padding: 0 4px; font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">Řádek 56 px, ikona v dlaždici 32. Nová položka = další řádek, nová sekce = další skupina.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prázdný stav + navbar -->
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Prázdný stav</h3>
+          <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 32px 24px; background: #F7F6F2; border: 1px solid #DEDDD2; border-radius: 16px">
+            <div style="width: 136px; height: 136px; border-radius: 50%; overflow: hidden; background: linear-gradient(165deg, #F1F1E7 25%, #DBE9E3 60%, #C1DFDF 100%)">
+              <img src="../assets/eagle-empty-state.png" alt="" style="width: 150px; height: 171px; margin-left: -12px; margin-top: -8px; object-fit: cover">
+            </div>
+            <h4 style="margin: 4px 0 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Zatím tu je ticho</h4>
+            <p style="margin: 0; max-width: 280px; font: 400 14px/20px Inter, system-ui, sans-serif; color: #5E6B57">Až někdo, koho sleduješ, získá pero, uvidíš ho tady.</p>
+            <a href="Hledani.dc.html" style="display: inline-flex; align-items: center; height: 48px; padding: 0 20px; margin-top: 4px; border-radius: 12px; border: 1.5px solid #C9661A; background: #E07B1F; color: #FFFFFF; text-decoration: none; font: 600 16px/20px Inter, system-ui, sans-serif">Najít kamarády</a>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h3 style="margin: 0; font: 700 22px/28px 'Baloo 2', system-ui, sans-serif">Floating navbar</h3>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 0 8px; background: #F7F6F2; border: 1px solid #DEDDD2; border-radius: 16px">
+            <dc-import name="NavBar" active="domu" hint-size="390px,116px"></dc-import>
+            <dc-import name="NavBar" active="skupina" hint-size="390px,116px"></dc-import>
+            <span style="padding: 0 24px 16px; font: 500 12px/16px Inter, system-ui, sans-serif; color: #5E6B57">Bílá pilulka 16 px od okrajů, výška 60, jen ikony 26 px (popisky v aria-label). Aktivní položka: podklad orange-100 56×44 a vyplněná ikona. Střed 64 px s prstencem v barvě pozadí.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var line = '1px';
+    var sw = function (n, h, u, light) { return { n: n, h: h, hx: h, u: u, bw: light ? line : '0px', bd: '#DEDDD2' }; };
+    var medal = function (n, f, e, u) { return { n: n, h: f, hx: f + ' / ' + e, u: u, bw: '3px', bd: e }; };
+    var colorGroups = [
+      { name: 'Lesní zelená', items: [
+        sw('forest-900', '#1F3A1A', 'Nadpisy, text, čísla'),
+        sw('forest-700', '#1E4019', 'Tmavé bannery'),
+        sw('forest-500', '#5E6B57', 'Sekundární text'),
+        sw('forest-300', '#9AA392', 'Neaktivní ikony')
+      ] },
+      { name: 'Oranžová', items: [
+        sw('orange-500', '#E07B1F', 'Primární akce'),
+        sw('orange-600', '#C9661A', 'Stisknuto, okraje'),
+        sw('orange-100', '#FCEBD9', 'Jemné zvýraznění', true)
+      ] },
+      { name: 'Plochy', items: [
+        sw('bg', '#F7F6F2', 'Pozadí obrazovek', true),
+        sw('surface', '#F0EFE6', 'Karty', true),
+        sw('surface-raised', '#FFFFFF', 'Navbar, inputy, nastavení', true),
+        sw('border', '#DEDDD2', 'Okraje 1 px'),
+        sw('sage-300', '#C6CBBD', 'Placeholdery fotek')
+      ] },
+      { name: 'Stavy', items: [
+        sw('success', '#3E8E41', 'Splněno, uloženo'),
+        sw('warning', '#D99A1B', 'Upozornění'),
+        sw('danger', '#C8442F', 'Chyby, odhlášení')
+      ] },
+      { name: 'Medaile', items: [
+        medal('Zlato', '#FFE87F', '#E8C400', '1. místo'),
+        medal('Stříbro', '#E0E0E0', '#BDBDBD', '2. místo'),
+        medal('Bronz', '#E4C3A2', '#C98A4F', '3. místo')
+      ] },
+      { name: 'Světla (jen tečka, štítek, progress)', items: [
+        sw('1. světlo', '#5B8C3A', 'Kategorie 1A–1W'),
+        sw('2. světlo', '#3D7EA6', 'Kategorie 2A–2Y'),
+        sw('3. světlo', '#B5523B', 'Kategorie 3A–3EE'),
+        sw('4. světlo', '#D4A017', 'Kategorie 4A–4Q'),
+        { n: 'Grand challenge', h: '#FCEFB4', hx: '#FCEFB4 / #5A4200', u: 'Odznak (hvězda #B88A0E)', bw: '0px', bd: '#DEDDD2' }
+      ] },
+      { name: 'Světla – plocha štítku (text tmavým odstínem)', items: [
+        { n: '1. světlo', h: '#E3ECDA', hx: '#E3ECDA / #2F5A1A', u: 'Štítek kategorie', bw: '0px', bd: '#DEDDD2' },
+        { n: '2. světlo', h: '#DCE9F1', hx: '#DCE9F1 / #1F4E6B', u: 'Štítek kategorie', bw: '0px', bd: '#DEDDD2' },
+        { n: '3. světlo', h: '#F3E0DA', hx: '#F3E0DA / #7A2E1E', u: 'Štítek kategorie', bw: '0px', bd: '#DEDDD2' },
+        { n: '4. světlo', h: '#F6ECCB', hx: '#F6ECCB / #6B4F00', u: 'Štítek kategorie', bw: '0px', bd: '#DEDDD2' }
+      ] }
+    ];
+    var B = "'Baloo 2', 'Trebuchet MS', system-ui, sans-serif";
+    var I = "Inter, system-ui, -apple-system, sans-serif";
+    var row = function (name, spec, font, sample, ls, tt, color) { return { name: name, spec: spec, font: font, sample: sample, ls: ls || 'normal', tt: tt || 'none', color: color || '#1F3A1A' }; };
+    var typeRows = [
+      row('Display', 'Baloo 2 · 32 / 800', '800 32px/38px ' + B, 'Orlí pera', '-0.3px'),
+      row('H1', 'Baloo 2 · 26 / 800', '800 26px/32px ' + B, 'Ahoj, Jakube!'),
+      row('H2', 'Baloo 2 · 22 / 700', '700 22px/28px ' + B, 'Běh na 100 m'),
+      row('H3', 'Baloo 2 · 18 / 700', '700 18px/24px ' + B, '1. světlo'),
+      row('Metric', 'Baloo 2 · 32 / 800', '800 32px/36px ' + B, '11,25 s', '-0.5px'),
+      row('Body L', 'Inter · 16 / 400', '400 16px/24px ' + I, 'Splnil jsi 3 pera z Atletiky. Ještě 9 a máš celé podsvětlo.'),
+      row('Body', 'Inter · 14 / 400', '400 14px/20px ' + I, 'Noc s Andersenem začíná v knihovně. Spacák a baterku s sebou.'),
+      row('Label', 'Inter · 14 / 600', '600 14px/20px ' + I, 'Upravit profil'),
+      row('Caption', 'Inter · 12 / 500', '500 12px/16px ' + I, 'Choltice, Pardubický kraj · dnes 9:00', 'normal', 'none', '#5E6B57'),
+      row('Overline', 'Inter · 12 / 600 · verzálky', '600 12px/16px ' + I, 'Moje sbírka', '1.2px', 'uppercase', '#5E6B57')
+    ];
+    var spaces = [
+      { v: '4', w: '4px', u: 'ikona ↔ text v odznaku' },
+      { v: '8', w: '8px', u: 'mezi fotkami' },
+      { v: '12', w: '12px', u: 'mezi kartami' },
+      { v: '16', w: '16px', u: 'okraj, vnitřek karty' },
+      { v: '24', w: '24px', u: 'mezi sekcemi' },
+      { v: '32', w: '32px', u: 'velké odsazení' },
+      { v: '48', w: '48px', u: 'výška tlačítka' }
+    ];
+    var radii = [
+      { v: '8px', n: '8', u: 'Odznaky, dlaždice' },
+      { v: '12px', n: '12', u: 'Tlačítka, fotky' },
+      { v: '16px', n: '16', u: 'Karty' },
+      { v: '24px', n: '24', u: 'Bannery' },
+      { v: '999px', n: 'full', u: 'Pilulky, navbar' }
+    ];
+    return { colorGroups: colorGroups, typeRows: typeRows, spaces: spaces, radii: radii };
+  }
+}
+</script>
+</body>
+</html>

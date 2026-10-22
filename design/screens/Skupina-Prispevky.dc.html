@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>Skupina – Příspěvky</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 1500px; overflow: hidden; background: #F7F6F2; color: #1F3A1A; font-family: Inter, system-ui, -apple-system, sans-serif">
+  <header>
+    <div role="img" aria-label="Titulní fotka skupiny" style="position: relative; height: 150px; background: #1E4019; overflow: hidden">
+      <svg width="390" height="150" viewBox="0 0 390 150" fill="none" stroke="#3A6332" stroke-width="1.5" aria-hidden="true" style="position: absolute; inset: 0"><path d="M250 74c1-16 24-28 52-26s42 14 40 30-22 26-48 24-45-12-44-28z"></path><path d="M220 75c0-30 40-52 85-50s70 26 66 54-38 46-82 44-69-18-69-48z"></path><path d="M190 78c-4-46 54-80 118-76s100 38 94 80-56 70-118 66-90-28-94-70z"></path><path d="M160 80c-6-62 70-108 152-102s130 52 122 108-74 94-154 88-114-38-120-94z"></path><path d="M-20 128c40-20 80-10 120 10s70 40 110 30"></path><path d="M-20 100c50-25 100-15 140 5s60 30 90 25"></path><path d="M-20 72c60-30 110-20 150 0"></path><path d="M-20 44c50-24 90-16 120-2"></path></svg>
+    </div>
+    <div style="position: relative; padding: 0 16px">
+      <div style="position: absolute; left: 16px; top: -48px; width: 96px; height: 96px; box-sizing: border-box; border-radius: 30px; border: 4px solid #F7F6F2; background: #FCEBD9; display: flex; align-items: center; justify-content: center; font: 800 40px/1 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif; color: #C9661A">T</div>
+      <div style="margin-left: 108px; padding-top: 6px; min-height: 52px; display: flex; flex-direction: column; gap: 0">
+        <h1 style="margin: 0; font: 800 26px/32px 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif">Trilobit</h1>
+        <span style="display: inline-flex; align-items: center; gap: 6px; font: 500 13px/18px Inter, system-ui, sans-serif; color: #5E6B57"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>300 členů</span>
+      </div>
+    </div>
+    <div style="margin: 14px 16px 0">
+      <p style="margin: 0; font: 400 14px/20px Inter, system-ui, sans-serif; color: #1F3A1A">Oddíl Ligy lesní moudrosti z Choltic. Scházíme se každý čtvrtek v klubovně, o víkendech vyrážíme do Železných hor a v létě… <a href="#" style="color: #C9661A; font-weight: 600; text-decoration: none; white-space: nowrap">více</a></p>
+    </div>
+  </header>
+
+  <nav role="tablist" aria-label="Obsah skupiny" style="margin: 16px 16px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; height: 52px; box-sizing: border-box; background: #F0EFE6; border: 1px solid #DEDDD2; border-radius: 999px">
+    <a href="Skupina-Prispevky.dc.html" role="tab" aria-selected="true" style="display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #E07B1F; color: #FFFFFF; text-decoration: none; font: 600 14px/20px Inter, system-ui, sans-serif; box-shadow: 0 1px 0 #C9661A">Příspěvky</a>
+    <a href="Skupina-Oznameni.dc.html" role="tab" aria-selected="false" style="display: flex; align-items: center; justify-content: center; border-radius: 999px; color: #1F3A1A; text-decoration: none; font: 600 14px/20px Inter, system-ui, sans-serif">Oznámení</a>
+    <a href="Skupina-Zebricek.dc.html" role="tab" aria-selected="false" style="display: flex; align-items: center; justify-content: center; border-radius: 999px; color: #1F3A1A; text-decoration: none; font: 600 14px/20px Inter, system-ui, sans-serif">Žebříček</a>
+  </nav>
+
+  <main style="display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 140px">
+    <sc-for list="{{posts}}" as="it" hint-placeholder-count="3">
+      <dc-import name="PostCard" post="{{it}}" hint-size="358px,480px"></dc-import>
+    </sc-for>
+  </main>
+
+  <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 130px; background: linear-gradient(180deg, rgba(247,246,242,0) 0%, rgba(247,246,242,0.92) 55%, #F7F6F2 100%)"></div>
+  <div style="position: absolute; left: 0; bottom: 0; width: 390px; height: 116px">
+    <dc-import name="NavBar" active="skupina" hint-size="390px,116px"></dc-import>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { posts: [
+      { name: 'Tereza Svobodová', ini: 'TS', tint: '#DDE8D2', place: 'Choltice, Pardubický kraj', time: 'dnes 9:00', cat: 'Atletika – běhy', color: '#5B8C3A', title: 'Běh na 100 m', gc: true, metrics: [{ label: 'Čas', value: '11,25', unit: 's' }], photos: 1, likes: 24 },
+      { name: 'Ondřej Veselý', ini: 'OV', tint: '#DDE8D2', place: 'Choltice, Pardubický kraj', time: 'včera 19:10', cat: 'Příroda – dřeviny', color: '#3D7EA6', title: 'Urči stromy v lese', gc: false, metrics: [{ label: 'Určeno', value: '30', unit: 'druhů' }], photos: 2, likes: 15, liked: true },
+      { name: 'Barbora Horáková', ini: 'BH', tint: '#F4E8C1', place: 'Choltice, Pardubický kraj', time: 'včera 15:30', cat: 'Turistika', color: '#D4A017', title: 'Pochod na 20 km', gc: false, metrics: [{ label: 'Vzdálenost', value: '21,3', unit: 'km' }], photos: 0, likes: 11 }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

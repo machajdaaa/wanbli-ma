@@ -1,34 +1,37 @@
 <ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home" href="/nav/home">
-      <img class="tab-icon tab-icon-default" src="/assets/icon/home.svg" alt="" />
-      <img class="tab-icon tab-icon-selected" src="/assets/icon/home-selected.svg" alt="" />
-      <ion-label>Domů</ion-label>
+  <!-- Fade from the content into the background under the floating navbar. -->
+  <div
+    slot="bottom"
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 bottom-0 z-[9] h-[calc(130px+var(--ion-safe-area-bottom,0px))] bg-[image:var(--wanbli-gradient-navbar-fade)]"
+  ></div>
+
+  <ion-tab-bar slot="bottom" [attr.aria-label]="'nav.label' | transloco">
+    <ion-tab-button tab="home" href="/nav/home" [attr.aria-label]="'nav.home' | transloco">
+      <app-icon name="home" [size]="26" class="tab-icon-default" />
+      <app-icon name="home-filled" [size]="26" class="tab-icon-selected" />
     </ion-tab-button>
 
-    <div class="tab-divider"></div>
-
-    <!-- Not wired up yet — no route/page exists for this tab. -->
-    <ion-tab-button tab="eagle-feathers" href="/nav/eagle-feathers">
-      <img class="tab-icon tab-icon-default" src="/assets/icon/feather.svg" alt="" />
-      <img class="tab-icon tab-icon-selected" src="/assets/icon/feather-selected.svg" alt="" />
-      <ion-label>Orlí pera</ion-label>
+    <ion-tab-button tab="eagle-feathers" href="/nav/eagle-feathers" [attr.aria-label]="'nav.eagleFeathers' | transloco">
+      <app-icon name="feather" [size]="26" class="tab-icon-default" />
+      <app-icon name="feather-filled" [size]="26" class="tab-icon-selected" />
     </ion-tab-button>
 
-    <div class="tab-divider"></div>
+    <!-- Space for the center button (76 px column in the design). -->
+    <div class="nav-fab-slot" aria-hidden="true"></div>
 
-    <ion-tab-button tab="group" href="/nav/group">
-      <img class="tab-icon tab-icon-default" src="/assets/icon/bullhorn.svg" alt="" />
-      <img class="tab-icon tab-icon-selected" src="/assets/icon/bullhorn-selected.svg" alt="" />
-      <ion-label>Skupina</ion-label>
+    <ion-tab-button tab="group" href="/nav/group" [attr.aria-label]="'nav.group' | transloco">
+      <app-icon name="group" [size]="26" class="tab-icon-default" />
+      <app-icon name="group-filled" [size]="26" class="tab-icon-selected" />
     </ion-tab-button>
 
-    <div class="tab-divider"></div>
-
-    <ion-tab-button tab="profile" href="/nav/profile">
-      <img class="tab-icon tab-icon-default" src="/assets/icon/user.png" alt="" />
-      <img class="tab-icon tab-icon-selected" src="/assets/icon/user-selected.svg" alt="" />
-      <ion-label>Můj profil</ion-label>
+    <ion-tab-button tab="profile" href="/nav/profile" [attr.aria-label]="'nav.profile' | transloco">
+      <app-icon name="profile" [size]="26" class="tab-icon-default" />
+      <app-icon name="profile-filled" [size]="26" class="tab-icon-selected" />
     </ion-tab-button>
+
+    <button type="button" class="nav-fab" [attr.aria-label]="'nav.addFeather' | transloco" (click)="openUpload()">
+      <app-icon name="feather-add" [size]="34" [strokeWidth]="2.4" />
+    </button>
   </ion-tab-bar>
 </ion-tabs>

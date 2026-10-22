@@ -6,6 +6,7 @@ export interface OrganisationMemberResponse {
   createdAt: string;
   firstName: string;
   id: number;
+  isFollowing: boolean;
   lastName: string;
   nickname: string;
   profilePicture: string | null;

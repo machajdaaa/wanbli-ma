@@ -1,9 +1,85 @@
-<div class="page flex flex-col gap-4 overflow-y-auto">
-  <app-daily-challenge-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-  <app-activity-card />
-</div>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
+
+  <main class="flex flex-col gap-5 px-4 pt-screen">
+    <header class="flex items-center justify-between gap-3">
+      <h1 class="type-h1 text-text">{{ 'home.greeting' | transloco: { name: firstName() } }}</h1>
+      <a
+        routerLink="/search"
+        class="flex size-11 shrink-0 items-center justify-center rounded-full border border-border bg-surface-raised text-text"
+        [attr.aria-label]="'home.searchPeople' | transloco"
+      >
+        <app-icon name="search" [size]="22" />
+      </a>
+    </header>
+
+    @if (challenge(); as challenge) {
+      <app-daily-challenge-card [challenge]="challenge" (go)="openChallenge($event)" />
+    }
+
+    @switch (status()) {
+      @case ('loading') {
+        <div class="flex flex-col gap-3 pt-2" aria-busy="true" [attr.aria-label]="'common.loading' | transloco">
+          <app-skeleton variant="post-card" />
+          <app-skeleton variant="post-card" />
+        </div>
+      }
+
+      @case ('error') {
+        <section class="flex flex-col items-center gap-3 px-4 pt-6 text-center" role="alert">
+          <h2 class="type-h3 text-text">{{ 'home.errorTitle' | transloco }}</h2>
+          <p class="type-body text-text-muted">{{ 'home.errorText' | transloco }}</p>
+          <app-button variant="secondary" (click)="load()">{{ 'common.retry' | transloco }}</app-button>
+        </section>
+      }
+
+      @case ('ready') {
+        @if (mode() === 'league' && posts().length) {
+          <!-- 1b: follows nobody → posts from the whole League -->
+          <section
+            class="flex flex-col gap-3.5 rounded-16 border border-border bg-surface-raised p-4"
+            [attr.aria-label]="'home.noFollowingLabel' | transloco"
+          >
+            <div class="flex items-start gap-3">
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-12 bg-primary-subtle text-primary-pressed">
+                <app-icon name="user-plus" [size]="22" />
+              </span>
+              <div class="flex flex-col gap-0.5">
+                <span class="type-label text-text">{{ 'home.noFollowingTitle' | transloco }}</span>
+                <span class="type-body text-text-muted">{{ 'home.noFollowingText' | transloco }}</span>
+              </div>
+            </div>
+            <app-button [block]="true" link="/search">{{ 'home.findFriends' | transloco }}</app-button>
+          </section>
+        }
+
+        @if (posts().length) {
+          <section class="flex flex-col gap-3" [class]="mode() === 'league' ? 'pt-1' : 'pt-2'">
+            <h2 class="type-h3 text-text">
+              {{ (mode() === 'league' ? 'home.fromLeague' : 'home.fromFriends') | transloco }}
+            </h2>
+            @for (post of posts(); track post.id) {
+              <app-post-card [post]="post" (menu)="menuPost.set($event)" />
+            }
+          </section>
+        } @else {
+          <!-- 1c: nothing to show -->
+          <app-empty-state
+            [title]="'home.emptyTitle' | transloco"
+            [text]="'home.emptyText' | transloco"
+            [actionLabel]="'home.findFriends' | transloco"
+            actionLink="/search"
+          />
+        }
+      }
+    }
+  </main>
+
+  <ion-infinite-scroll threshold="25%" [disabled]="status() !== 'ready' || !hasNextPage()" (ionInfinite)="onInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="crescent" />
+  </ion-infinite-scroll>
+
+  <app-post-menu-sheet [(post)]="menuPost" (hidden)="removePost($event)" (deleted)="removePost($event)" />
+</ion-content>

@@ -1,0 +1,185 @@
+/*
+ * Tailwind entry (plain CSS, processed by @tailwindcss/postcss only).
+ * Listed in angular.json "styles" after global.scss. Kept out of Sass because
+ * Sass can't parse Tailwind v4 syntax like `--color-*: initial`.
+ */
+
+/*
+ * Tailwind utilities only — preflight (Tailwind's base reset) is intentionally
+ * skipped since Ionic's normalize/typography CSS above already resets base
+ * elements.
+ */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/*
+ * Tailwind theme → design tokens. Default palettes, radii and font families
+ * are reset so only token-backed classes exist (bg-surface, text-forest-500,
+ * rounded-12, font-display…). `inline` makes utilities reference the
+ * --wanbli-* variables directly, so a future dark theme only has to override
+ * the semantic tokens.
+ */
+@theme inline {
+  --color-*: initial;
+  --radius-*: initial;
+  --font-*: initial;
+  --shadow-*: initial;
+
+  /* Semantic */
+  --color-bg: var(--wanbli-color-bg);
+  --color-surface: var(--wanbli-color-surface);
+  --color-surface-raised: var(--wanbli-color-surface-raised);
+  --color-surface-pressed: var(--wanbli-color-surface-pressed);
+  --color-surface-disabled: var(--wanbli-color-surface-disabled);
+  --color-surface-dark: var(--wanbli-color-surface-dark);
+  --color-placeholder: var(--wanbli-color-placeholder);
+  --color-placeholder-alt: var(--wanbli-color-placeholder-alt);
+  --color-track: var(--wanbli-color-track);
+  --color-border: var(--wanbli-color-border);
+  --color-border-subtle: var(--wanbli-color-border-subtle);
+  --color-border-strong: var(--wanbli-color-border-strong);
+  --color-border-sky: var(--wanbli-color-border-sky);
+  --color-text: var(--wanbli-color-text);
+  --color-text-muted: var(--wanbli-color-text-muted);
+  --color-text-disabled: var(--wanbli-color-text-disabled);
+  --color-text-on-dark: var(--wanbli-color-text-on-dark);
+  --color-text-on-dark-muted: var(--wanbli-color-text-on-dark-muted);
+  --color-text-accent: var(--wanbli-color-text-accent);
+  --color-icon-inactive: var(--wanbli-color-icon-inactive);
+  --color-primary: var(--wanbli-color-primary);
+  --color-primary-pressed: var(--wanbli-color-primary-pressed);
+  --color-primary-border: var(--wanbli-color-primary-border);
+  --color-primary-disabled: var(--wanbli-color-primary-disabled);
+  --color-primary-disabled-border: var(--wanbli-color-primary-disabled-border);
+  --color-primary-subtle: var(--wanbli-color-primary-subtle);
+  --color-primary-subtle-text: var(--wanbli-color-primary-subtle-text);
+  --color-on-primary: var(--wanbli-color-on-primary);
+  --color-success: var(--wanbli-color-success);
+  --color-success-surface: var(--wanbli-color-success-surface);
+  --color-success-text: var(--wanbli-color-success-text);
+  --color-warning: var(--wanbli-color-warning);
+  --color-danger: var(--wanbli-color-danger);
+  --color-danger-surface: var(--wanbli-color-danger-surface);
+  --color-danger-border: var(--wanbli-color-danger-border);
+  --color-danger-pressed: var(--wanbli-color-danger-pressed);
+  --color-danger-border-pressed: var(--wanbli-color-danger-border-pressed);
+  --color-toggle-disabled: var(--wanbli-color-toggle-disabled);
+  --color-light-1: var(--wanbli-color-light-1);
+  --color-light-1-surface: var(--wanbli-color-light-1-surface);
+  --color-light-1-text: var(--wanbli-color-light-1-text);
+  --color-light-2: var(--wanbli-color-light-2);
+  --color-light-2-surface: var(--wanbli-color-light-2-surface);
+  --color-light-2-text: var(--wanbli-color-light-2-text);
+  --color-light-3: var(--wanbli-color-light-3);
+  --color-light-3-surface: var(--wanbli-color-light-3-surface);
+  --color-light-3-text: var(--wanbli-color-light-3-text);
+  --color-light-4: var(--wanbli-color-light-4);
+  --color-light-4-surface: var(--wanbli-color-light-4-surface);
+  --color-light-4-text: var(--wanbli-color-light-4-text);
+  --color-gc-surface: var(--wanbli-color-gc-surface);
+  --color-gc-text: var(--wanbli-color-gc-text);
+  --color-gc-star: var(--wanbli-color-gc-star);
+  --color-gc-outline: var(--wanbli-color-gc-outline);
+  --color-medal-gold: var(--wanbli-color-medal-gold);
+  --color-medal-gold-edge: var(--wanbli-color-medal-gold-edge);
+  --color-medal-silver: var(--wanbli-color-medal-silver);
+  --color-medal-silver-edge: var(--wanbli-color-medal-silver-edge);
+  --color-medal-bronze: var(--wanbli-color-medal-bronze);
+  --color-medal-bronze-edge: var(--wanbli-color-medal-bronze-edge);
+  --color-leader: var(--wanbli-color-leader);
+  --color-you: var(--wanbli-color-you);
+  --color-tint-1: var(--wanbli-color-tint-1);
+  --color-tint-2: var(--wanbli-color-tint-2);
+  --color-tint-3: var(--wanbli-color-tint-3);
+  --color-tint-4: var(--wanbli-color-tint-4);
+  --color-tint-5: var(--wanbli-color-tint-5);
+  --color-scrim: var(--wanbli-color-scrim);
+  --color-photo-overlay: var(--wanbli-color-photo-overlay);
+  --color-on-dark-subtle: var(--wanbli-color-on-dark-subtle);
+  --color-glass: var(--wanbli-color-glass);
+  --color-white: var(--wanbli-palette-white);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Design palette names, as used in Main.dc.html */
+  --color-forest-900: var(--wanbli-palette-forest-900);
+  --color-forest-700: var(--wanbli-palette-forest-700);
+  --color-forest-500: var(--wanbli-palette-forest-500);
+  --color-forest-300: var(--wanbli-palette-forest-300);
+  --color-orange-500: var(--wanbli-palette-orange-500);
+  --color-orange-600: var(--wanbli-palette-orange-600);
+  --color-orange-100: var(--wanbli-palette-orange-100);
+  --color-sage-300: var(--wanbli-palette-sage-300);
+
+  --radius-8: var(--wanbli-radius-8);
+  --radius-12: var(--wanbli-radius-12);
+  --radius-16: var(--wanbli-radius-16);
+  --radius-24: var(--wanbli-radius-24);
+  --radius-28: var(--wanbli-radius-28);
+  --radius-full: var(--wanbli-radius-full);
+
+  --font-text: var(--wanbli-font-text);
+  --font-display: var(--wanbli-font-display);
+
+  --shadow-navbar: var(--wanbli-shadow-navbar);
+  --shadow-fab: var(--wanbli-shadow-fab);
+  --shadow-cta: var(--wanbli-shadow-cta);
+  --shadow-own-row: var(--wanbli-shadow-own-row);
+  --shadow-sticky: var(--wanbli-shadow-sticky);
+  --shadow-toast: var(--wanbli-shadow-toast);
+  --shadow-sheet: var(--wanbli-shadow-sheet);
+  --shadow-focus: var(--wanbli-shadow-focus);
+  --shadow-pressed: var(--wanbli-shadow-pressed);
+  --shadow-knob: var(--wanbli-shadow-knob);
+}
+
+/* Type scale (Main.dc.html → Typografie). Color is set separately. */
+@utility type-display {
+  font: var(--wanbli-text-display);
+  letter-spacing: var(--wanbli-tracking-display);
+}
+@utility type-h1 {
+  font: var(--wanbli-text-h1);
+}
+@utility type-h2 {
+  font: var(--wanbli-text-h2);
+}
+@utility type-h3 {
+  font: var(--wanbli-text-h3);
+}
+@utility type-metric {
+  font: var(--wanbli-text-metric);
+  letter-spacing: var(--wanbli-tracking-metric);
+}
+@utility type-body-l {
+  font: var(--wanbli-text-body-l);
+}
+@utility type-body {
+  font: var(--wanbli-text-body);
+}
+@utility type-label {
+  font: var(--wanbli-text-label);
+}
+@utility type-caption {
+  font: var(--wanbli-text-caption);
+}
+@utility type-overline {
+  font: var(--wanbli-text-overline);
+  letter-spacing: var(--wanbli-tracking-overline);
+  text-transform: uppercase;
+}
+
+
+/*
+ * ButtonComponent's `forceActive` (used by /dev/ui) strips the `active:` prefix
+ * at runtime, so the plain forms of its pressed-state classes must exist.
+ */
+@source inline("bg-primary-pressed shadow-pressed translate-y-px bg-surface-pressed border-border-strong decoration-primary-pressed bg-danger-surface border-danger-border-pressed text-danger-pressed");
+
+/*
+ * Top padding of a screen: 60 px in the design (390 px phone incl. status
+ * bar), or the safe area + 16 px when the notch is taller.
+ */
+@utility pt-screen {
+  padding-top: max(3.75rem, calc(var(--ion-safe-area-top, 0px) + 1rem));
+}

@@ -1,0 +1,76 @@
+<ion-content>
+  <header class="flex items-center gap-2 px-4 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))] pb-2">
+    <app-back-button fallback="/nav/profile" class="-ml-1.5" />
+    <h1 class="type-h1 text-text">{{ 'editProfile.title' | transloco }}</h1>
+  </header>
+
+  @if (loadFailed()) {
+    <section class="flex flex-col items-center gap-3 px-8 pt-10 text-center" role="alert">
+      <h2 class="type-h3 text-text">{{ 'profile.errorTitle' | transloco }}</h2>
+      <app-button variant="secondary" (click)="load()">{{ 'common.retry' | transloco }}</app-button>
+    </section>
+  } @else {
+    <form
+      id="profile-form"
+      class="flex flex-col gap-5 px-4 pt-4 pb-[calc(52px+var(--wanbli-space-10)+var(--ion-safe-area-bottom,0px))]"
+      [formGroup]="form"
+      (ngSubmit)="save()"
+      novalidate
+    >
+      <div class="flex flex-col items-center gap-1">
+        <button type="button" class="relative rounded-[30px]" [attr.aria-label]="'editProfile.changePhoto' | transloco" (click)="photoUnavailable()">
+          <app-avatar
+            [size]="96"
+            [name]="profile()?.person?.name ?? null"
+            [imageUrl]="profile()?.person?.avatarUrl ?? null"
+            [seed]="profile()?.person?.id ?? 0"
+          />
+          <span
+            class="absolute -right-2 -bottom-2 flex size-[38px] items-center justify-center rounded-full bg-primary text-on-primary shadow-[0_0_0_4px_var(--wanbli-color-bg)]"
+          >
+            <app-icon name="camera" [size]="18" />
+          </span>
+        </button>
+        <app-button variant="text" class="mt-1.5" (click)="photoUnavailable()">{{ 'editProfile.changePhotoText' | transloco }}</app-button>
+      </div>
+
+      <app-text-input
+        formControlName="firstName"
+        autocomplete="given-name"
+        [label]="'editProfile.firstName' | transloco"
+        [error]="errorFor('firstName')"
+      />
+      <app-text-input
+        formControlName="lastName"
+        autocomplete="family-name"
+        [label]="'editProfile.lastName' | transloco"
+        [error]="errorFor('lastName')"
+      />
+      <app-text-input
+        formControlName="nickname"
+        autocomplete="nickname"
+        [label]="'editProfile.nickname' | transloco"
+        [hint]="'editProfile.nicknameHint' | transloco"
+        [error]="errorFor('nickname')"
+      />
+      <app-text-input
+        formControlName="bio"
+        [label]="'editProfile.bio' | transloco"
+        [multiline]="true"
+        [rows]="3"
+        [maxLength]="bioMaxLength"
+        [showCounter]="true"
+        [error]="errorFor('bio')"
+      />
+    </form>
+
+    <div
+      slot="fixed"
+      class="absolute inset-x-4 bottom-[calc(var(--wanbli-space-8)+var(--ion-safe-area-bottom,0px))]"
+    >
+      <app-button size="lg" [block]="true" [loading]="saving()" (click)="save()">
+        {{ (saving() ? 'common.saving' : 'common.save') | transloco }}
+      </app-button>
+    </div>
+  }
+</ion-content>

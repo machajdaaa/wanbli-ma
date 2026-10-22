@@ -1,0 +1,26 @@
+/*
+ * Global styles for Ionic overlays — ion-modal is moved to the app root when
+ * presented, so its styling can't live in component styles.
+ */
+
+/* Bottom sheet: content-height panel anchored to the bottom edge. */
+ion-modal.app-bottom-sheet {
+  --width: 100%;
+  --max-width: 32rem;
+  --height: auto;
+  --border-radius: var(--wanbli-radius-24) var(--wanbli-radius-24) 0 0;
+  --background: var(--wanbli-color-surface-raised);
+  --box-shadow: var(--wanbli-shadow-sheet);
+  --backdrop-opacity: 1;
+  align-items: flex-end;
+
+  &::part(backdrop) {
+    background: var(--wanbli-color-scrim);
+  }
+
+  .ion-page {
+    position: relative;
+    display: block;
+    contain: content;
+  }
+}

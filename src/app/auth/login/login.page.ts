@@ -1,156 +1,76 @@
-import {
-  Component,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-import { NavController } from '@ionic/angular/standalone';
-import {
-  IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  LoadingController,
-  AlertController,
-} from '@ionic/angular/standalone';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { IonContent, NavController } from '@ionic/angular/standalone';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/services/auth.service';
-import { Gender } from '../../core/api/enums';
-import { TextInputComponent } from '../../shared/design-system/text-input/text-input.component';
 import { ButtonComponent } from '../../shared/design-system/button/button.component';
+import { TextInputComponent } from '../../shared/design-system/text-input/text-input.component';
+import { ToastService } from '../../shared/design-system/toast/toast.service';
 
-function passwordsMatch(control: AbstractControl): ValidationErrors | null {
-  const password = control.get('password')?.value;
-  const passwordConfirm = control.get('passwordConfirm')?.value;
-  return password === passwordConfirm ? null : { passwordsMismatch: true };
-}
-
+/**
+ * Login (Prihlaseni.dc.html): eagle, "Vítej zpátky!", nickname + password
+ * with reveal, "Zapomněl/a jsi heslo?" (info page for now), link to
+ * registration. Wrong credentials show under the password field; other
+ * failures as a toast with retry. The API logs in by nickname only, so the
+ * field says "Přezdívka" (redesign-plan §4.11).
+ */
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-login',
-  templateUrl: 'login.page.html',
-  styleUrl: 'login.page.scss',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    IonContent, IonHeader, IonToolbar, IonTitle,
-    TextInputComponent, ButtonComponent,
-  ],
+  templateUrl: './login.page.html',
+  imports: [IonContent, ReactiveFormsModule, RouterLink, TranslocoPipe, ButtonComponent, TextInputComponent],
 })
 export class LoginPage {
-  private authService = inject(AuthService);
+  private auth = inject(AuthService);
   private navCtrl = inject(NavController);
-  private loadingCtrl = inject(LoadingController);
-  private alertCtrl = inject(AlertController);
+  private toasts = inject(ToastService);
+  private transloco = inject(TranslocoService);
 
-  readonly Gender = Gender;
-
-  isSubmitting = signal(false);
-  mode = signal<'login' | 'register'>('login');
-
-  form = new FormGroup({
-    nickname: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required),
+  protected readonly form = new FormGroup({
+    nickname: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
 
-  registerForm = new FormGroup(
-    {
-      nickname: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      firstName: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
-      birthDate: new FormControl('', Validators.required),
-      gender: new FormControl<Gender | null>(null, Validators.required),
-      password: new FormControl('', Validators.required),
-      passwordConfirm: new FormControl('', Validators.required),
-    },
-    { validators: passwordsMatch }
-  );
+  protected readonly submitting = signal(false);
+  protected readonly submitted = signal(false);
+  protected readonly credentialsError = signal(false);
+  private readonly formChanges = toSignal(this.form.valueChanges);
 
-  toggleMode(): void {
-    this.mode.set(this.mode() === 'login' ? 'register' : 'login');
+  constructor() {
+    // Typing again clears the "wrong credentials" message.
+    this.form.valueChanges.subscribe(() => this.credentialsError.set(false));
   }
 
-  async onSubmit(): Promise<void> {
-    if (this.form.invalid) return;
+  protected errorFor(name: 'nickname' | 'password'): string | null {
+    this.formChanges();
+    if (name === 'password' && this.credentialsError()) return this.transloco.translate('auth.errors.credentials');
+    const control = this.form.controls[name];
+    if (control.valid || !(control.touched || this.submitted())) return null;
+    return this.transloco.translate(`auth.errors.${name}Required`);
+  }
 
-    this.isSubmitting.set(true);
-    const loading = await this.loadingCtrl.create({ spinner: 'crescent' });
-    await loading.present();
-
-    const { nickname, password } = this.form.value;
-
-    this.authService.login(nickname!, password!).subscribe({
-      next: async () => {
-        await loading.dismiss();
-        this.isSubmitting.set(false);
-        await this.navCtrl.navigateRoot('/nav');
+  protected submit(): void {
+    this.submitted.set(true);
+    this.form.markAllAsTouched();
+    if (this.form.invalid || this.submitting()) return;
+    const { nickname, password } = this.form.getRawValue();
+    this.submitting.set(true);
+    this.auth.login(nickname.trim(), password).subscribe({
+      next: () => {
+        this.submitting.set(false);
+        this.navCtrl.navigateRoot('/nav/home');
       },
-      error: async (err) => {
-        await loading.dismiss();
-        this.isSubmitting.set(false);
-        const alert = await this.alertCtrl.create({
-          header: 'Přihlášení selhalo',
-          message: err?.error?.message ?? 'Neplatné přihlašovací údaje.',
-          buttons: ['OK'],
-        });
-        await alert.present();
+      error: (error: HttpErrorResponse) => {
+        this.submitting.set(false);
+        if (error.status === 400 || error.status === 401) {
+          this.credentialsError.set(true);
+        } else {
+          this.toasts.error(this.transloco.translate('auth.errors.network'), () => this.submit());
+        }
       },
     });
-  }
-
-  async onRegisterSubmit(): Promise<void> {
-    if (this.registerForm.invalid) return;
-
-    this.isSubmitting.set(true);
-    const loading = await this.loadingCtrl.create({ spinner: 'crescent' });
-    await loading.present();
-
-    const {
-      nickname,
-      email,
-      firstName,
-      lastName,
-      birthDate,
-      gender,
-      password,
-      passwordConfirm,
-    } = this.registerForm.value;
-
-    this.authService
-      .register({
-        nickname: nickname!,
-        email: email!,
-        firstName: firstName!,
-        lastName: lastName!,
-        birthDate: birthDate!,
-        gender: gender!,
-        password: password!,
-        passwordConfirm: passwordConfirm!,
-      })
-      .subscribe({
-        next: async () => {
-          await loading.dismiss();
-          this.isSubmitting.set(false);
-          await this.navCtrl.navigateRoot('/nav');
-        },
-        error: async (err) => {
-          await loading.dismiss();
-          this.isSubmitting.set(false);
-          const alert = await this.alertCtrl.create({
-            header: 'Registrace selhala',
-            message: err?.error?.message ?? 'Zkontrolujte zadané údaje.',
-            buttons: ['OK'],
-          });
-          await alert.present();
-        },
-      });
   }
 }

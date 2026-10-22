@@ -34,7 +34,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": ["src/global.scss", "src/tailwind.css", "src/theme/variables.scss"],
             "scripts": [],
             "browser": "src/main.ts"
           },
@@ -104,7 +104,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": ["src/global.scss", "src/tailwind.css", "src/theme/variables.scss"],
             "scripts": []
           },
           "configurations": {

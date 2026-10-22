@@ -1,13 +1,71 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>profile</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content />
+  </ion-refresher>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="flex flex-col gap-6 px-4 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))]">
+    <div class="flex justify-end">
+      <a
+        routerLink="/settings"
+        class="flex size-11 items-center justify-center rounded-full border border-border bg-surface-raised text-text"
+        [attr.aria-label]="'settings.title' | transloco"
+      >
+        <app-icon name="settings" [size]="22" />
+      </a>
+    </div>
+
+    @switch (status()) {
+      @case ('loading') {
+        <div class="-mt-8 flex flex-col items-center gap-3" aria-busy="true" [attr.aria-label]="'common.loading' | transloco">
+          <div class="size-24 rounded-[30px] bg-track"></div>
+          <div class="h-7 w-48 rounded-full bg-track"></div>
+          <app-skeleton variant="post-card" class="mt-4 w-full" />
+        </div>
+      }
+      @case ('error') {
+        <section class="flex flex-col items-center gap-3 px-4 pt-6 text-center" role="alert">
+          <h2 class="type-h3 text-text">{{ 'profile.errorTitle' | transloco }}</h2>
+          <p class="type-body text-text-muted">{{ 'home.errorText' | transloco }}</p>
+          <app-button variant="secondary" (click)="load()">{{ 'common.retry' | transloco }}</app-button>
+        </section>
+      }
+      @case ('ready') {
+        @if (profile(); as profile) {
+          <app-profile-header class="-mt-8" [profile]="profile" />
+          <app-button variant="secondary" [block]="true" link="/profile/edit" class="-mt-2">
+            {{ 'profile.edit' | transloco }}
+          </app-button>
+
+          <section class="flex flex-col gap-3">
+            <div class="flex items-baseline justify-between">
+              <h2 class="type-h3 text-text">{{ 'profile.myCollection' | transloco }}</h2>
+              <a
+                routerLink="/nav/eagle-feathers"
+                class="relative type-label text-text underline decoration-primary decoration-2 underline-offset-4 after:absolute after:-inset-3 after:content-['']"
+                >{{ 'profile.allFeathers' | transloco }}</a
+              >
+            </div>
+            <app-collection-progress [collection]="profile.collection" />
+          </section>
+
+          <section class="flex flex-col gap-3">
+            <h2 class="type-h3 text-text">{{ 'profile.myPosts' | transloco }}</h2>
+            @for (post of posts(); track post.id) {
+              <app-post-card [post]="post" (menu)="menuPost.set($event)" />
+            } @empty {
+              <p class="type-body text-text-muted">{{ 'profile.noPosts' | transloco }}</p>
+            }
+          </section>
+        }
+      }
+    }
+  </main>
+
+  @if (hasNextPage()) {
+    <ion-infinite-scroll (ionInfinite)="onInfinite($event)">
+      <ion-infinite-scroll-content />
+    </ion-infinite-scroll>
+  }
+
+  <app-post-menu-sheet [(post)]="menuPost" (hidden)="removePost($event)" (deleted)="removePost($event)" />
 </ion-content>

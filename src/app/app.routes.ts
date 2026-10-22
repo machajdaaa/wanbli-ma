@@ -1,5 +1,19 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { environment } from '../environments/environment';
+import { PlaceholderData } from './pages/placeholder/placeholder.page';
+
+const placeholder = () => import('./pages/placeholder/placeholder.page').then((m) => m.PlaceholderPage);
+
+// Design-system catalog; dev builds only, no auth so it works without the backend.
+const devRoutes: Routes = environment.production
+  ? []
+  : [
+      {
+        path: 'dev/ui',
+        loadComponent: () => import('./dev/ui/dev-ui.page').then((m) => m.DevUiPage),
+      },
+    ];
 
 export const routes: Routes = [
   {
@@ -12,20 +26,52 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/login/login.page').then((m) => m.LoginPage),
   },
   {
+    path: 'register',
+    loadComponent: () => import('./auth/register/register.page').then((m) => m.RegisterPage),
+  },
+  // No password reset endpoint yet — informational page.
+  {
+    path: 'forgot-password',
+    loadComponent: placeholder,
+    data: {
+      titleKey: 'placeholder.forgotPassword.title',
+      textKey: 'placeholder.forgotPassword.text',
+      fallback: '/login',
+    } satisfies PlaceholderData,
+  },
+  ...devRoutes,
+
+  // Full-screen pages outside the tab shell (no navbar, back button instead).
+  {
+    path: 'upload',
+    canActivate: [authGuard],
+    loadComponent: placeholder,
+    data: { titleKey: 'placeholder.upload.title', textKey: 'placeholder.upload.text' } satisfies PlaceholderData,
+  },
+  {
+    path: 'search',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/people-search/people-search.page').then((m) => m.PeopleSearchPage),
+  },
+  {
+    path: 'users/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/user-profile/user-profile.page').then((m) => m.UserProfilePage),
+  },
+  {
+    path: 'settings',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPage),
+  },
+  {
+    path: 'profile/edit',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/profile-edit/profile-edit.page').then((m) => m.ProfileEditPage),
+  },
+
+  {
     path: '',
     canActivate: [authGuard],
     loadChildren: () => import('./nav/nav.routes').then((m) => m.routes),
-  },
-  {
-    path: 'eagle-feathers',
-    loadComponent: () => import('./pages/eagle-feathers/eagle-feathers.page').then( m => m.EagleFeathersPage)
-  },
-  {
-    path: 'group',
-    loadComponent: () => import('./pages/group/group.page').then( m => m.GroupPage)
-  },
-  {
-    path: 'profile',
-    loadComponent: () => import('./pages/profile/profile.page').then( m => m.ProfilePage)
   },
 ];

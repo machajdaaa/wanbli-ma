@@ -1,0 +1,56 @@
+<ion-content>
+  <header class="flex items-center gap-2 px-4 pt-[max(3.25rem,calc(var(--ion-safe-area-top,0px)+0.75rem))] pb-2">
+    <app-back-button fallback="/nav/profile" class="-ml-0.5" />
+    <h1 class="type-h1 text-text">{{ 'settings.title' | transloco }}</h1>
+  </header>
+
+  <main class="flex flex-col gap-6 px-4 pt-4 pb-10">
+    <app-settings-group [title]="'settings.account' | transloco">
+      <app-settings-row icon="profile" [label]="'settings.personal' | transloco" link="/profile/edit" />
+      <app-settings-row icon="lock" [label]="'settings.password' | transloco" [soon]="true" />
+    </app-settings-group>
+
+    <div class="flex flex-col gap-2">
+      <app-settings-group [title]="'settings.app' | transloco">
+        <app-settings-row icon="bell" kind="static" [label]="'settings.notifications' | transloco" />
+        @for (item of notificationKeys; track item.key) {
+          <app-settings-row
+            kind="toggle"
+            [label]="item.label | transloco"
+            [checked]="settings.notifications()[item.key]"
+            (checkedChange)="setNotification(item.key, $event)"
+          />
+        }
+      </app-settings-group>
+      <app-settings-group>
+        <app-settings-row icon="moon" kind="toggle" [label]="'settings.darkMode' | transloco" [soon]="true" />
+        <app-settings-row icon="globe" [label]="'settings.language' | transloco" [value]="'settings.czech' | transloco" [soon]="true" />
+      </app-settings-group>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <app-settings-group [title]="'settings.privacy' | transloco">
+        <app-settings-row
+          icon="eye"
+          kind="toggle"
+          [label]="'settings.privateProfile' | transloco"
+          [checked]="isPrivate()"
+          [disabled]="savingPrivate()"
+          (checkedChange)="setPrivate($event)"
+        />
+        <app-settings-row icon="block" [label]="'settings.blocked' | transloco" [soon]="true" />
+      </app-settings-group>
+      <p class="px-4 type-caption text-text-muted">{{ 'settings.privateProfileHint' | transloco }}</p>
+    </div>
+
+    <app-settings-group [title]="'settings.about' | transloco">
+      <app-settings-row icon="document" [label]="'settings.terms' | transloco" [soon]="true" />
+      <app-settings-row icon="lock" [label]="'settings.privacyPolicy' | transloco" [soon]="true" />
+      <app-settings-row icon="info" kind="static" [label]="'settings.version' | transloco" [value]="settings.appVersion" />
+    </app-settings-group>
+
+    <app-settings-group>
+      <app-settings-row icon="logout" kind="destructive" [label]="'settings.logout' | transloco" [disabled]="loggingOut()" (pressed)="logout()" />
+    </app-settings-group>
+  </main>
+</ion-content>

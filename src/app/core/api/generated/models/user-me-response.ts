@@ -4,15 +4,20 @@
 import { Gender } from '../models/gender';
 import { UserRole } from '../models/user-role';
 export interface UserMeResponse {
+  approvedFeatherCount: number;
   birthDate: string;
   createdAt: string;
   email: string;
   firstName: string;
+  followerCount: number;
+  followingCount: number;
   gender: Gender;
   id: number;
+  isPrivate: boolean;
   lastName: string;
   nickname: string;
   organisationId: number | null;
+  postCount: number;
   profilePicture: string | null;
   role: UserRole;
 }

@@ -6,6 +6,7 @@ export interface UpdateUserRequest {
   birthDate: string;
   firstName: string;
   gender: Gender;
+  isPrivate?: boolean | null;
   lastName: string;
   nickname: string;
   profilePicture: string | null;

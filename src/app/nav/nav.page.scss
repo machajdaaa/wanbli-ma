@@ -1,42 +1,102 @@
+/*
+ * Floating navbar (NavBar.dc.html). ion-tab-bar becomes the pill itself:
+ * 60 px tall, 16 px from the sides, 24 px + safe area from the bottom.
+ * It's taken out of the tabs' flex flow (position: absolute) so pages scroll
+ * underneath it; pages reserve the space via --wanbli-size-navbar-area
+ * (global.scss, `app-nav ion-content`).
+ */
+
 ion-tab-bar {
-  --background: var(--wanbli-color-bg-nav);
-  --border: 1px solid var(--wanbli-color-nav-border);
-  --color: var(--wanbli-color-text-dark);
-  --color-selected: var(--wanbli-color-text-dark);
-  height: 4.5rem;
+  --background: var(--wanbli-color-surface-raised);
+  --border: 0;
+  --color: var(--wanbli-color-icon-inactive);
+  --color-selected: var(--wanbli-color-primary);
+
+  position: absolute;
+  left: var(--wanbli-space-4);
+  right: var(--wanbli-space-4);
+  bottom: calc(var(--wanbli-space-6) + var(--ion-safe-area-bottom, 0px));
+  // Ionic forces box-sizing: content-box (!important inside its shadow DOM wins
+  // over ours), so the 1 px border is subtracted to keep the pill 60 px tall.
+  height: calc(var(--wanbli-size-navbar) - 2 * var(--wanbli-border-1));
+  padding: 0 var(--wanbli-space-2);
+  border: var(--wanbli-border-1) solid var(--wanbli-color-border-subtle);
+  border-radius: var(--wanbli-radius-full);
+  box-shadow: var(--wanbli-shadow-navbar);
+  // Ionic sets contain: strict, which would clip the center button above the pill.
+  contain: none;
+  overflow: visible;
 }
 
 ion-tab-button {
-  font-family: var(--wanbli-font-family);
+  --background: transparent;
+  --background-focused: transparent;
+  --ripple-color: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+  --app-icon-accent: var(--wanbli-color-primary-subtle);
 
-  ion-label {
-    font-size: var(--wanbli-font-size-12);
-    font-weight: var(--wanbli-font-weight-medium);
+  // The host is display: block by default, so the 56×44 pill inside wouldn't
+  // center vertically — make it a flex container.
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 0;
+  height: 100%;
+  max-width: none;
+
+  &::part(native) {
+    width: 56px;
+    height: var(--wanbli-size-touch);
+    margin: auto;
+    border-radius: var(--wanbli-radius-full);
+    overflow: visible;
+  }
+
+  &.tab-selected::part(native) {
+    background: var(--wanbli-color-primary-subtle);
+  }
+
+  &.ion-focused::part(native) {
+    outline: 2px solid var(--wanbli-color-primary-pressed);
+    outline-offset: 2px;
   }
 }
 
-.tab-icon {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.tab-icon-selected {
+.tab-icon-selected,
+ion-tab-button.tab-selected .tab-icon-default {
   display: none;
 }
 
-ion-tab-button.tab-selected {
-  .tab-icon-default {
-    display: none;
-  }
-
-  .tab-icon-selected {
-    display: block;
-  }
+ion-tab-button.tab-selected .tab-icon-selected {
+  display: inline-flex;
 }
 
-.tab-divider {
-  align-self: center;
-  width: var(--wanbli-border-width-md);
-  height: 1.625rem;
-  background: var(--wanbli-color-nav-divider);
+.nav-fab-slot {
+  flex: 0 0 76px;
+}
+
+.nav-fab {
+  position: absolute;
+  left: 50%;
+  top: -26px;
+  width: var(--wanbli-size-navbar-fab);
+  height: var(--wanbli-size-navbar-fab);
+  margin-left: calc(var(--wanbli-size-navbar-fab) / -2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--wanbli-color-primary);
+  color: var(--wanbli-color-on-primary);
+  box-shadow: var(--wanbli-shadow-fab);
+
+  &:active {
+    background: var(--wanbli-color-primary-pressed);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wanbli-color-primary-pressed);
+    outline-offset: 8px;
+  }
 }

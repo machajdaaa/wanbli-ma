@@ -1,10 +1,10 @@
 // Pojmenované enumy — generátor je nedokáže vytvořit, dokud BE nepřidá x-enum-varnames do spec.
 // Hodnoty je potřeba ověřit s backendem.
 
+// API: UserRole = 0 | 1. Admin work happens in the separate admin app, not here.
 export enum UserRole {
   User = 0,
   Leader = 1,
-  Admin = 2,
 }
 
 export enum Gender {

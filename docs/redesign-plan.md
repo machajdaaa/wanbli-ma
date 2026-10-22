@@ -1,0 +1,512 @@
+# Orlí pera – plán redesignu
+
+Pracovní dokument k redesignu podle `design/` a zadání v `trilobit_prompt.md`.
+Rozhodnutí přijatá během práce se dopisují do sekce **Rozhodnutí** (s fází, ve
+které vznikla). Chybějící data z API se evidují v `docs/backend-requirements.md`
+(vznikne ve fázi 3).
+
+## 0. Výchozí stav (fáze 0, 11. 10. 2026)
+
+- `npm run lint` ✅, `npm run build` ✅ (jen Sass `@import` deprecation warningy).
+- `npm test` ❌ **4 z 8 specs padají už teď**:
+  - `ActivityCardComponent`, `DailyChallengeCardComponent` – NgModule-styl
+    `declarations` u standalone komponenty (gotcha z CLAUDE.md).
+  - `AppComponent`, `HomePage` – chybí `provideHttpClient()` v TestBed
+    (`HomePage` padá kvůli rozpracovanému `FeedService`).
+  - Opraví se ve fázi 1 (`imports` místo `declarations`, `provideHttpClient()` +
+    `provideHttpClientTesting()`, Transloco testing provider).
+- Karma potřebuje Chrome; na tomhle stroji je jen Brave →
+  `CHROME_BIN="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" npm test -- --watch=false --browsers=ChromeHeadless`.
+- Necommitnuté změny (`FeedService` + nekonečný scroll na Domů) se převezmou:
+  `FeedService` se ve fázi 3 rozšíří na view-modely, logika stránkování
+  a chybového stavu na Domů se zachová ve fázi 4. Commitnou se v rámci fáze 1.
+- Katalogové endpointy (`/api/eagle-feathers/...`) vyžadují přihlášení, formát
+  `section` (`"A"` vs. `"1A"`, víceznakové `"AA"`) jsem nemohl ověřit naživo.
+  Mapování proto bude tolerantní (viz R7).
+
+## 1. Obrazovky a routy
+
+| # | Obrazovka (design) | Route | Kde žije | Stránka / komponenta |
+|---|---|---|---|---|
+| 9 | `Prihlaseni` | `/login` | mimo taby | `auth/login/LoginPage` (přepsat) |
+| 10 | `Registrace` | `/register` | mimo taby | `auth/register/RegisterPage` (nová) |
+| – | (není v designu) | `/forgot-password` | mimo taby | `auth/forgot-password/…` – info „připravujeme“ |
+| 1, 1b, 1c | `Domu`, `Domu-Nesleduji`, `Domu-Prazdny` | `/nav/home` | tab | `pages/home/HomePage` |
+| 1d, 1e | `Domu-MenuPrispevku`, `Profil-MenuPrispevku` | bottom sheet | – | `shared/components/post-menu-sheet` |
+| 2 | `OrliPera` | `/nav/eagle-feathers` | tab | `pages/eagle-feathers/EagleFeathersPage` |
+| 2a, 2b | `KategorieDetail(-4A)` | `/nav/eagle-feathers/category/:light/:section` | tab (stack) | `pages/eagle-feathers/category/…` |
+| 2c, 2d | `PeroDetail(-4A1)` | `/nav/eagle-feathers/feather/:id` | tab (stack) | `pages/eagle-feathers/feather/…` |
+| 2e | `VyhledaniPera` | `/nav/eagle-feathers/search` | tab (stack) | `pages/eagle-feathers/search/…` |
+| 3a–3d | `Skupina-*` | `/nav/group` | tab | `pages/group/GroupPage` (segmenty uvnitř) |
+| 4 | `Profil` | `/nav/profile` | tab | `pages/profile/ProfilePage` |
+| 5 | `Nastaveni` | `/settings` | mimo taby | `pages/settings/…` |
+| 6 | `UpravitProfil` | `/profile/edit` | mimo taby | `pages/profile-edit/…` |
+| 7 | `Hledani` | `/search` | mimo taby | `pages/people-search/…` |
+| 8 | `CiziProfil` | `/users/:id` | mimo taby | `pages/user-profile/…` (vlastní id → redirect `/nav/profile`) |
+| – | nahrání pera (nenavrženo) | `/upload` | mimo taby | `pages/upload/…` – placeholder |
+| – | katalog komponent | `/dev/ui` | mimo taby, jen dev build | `dev/ui/…` |
+
+Všechny routy kromě `/login`, `/register`, `/forgot-password` jsou za
+`authGuard`. Žádná route nepotřebuje `roleGuard` (koncept: vedoucí = dítě).
+
+## 2. Komponenty
+
+### `shared/design-system/` (primitivy, bez byznys logiky)
+
+| Komponenta | Stavy / varianty | Zdroj v designu |
+|---|---|---|
+| `ButtonComponent` (přepis) | primary / secondary / text / destructive × default, pressed (`:active`), disabled, loading; výška 48 (text 44), `block` | Main → Tlačítka |
+| `TextInputComponent` (přepis) | label nad polem, focus ring, error + text, hint, counter, password toggle, `textarea` varianta | Main → Input, UpravitProfil, Prihlaseni |
+| `SearchInputComponent` | lupa, clear „×“, `type="search"` | Main, Hledani, VyhledaniPera |
+| `SegmentedControlComponent` | 2–4 segmenty, `role="tablist"`, `sticky` varianta (bílý podklad + 1px linka) | Main, Skupina, PeroDetail (Muži/Ženy) |
+| `AvatarComponent` | 32/40/56/96 (r10/12/18/30), foto / iniciály na tintu / bez fotky ikona | Main → Avatar |
+| `BadgeComponent` | grand-challenge, done („Splněno“), announcement, leader, you, deed-done / deed-todo (dashed) | Main, KategorieDetail |
+| `LightTagComponent` | světlo 1–4 + římská číslice + název; varianta „kód“ (22 px) | Main, PostCard, KategorieDetail |
+| `ProgressBarComponent` | barva světla, výška 6/8, track normal/na-tintu | Main, OrliPera, Profil |
+| `ToggleComponent` | on / off / disabled, `role="switch"` | Main → Přepínač |
+| `SettingsGroupComponent` + `SettingsRowComponent` | navigace, s hodnotou, s přepínačem, destruktivní, disabled + „Brzy“ | Main, Nastaveni |
+| `BottomSheetComponent` | handle, hlavička, akce, Zrušit; postavené na `ion-modal` s breakpointy | Domu-MenuPrispevku |
+| `ToastService` + `ToastComponent` | success / error s akcí „Zkusit znovu“ | Main → Toast |
+| `EmptyStateComponent` | orel v kruhu, nadpis, věta, CTA (primary/secondary) | Main, Domu-Prazdny |
+| `SkeletonComponent` | post-card, list-row | (není v designu – odvozeno z karet) |
+| `IconComponent` | inline SVG sada z Main/NavBar (outline + filled varianty) | Main → Ikony |
+
+### `shared/components/` (feature komponenty)
+
+| Komponenta | Pozn. |
+|---|---|
+| `PostCardComponent` | nahrazuje `ActivityCard`; vstup `PostCardVm`, výstupy `like`, `menu`, `author` |
+| `PostMenuSheetComponent` | cizí / vlastní varianta, potvrzení smazání |
+| `DailyChallengeCardComponent` (přepis) | vizuál z `DailyChallenge.dc.html` |
+| `FloatingNavBarComponent` | součást `nav/` shellu |
+| `CategoryCardComponent` | karta 178×128 v katalogu |
+| `FeatherRowComponent` | řádek pera v kategorii (Čin/GC stav) a ve výsledcích hledání |
+| `CollectionProgressComponent` | „Moje sbírka“ – 4 světla |
+| `ProfileHeaderComponent` + `ProfileStatsComponent` | sdílené vlastním a cizím profilem |
+| `GroupHeaderComponent` | cover, avatar, název, členové, popis + „více“ |
+| `AnnouncementCardComponent` | info blok Kdy / Kde / Vstupné / Věk |
+| `LeaderboardPodiumComponent` + `LeaderboardRowComponent` | pódium 2–1–3, řádek, připnutý vlastní řádek |
+| `PersonRowComponent` | hledání lidí – avatar, jméno, skupina, počet per, Sledovat |
+
+## 3. View-modely a služby
+
+Služby v `core/services/` vrací view-modely (`core/models/*.vm.ts`). Mock data
+jen v `core/mocks/` s `// MOCK(<důvod>)`.
+
+| VM | Služba | Zdroj API | MOCK |
+|---|---|---|---|
+| `PostCardVm` { id, author{id,name,initials,avatarUrl,tint,isMe}, place?, createdAt, feather{code,name,light,categoryName}, isGrandChallenge, metrics[0–2], photos[], likeCount, likedByMe } | `FeedService`, `PostService` | `get-feed`, `get-organisation-feed`, `get-post`, `like-post`, `unlike-post`, `delete-post` | pero, GC, metriky, více fotek, `likedByMe` (viz R4–R6) |
+| `HomeFeedVm` { mode: `following` \| `league`, posts, hasNextPage } | `FeedService` | `get-feed` + `get-following(me).totalCount` | – |
+| `DailyChallengeVm` { title, text, featherId } | `ChallengeService` | – | celé |
+| `LightVm` / `CategoryCardVm` { light, section, code, name, done, total } | `EagleFeatherService` | `get-eagle-feathers` (celý katalog jednou, cache) + `get-my-user-eagle-feathers` | názvy kategorií (konstanta z `Kategorie.dc.html`) |
+| `CategoryDetailVm` { …, rules?, feathers: `FeatherRowVm`[], gcDone } | `EagleFeatherService` | `get-eagle-feathers-by-section` + moje pera | pravidla kategorie |
+| `FeatherDetailVm` { code, name, category, light, measure, deed{done,doneAt,text}, gc{…}, limits?, terms?, social } | `EagleFeatherService` | `get-eagle-feather-by-id` (`challenge`, `grandChallenge`) + moje pera | `measure`, limity, slovníček, „kolik lidí ze skupiny“ |
+| `FeatherSearchResultVm` | `EagleFeatherService` | z cache katalogu, filtr na klientu (bez diakritiky, kód) | – |
+| `GroupVm` { id, name, avatarUrl, coverUrl?, memberCount, description } | `GroupService` | `get-organisation(me.organisationId)` | cover (ilustrace z designu jako default, ne mock) |
+| `AnnouncementVm` { author{name,isLeader}, createdAt, title, text, imageUrl?, info? {when,where,price,age} } | `GroupService` | `get-announcements` | info blok, obrázek (viz R5) |
+| `LeaderboardVm` { podium[3], rows[], me } | `GroupService` | – | celé |
+| `ProfileVm` { user, nickname, group?, bio?, stats{feathers, followers, following}, collection[4], isMe, isFollowing } | `ProfileService` | `user/me` / `get-user`, `get-followers`/`get-following` (`totalCount`), moje pera, `update-current-user` | bio, u cizího: počet per, sbírka, skupina |
+| `PersonRowVm` { id, name, initials, groupName, featherCount, isFollowing } | `PeopleService` | `get-organisation-members`, `get-following(me)`, `follow-user`, `unfollow-user` | počet per u členů; fulltext hledání mimo skupinu |
+| `SettingsVm` (notifikace, tmavý režim) | `SettingsService` (Preferences) | – | lokálně, ne na serveru |
+| `RegisterVm` / oddíly | `AuthService`, `GroupService` | `register` | seznam oddílů, souhlas rodiče |
+
+Sledování: „sleduju ho?“ a „sleduju někoho?“ se počítá z `get-following(me)`
+(načte se jednou do signálu v `PeopleService`, follow/unfollow ho aktualizuje).
+
+## 4. Rozpory a nejasnosti
+
+Design × koncept × API. U každého je navržené výchozí řešení (R = rozhodnutí níže).
+
+1. **Jméno vs. přezdívka u autora.** `PostAuthorResponse` má jen `nickname`;
+   `PublicUserResponse` a `OrganisationMemberResponse` mají jméno i příjmení.
+   → Podle výchozího rozhodnutí v promptu: jméno a příjmení, kde je API vrací
+   (profil, hledání, skupina), jinak přezdívka (karta pera, oznámení).
+2. **Text příspěvku.** `PostResponse.content` existuje, karta v designu text nemá.
+   → R6.
+3. **Skutečné příspěvky bez pera/místa.** API nevrací pero, výkon ani místo,
+   karta bez nich nemá ani nadpis. → R5.
+4. **„Lajkl jsem?“** API nevrací. → R4.
+5. **Stav pera „splněno“.** `UserEagleFeatherResponse` má `status`
+   (čeká/schváleno/zamítnuto?) i `isCompleted`. Koncept zakazuje ukazovat stavy
+   schvalování. → R8.
+6. **Tabulka limitů v `PeroDetail`** začíná na „14–15 let“ a končí „50 a více“,
+   aplikace je pro děti 8–15. → Mock tabulka zachová strukturu z designu;
+   skutečné věkové kategorie dodá backend (zapsat do backend-requirements).
+7. **„V Trilobitu ho má 7 lidí“** – natvrdo název oddílu. → Text přes klíč
+   s `{{group}}` z `GroupVm.name`.
+8. **„Tady jsou pera z celé organizace“ × „Z celé Ligy“** na stejné obrazovce
+   (1b). → Sjednotit na „z celé Ligy“ (koncept mluví o Lize).
+9. **`CiziProfil` má v designu navbar**, prompt ale dává `/users/:id` mimo tab
+   shell. → R2.
+10. **Registrace** – design: jedno pole „Jméno a příjmení“, výběr oddílu,
+    souhlas, bez data narození a pohlaví. API: `firstName`, `lastName`,
+    `birthDate`, `gender`, `passwordConfirm` povinné. → R10.
+11. **Přihlášení** – design „E-mail nebo přezdívka“, API bere jen `nickname`.
+    → Label „Přezdívka“, dokud API e-mail nepřijme.
+12. **Upravit profil** – design má jedno pole „Jméno“, API `firstName` + `lastName`
+    a `UpdateUserRequest` vyžaduje i `birthDate` a `gender` (pošlou se stávající
+    hodnoty z `user/me`). Bio v API není. → Dvě pole Jméno / Příjmení; bio
+    lokálně (MOCK).
+13. **„Upravit příspěvek – Fotky a výkon“** ve vlastním menu – formulář není
+    navržený. → Vede na placeholder `/upload` (stejně jako nahrání pera).
+14. **`KategorieDetail` má stav „locked“** (zamčené pero, `opacity .55`) a
+    nevyrenderovaný filtr Všechna/Moje. Koncept ani API zamykání nezná.
+    → Neimplementovat, žádné pero se nezamyká.
+15. **`UserRole.Admin = 2`** v `enums.ts`, API `0 | 1`. → Oprava ve fázi 9
+    (jak zadáno); nikde se nepoužívá.
+16. **Gender enum** (`Unknown=0, Male=1, Female=2`) je v `enums.ts` označený
+    „ověřit s backendem“. Registrace na něm závisí. → Ponechat, zapsat
+    do backend-requirements jako otázku.
+17. **Feed bez sledovaných** – nevím, jestli `/api/feed` vrací celou Ligu.
+    → Režim 1b se pozná z `get-following(me).totalCount === 0`, data stejně
+    z `/api/feed`; když je prázdný, ukáže se prázdný stav.
+18. **Moje příspěvky / příspěvky cizího uživatele** – API nemá
+    `GET /users/{id}/posts`. → MOCK + backend-requirements.
+19. **Daily challenge text** v designu („Běh na 100m pod 10 minut“) je
+    nesmyslný – jen vzorová data, v mocku použít smysluplný text.
+20. **Kódy kategorií** přeskakují X (`2W → 2Y`, `3W → 3Y → 3Z → 3AA`). Kód se
+    proto nikdy nedopočítává z indexu, vždy z `section` z API.
+21. **Dotykové plochy** pod 44 px v designu: tlačítko „Celá pravidla“ (32 px),
+    „Do toho!“ a „Začít“ (36 px). → Vizuál zachovat, klikací plochu rozšířit
+    na 44 px (padding / `::before` hit area).
+22. **Kontrast (WCAG AA = 4,5 : 1 pro text pod 18,66 px bold / 24 px).**
+    Spočítáno z hex hodnot designu:
+    - bílý text na `orange-500` `#E07B1F` (primární tlačítko, segment,
+      navbar „+“): **~3,0 : 1** ❌
+    - bílý text na `orange-600` `#C9661A`: ~4,0 : 1 ❌
+    - `#E07B1F` text na krémové („DAILY CHALLENGE“): ~2,7 : 1 ❌
+    - `forest-500` `#5E6B57` na `surface` / `bg`: ~4,9 : 1 ✅,
+      `forest-900` na čemkoli světlém ✅
+    Primární tlačítko podle designu tedy AA nesplní. **Potřebuje tvoje
+    rozhodnutí** (viz otázka O1 níže). Do té doby se tokeny implementují
+    přesně podle designu a oranžový *text* na světlém podkladu dostane
+    tmavší token `orange-700` (`#A9531A`, ~5 : 1).
+
+## 4b. Otevřené otázky na tebe
+
+- **O1 – Kontrast primárního tlačítka.** (a) Nechat oranžovou z designu
+  a přijmout výjimku z AA pro tlačítka, (b) ztmavit výplň tlačítek na
+  ~`#B35A12` (bílý text ~4,8 : 1, vizuálně tmavší, okraj/pressed se posunou
+  o stupeň). Tmavý text `forest-900` na oranžové by dal jen ~4,2 : 1, takže
+  to řešení není.
+  **Rozhodnuto 11. 10. 2026: (a)** – barvy podle designu, výjimka z AA pro
+  bílý text na oranžových tlačítkách / segmentu / FAB je **známý dluh**.
+  Oranžový *text* na světlém podkladu přesto používá `orange-700`.
+
+## 5. Rozhodnutí
+
+- **R1 – Navbar (fáze 3).** Zůstává `ion-tabs` + `ion-tab-bar` (zachová
+  Ionic tab stacky a back navigaci), restyluje se na plovoucí pilulku přes CSS
+  custom properties / `::part`. Prostřední tlačítko je běžný `<button>` uvnitř
+  tab baru, není to tab. Pozadí obsahu pod navbarem dostane gradient
+  a `ion-content` spodní padding = výška navbaru + safe area.
+- **R2 – Obrazovky mimo taby nemají navbar** (`/users/:id`, `/search`,
+  `/settings`, `/profile/edit`, `/upload`) – mají tlačítko Zpět. Drží se tím
+  zadaných rout a Ionic stack navigace; navbar v `CiziProfil` designu
+  se nepřenáší.
+- **R3 – Katalog per** se načte jednou přes `get-all-eagle-feathers`
+  (`/eagle-feathers/all`, jeden request; do 22. 10. 2026 stránkovaně po 100)
+  a cachuje v `EagleFeatherService`; z něj se
+  počítají počty v kategoriích, progres po světlech a klientské hledání.
+  Volat `…/sections/{section}` pro ~95 kategorií by znamenalo ~95 requestů.
+  Detail kategorie a pera se přesto čte z vlastních endpointů (čerstvá data).
+- **R4 – Pírko.** Počáteční `likedByMe = false` (API ho nevrací). Klik =
+  optimistické přepnutí + `like-post`/`unlike-post`; při chybě rollback a toast.
+  Pokud `like-post` vrátí 409/400 („už lajknuto“), stav se nastaví na
+  lajknuto bez navýšení počtu.
+- **R5 – Politika chybějících polí u skutečných dat z API.** Pole nutná pro
+  layout (pero u příspěvku: název, kód, světlo, kategorie) se doplní
+  deterministickým mockem podle id. Pole, která by po zfalšování
+  vypadala jako fakt o skutečném člověku nebo akci (místo u příspěvku,
+  kdy/kde/vstupné/věk u oznámení), se **skryjí**. Plně mockované obrazovky
+  (žebříček, daily challenge) mají vše.
+- **R6 – Text příspěvku.** Když `content` není prázdný, zobrazí se pod názvem
+  pera jako Body (max. 3 řádky). Jinak by uživatelský text zmizel.
+- **R7 – Kód kategorie / pera.** `code = light + section` (pokud `section`
+  už začíná číslem světla, nepřidává se), pero `= code + number`.
+  Ověří se proti skutečné odpovědi ve fázi 5.
+- **R8 – „Splněno“ = `isCompleted === true`.** Záznamy, které ještě nejsou
+  dokončené (čekají na schválení / zamítnuté), UI neukazuje vůbec – pero
+  vypadá jako nesplněné. Čin = záznam s `isGrandChallenge = false`,
+  Grand challenge = `true`.
+- **R9 – i18n.** `@jsverse/transloco`, jediný jazyk `cs`, soubor
+  `public/assets/i18n/cs.json` (servíruje se jako `/assets/i18n/cs.json`).
+  Formátování přes `registerLocaleData(localeCs)` + `LOCALE_ID = 'cs'`
+  a vlastní pipes: `relativeTime` („dnes 9:00“, „včera 17:40“, „neděle 16:05“
+  do 7 dní, „4. 10. 14:30“, jiný rok „4. 10. 2025“), `czNumber` („11,25“),
+  `plural` přes `Intl.PluralRules('cs')` s klíči `one/few/other`
+  („1 pero / 2 pera / 5 per“) – bez `transloco-messageformat`, žádná další
+  závislost.
+- **R10 – Registrace.** Pole: Jméno, Příjmení (zvlášť – API), Přezdívka,
+  E-mail, Datum narození (`ion-datetime` v modalu), Pohlaví (SegmentedControl:
+  Kluk / Holka / Neuvádím → `Gender` 1/2/0), Heslo se zobrazením hesla
+  (`passwordConfirm` = `password`, design má jedno pole). Výběr oddílu
+  (MOCK seznam, neodesílá se – API má pozvánky), souhlas s podmínkami
+  (povinný na klientu, neodesílá se), upozornění pro mladší 15 let se ukáže
+  podle data narození. Chyby u polí, ze serveru přes Toast.
+- **R11 – Fonty.** Inter Variable zůstává; Baloo 2 se nahradí variabilním
+  řezem (`Baloo2[wght].ttf` z Google Fonts, OFL) pokrývajícím 400–800,
+  takže stačí jeden soubor pro 700 i 800. Nunito se ve fázi 1 odpojí
+  z `fonts.scss`, soubory se smažou ve fázi 9.
+- **R12 – Barvy avatarů** (tinty `#DDE8D2`, `#D6E6EF`, `#F1DCD5`, `#F4E8C1`,
+  `#E2E5DA`) jako tokeny `--wanbli-avatar-1..5`, výběr deterministicky podle
+  id uživatele.
+- **R13 – Skupina bez `organisationId`** → empty state „Zatím nejsi v žádné
+  skupině“ (bez akce, vstup řeší pozvánky v administraci).
+- **R14 – Nastavení.** Osobní údaje → `/profile/edit`. Neaktivní se štítkem
+  „Brzy“: Změnit heslo, Tmavý režim, Jazyk (jen Čeština), Kdo vidí moje
+  pera, Zablokovaní lidé, Podmínky, Ochrana údajů (zatím bez URL).
+  Notifikace: 4 přepínače, uložené lokálně přes Preferences. Verze
+  z `package.json` přes `environment.appVersion`.
+- **R15 – Testy.** Zůstávají smoke specy. Protože každá komponenta s texty
+  potřebuje Transloco, vznikne jeden helper `src/testing/test-providers.ts`
+  (`provideHttpClient`, `provideHttpClientTesting`, Transloco testing
+  s `cs.json`). Žádné mocky Capacitor pluginů.
+- **R16 – `/dev/ui`** se přidává do rout jen při `!environment.production`.
+- **R17 – Tailwind v samostatném `src/tailwind.css` (fáze 1).** Sass neumí
+  zparsovat Tailwind v4 syntaxi (`--color-*: initial`), proto `@theme`
+  a `@utility` žijí v čistém CSS souboru zařazeném v `angular.json → styles`
+  za `global.scss`. Výchozí Tailwind palety, radiusy, fonty a stíny jsou
+  vypnuté – existují jen třídy navázané na tokeny (`bg-surface`,
+  `text-text-muted`, `text-forest-500`, `rounded-12`, `font-display`,
+  `shadow-navbar`). Spacing zůstává Tailwind default (4 px krok = mřížka
+  designu). Typová škála = utility `type-display … type-overline`.
+- **R18 – Tokeny ve dvou vrstvách (fáze 1).** `--wanbli-palette-*` (surové
+  barvy z designu) a `--wanbli-color-*` (sémantické). Komponenty a Tailwind
+  používají jen sémantickou vrstvu (výjimka: názvy `forest-*`/`orange-*`
+  z designu jsou v Tailwindu kvůli zadání). Dark mode později přepíše jen
+  sémantickou vrstvu. Progress track sjednocen na `#E6E5DB` (Main), i když
+  OrliPera používá `#E2E1D6`. Radius odznaků 7 px z obrazovek sjednocen na 8
+  (Main: „8 – odznaky“).
+- **R19 – `color-scheme: light` v `index.html` (fáze 1).** Dokud není dark
+  mode, nativní prvky (date picker, scrollbary) se nemají přepínat do tmavé.
+- **R20 – Staré obrazovky (login, ActivityCard, DailyChallengeCard, navbar)**
+  dostaly ve fázi 1 jen přemapované tokeny a `type-*` třídy, aby nevypadaly
+  rozbitě; jejich texty se převedou na Transloco až při přepisu
+  v příslušné fázi (2–4, 8).
+- **R21 – Design-system komponenty na nativních prvcích (fáze 2).** `Button`,
+  `TextInput`, `Toggle`, `SegmentedControl` atd. renderují skutečné
+  `button`/`input`/`a` stylované Tailwindem místo restylovaných `ion-button`
+  / `ion-input`. Důvod: design má label nad polem a stavy, které Ionic
+  (floating label, shadow DOM) neumí bez boje se `::part`; nativní prvky jsou
+  i požadavek přístupnosti. Ionic zůstává tam, kde přidává chování –
+  `BottomSheet` je inline `ion-modal` (focus trap, Android back, zavření
+  tapnutím na pozadí, `aria-label` Ionic přenese do vnitřního dialogu).
+  `Button` s `link` renderuje `<a routerLink>`; během `loading` je nativně
+  disabled (žádný dvojí submit), ale vypadá normálně + spinner.
+- **R22 – Ionic globální CSS v cascade layer `ionic` (fáze 2).** Bez toho
+  neuvrstvené Ionic pravidla (`a { color: primary }`, `h2 { margin-top }`)
+  přebíjela všechny Tailwind utility. `typography.css` se neimportuje vůbec.
+- **R23 – Stav „stisknuto“ na `/dev/ui`** se zobrazuje přes `forceActive`
+  na `Button` (odstraní prefix `active:`); jinak je to `:active`. Focus stav
+  inputu se v katalogu ukazuje jen klepnutím. Ukázkové texty na `/dev/ui`
+  jsou natvrdo – je to vývojový nástroj, ne produktové UI.
+- **R24 – Toast** = vlastní `ToastService` + `<app-toast-host>` v `AppComponent`
+  (ne `ion-toast` – design má stavovou tečku a tmavou pilulku). Jeden toast
+  najednou, nad navbarem; úspěch zmizí po 3 s, chyba s akcí „Zkusit znovu“
+  zůstane do stisknutí. `role="status"` / `role="alert"`.
+- **R25 – Hit area.** Malá tlačítka z designu (36 px „Do toho!“/„Začít“,
+  `size="sm"`) mají vizuál 36 px, klikací plochu 44 px přes `::after`.
+  Akční tlačítko v toastu je 44 px místo 36 px.
+- **R26 – Placeholdery rout (fáze 3).** Všechny routy z plánu existují.
+  Obrazovky z fází 4–8 zatím vedou na obecnou `PlaceholderPage`
+  („Připravujeme“, s tlačítkem zpět) nastavenou přes route `data`; `/upload`
+  ji používá natrvalo. Šablonové taby Orlí pera / Skupina / Profil přišly
+  o výchozí `ion-header` a do své fáze ukazují stejný stav.
+- **R27 – `ApiClient` (fáze 3).** Generovaná třída `Api` je Promise-based;
+  služby volají generované `fn/*` funkce přes tenký `ApiClient` (Observable,
+  `allPages` pro stránkované seznamy). `AuthService.ensureCurrentUser()`
+  dodá přihlášeného uživatele (případně ho načte) – služby z něj berou id
+  a `organisationId`.
+- **R28 – Fotky u skutečných příspěvků (fáze 3).** Jen skutečný `imageUrl`;
+  šedé placeholder dlaždice (z designu) mají jen ukázkové karty na `/dev/ui`
+  (od 22. 10. 2026 jsou i příspěvky na profilech skutečné), aby skutečný příspěvek nenaznačoval fotky,
+  které nemá (navazuje na R5).
+- **R29 – Daily challenge** (od 22. 10. 2026 z `GET /api/challenges/current`)
+  nese `eagleFeatherId`, „Do toho!“ otevře detail pera přímo. Když výzva
+  není (404) nebo nejde načíst, karta se na Domů nezobrazí. Původně mock
+  s kódem pera převáděným přes katalog.
+- **R30 – Text „Zapomněl/a jsi heslo?“** vede na `/forgot-password`
+  s neutrálním „Obnovu hesla připravujeme“ – nevymýšlí se postup (např.
+  „obnoví vedoucí“), který nikdo nepotvrdil.
+- **R31 – Pozdrav bez 5. pádu (fáze 4).** Design má „Ahoj, Jakube!“
+  (vokativ). Spolehlivé skloňování libovolných jmen klient neumí, proto
+  „Ahoj, {křestní jméno}!“ v 1. pádu (bez jména přezdívka). Řešení později:
+  pole `vocative` z backendu nebo knihovna na české skloňování.
+- **R32 – Menu příspěvku bez skloňování a rodu (fáze 4).** Design má
+  „Přestat sledovat Terezu“ a „Její pera už neuvidíš“ – obojí vyžaduje
+  4. pád jména a znalost rodu. Použito neutrálně: „Přestat sledovat“ /
+  „Pera z tohoto profilu už na Domů neuvidíš“. Když autora nesleduji
+  (feed celé Ligy), nabídne se místo toho „Sledovat“.
+- **R33 – Nahlášení příspěvku (fáze 4).** Endpoint chybí. Protože jde
+  o bezpečnostní funkci, aplikace **nepředstírá**, že nahlášení odeslala –
+  ukáže „Nahlašování zatím nefunguje. Když tě něco trápí, řekni to vedoucímu
+  oddílu.“ Skrytí příspěvku funguje lokálně (do obnovení feedu).
+- **R34 – Upravit příspěvek** vede na placeholder `/upload` (formulář
+  není navržený). Smazání má potvrzovací krok přímo v bottom sheetu,
+  chyba → toast se „Zkusit znovu“.
+- **R35 – Prázdný feed má přednost (fáze 4).** Když nejsou žádné příspěvky,
+  ukáže se jen prázdný stav 1c (i v režimu celé Ligy) – karta 1b
+  „nikoho nesleduješ“ se zobrazuje jen nad skutečnými příspěvky.
+- **R36 – `ActivityCard` smazána už ve fázi 4** (místo fáze 9) – po
+  nahrazení `PostCard` nikde nebyla použitá. Fotky „+N“ v mřížce 3+ jsou jen
+  informace (`role="img"`), detail fotek ani příspěvku není navržený.
+- **R37 – Varianty karty na `/dev/ui`.** Rozložení 2 a 3+ fotek ze
+  skutečného API zatím nevznikne (jen jedna `imageUrl`), proto jsou všechny
+  varianty z `KartaPera.dc.html` k vidění v katalogu.
+- **R38 – „Splněno 3 / 7“ místo „3 ze 7 per splněno“ (fáze 5).** Design
+  potřebuje předložku z/ze podle výslovnosti čísla a 2. pád „per/pera“ podle
+  celkového počtu – neutrální zápis platí pro každé číslo.
+- **R39 – „Ve tvé skupině ho má N lidí“ (fáze 5).** Design má „V Trilobitu
+  ho má 7 lidí“ – název oddílu natvrdo a v 6. pádě, který u libovolného názvu
+  skupiny neumíme vytvořit. Věta má plurálové tvary i se shodou slovesa
+  („má 1 člověk / mají 2 lidé / má 5 lidí“). Bez skupiny se karta skryje.
+- **R40 – CTA detailu pera:** „Přidat splnění“, když má uživatel Čin nebo
+  Grand challenge splněný, jinak „Začít s perem“. Obojí vede na `/upload`.
+  Tlačítko je připnuté nad navbarem (`slot="fixed"`), pod ním přechod.
+- **R41 – Ilustrace banneru Orlí pera** je SVG asset
+  (`public/assets/images/eagle-feathers-banner.svg`) převzatý z designu –
+  barvy ilustrace tak nejsou v kódu komponent.
+- **R42 – Hledání pera** filtruje cachovaný katalog s debounce 150 ms;
+  čipy se porovnávají bez diakritiky (čip „běh“ je aktivní i pro „beh“).
+- **R43 – Pravidla kategorie** jdou rozbalit na místě („Celá pravidla“ ↔
+  „Méně“), samostatná obrazovka pravidel není navržená.
+- **R44 – Přilepené taby skupiny (fáze 6).** Po odscrollování hlavičky se
+  taby přilepí nahoru na bílý pruh s kompaktním jménem skupiny (stav 3d).
+  Přepnutí tabu ve sticky stavu posune obsah tak, aby nový tab začínal
+  hned pod taby. Každý tab se načte až při prvním otevření.
+- **R45 – Vlastní řádek žebříčku** je zvýrazněný (oranžový, „Ty“) a připne
+  se nad navbar, jen když jeho místo v seznamu není na obrazovce. Žebříček
+  je od 22. 10. 2026 skutečný (`/organisations/{id}/leaderboard`, celý přes
+  `allPages`); řádek otevře profil, vlastní řádek vede na můj profil. API
+  vrací jen přezdívku, ne jméno. Při shodě bodů mají dva lidé stejné
+  `rank` – medaile a výška stupně na pódiu jdou podle pozice (1.–3. místo
+  v pořadí), číslo ukazuje `rank`. Prázdný žebříček = empty state.
+- **R46 – „více“ u popisu skupiny** se zobrazí jen tehdy, když popis
+  skutečně přeteče 3 řádky (měřeno po vykreslení); rozbalí se na místě.
+- **R47 – Cover skupiny** je ilustrace z designu jako SVG asset
+  (`group-cover.svg`), dokud API nemá `coverUrl`. Avatar skupiny bez
+  obrázku = první písmeno názvu.
+- **R48 – Oznámení bez info bloku.** API nemá kdy/kde/vstupné/věk ani
+  obrázek, blok se proto nezobrazí (R5); karta je připravená ho ukázat,
+  jakmile `AnnouncementVm.info` naplní backend. Autor oznámení je vždy
+  označen „Vedoucí“ (oznámení vytváří jen vedoucí v administraci).
+- **R49 – Profil se načítá při každém vstupu** (`ionViewWillEnter`), aby se
+  po návratu z úpravy profilu ukázaly změny. Statistiky „Sledující /
+  Sleduji“ nejsou odkazy – seznamy sledujících nejsou navržené.
+- **R50 – Sledovat / Sleduješ** je sdílená `FollowButtonComponent`
+  nad `PeopleService.followingIds`, takže tlačítka pro stejného člověka
+  (hledání, cizí profil, menu příspěvku) jsou vždy v souladu. Přepnutí je
+  optimistické, počet sledujících na cizím profilu se upraví hned.
+- **R51 – Cizí profil s vlastním id** přesměruje na tab Profil. Skupina
+  ani bio cizího uživatele se nezobrazují (API je nevrací, nevymýšlí se –
+  R5; ukázkové bio bylo 22. 10. 2026 odstraněno). Počet per a počty
+  sledujících jsou z `UserProfileResponse`, sbírka z
+  `/users/{id}/eagle-feathers` (jen dokončené – R8).
+- **R52 – Úprava profilu:** Jméno a Příjmení zvlášť (API), přezdívka 2–30
+  znaků, bio max. 150 znaků s počítadlem (ukládá se jen v zařízení – MOCK).
+  Chyby u polí po opuštění pole nebo po pokusu o uložení; chyba serveru →
+  toast se „Zkusit znovu“, 409 → „Tahle přezdívka už je obsazená“. Změna
+  fotky ukáže, že zatím nejde (chybí upload endpoint). Po uložení toast
+  a návrat zpět.
+- **R53 – Hledání lidí** filtruje členy vlastní skupiny na klientu (bez
+  diakritiky, podle jména i přezdívky), řazeno podle počtu per (počty
+  z žebříčku skupiny; kdo v něm není, má 0).
+  Nadpis „Návrhy ze tvé skupiny“ se při hledání změní na „Výsledky ze tvé
+  skupiny“, ať je jasné, že se hledá jen tam.
+- **R54 – Odhlášení** je bez potvrzovacího dialogu (není navržený),
+  `AuthService.logout()` přesměruje na `/login`.
+- **R55 – Datum narození přes nativní `<input type="date">` (fáze 8).**
+  Na iOS/Androidu otevře systémový výběr data (kolečka / kalendář), je
+  přístupný a formát řídí jazyk systému. `ion-datetime` by přidal vlastní
+  vzhled, který design nemá. `max` = dnešek, datum v budoucnu nebo
+  nesmyslné se odmítne u pole.
+- **R56 – Registrace (doplňuje R10).** Jméno a Příjmení vedle sebe (2 sloupce),
+  pohlaví jako segmentovaný výběr Kluk / Holka / Neuvádím (výchozí
+  Neuvádím → `Gender.Unknown`), jedno pole hesla se zobrazením hesla
+  (odešle se i jako `passwordConfirm`), nápověda „Aspoň 8 znaků“ zezelená
+  s fajfkou. Výběr oddílu je MOCK a neodesílá se. Souhlas s podmínkami je
+  povinný checkbox; text podmínek zatím neexistuje, proto není odkazem.
+  Úspěšná registrace → Domů (bez sledovaných = stav 1b).
+- **R57 – Mladší 15 let (fáze 8).** Design slibuje „pošleme e-mail rodiči“
+  – API to neumí, takže aplikace to neslibuje: „Registraci udělej spolu
+  s rodičem. Potvrzení rodiče e-mailem připravujeme.“ Pozor: v ČR je hranice
+  pro souhlas se zpracováním osobních údajů dítěte 15 let (GDPR čl. 8,
+  zákon 110/2019 Sb.) – souhlas rodiče je tedy **právní požadavek**,
+  ne jen UX. Zapsáno v backend-requirements jako P1.
+- **R59 – Úklid (fáze 9).** Smazány fonty Nunito, staré ikony tabů
+  (`public/assets/icon/`) a dva nepoužívané obrázky; `UserRole` bez `Admin`
+  (API `0 | 1`); odstraněny nepoužité překladové klíče; Sass partials přes
+  `@use`. Odkaz na neexistující favicon odstraněn – logo zatím není
+  navržené. Audit dotykových ploch na všech obrazovkách: menší prvky
+  (segmenty, čipy, přepínač, štítek skupiny, autor v kartě) mají rozšířenou
+  klikací plochu na 44 px. `roleGuard` zůstává v kódu, ale žádná route ho
+  nepoužívá (vedoucí = dítě).
+- **R58 – Chyby přihlášení a registrace (fáze 8).** Špatné údaje (400/401)
+  → u pole Heslo „Přezdívka nebo heslo nesedí“, smaže se při dalším psaní.
+  Síť / 5xx → toast se „Zkusit znovu“. Validační chyby serveru
+  (`ProblemDetails.errors`) se přiřadí k polím, ale s vlastní českou hláškou
+  „Zkontroluj tento údaj“ (texty serveru nejsou lokalizované). Žádný
+  AlertController.
+- **R60 – Připnutí výzvy se nepoužívá (22. 10. 2026).** API umí
+  `pin`/`unpin` a `pinnedCount`, ale design ani koncept připnutí nemají;
+  „Do toho!“ dál jen otevře pero. Doplní se, až bude navržené.
+- **R61 – Soukromý profil (22. 10. 2026).** V Nastavení → Soukromí nahradil
+  neaktivní řádek „Kdo vidí moje pera – Celá Liga“ přepínač „Soukromý
+  profil“ s vysvětlivkou (ukládá `isPrivate` přes `PUT /api/user`,
+  optimisticky, při chybě vrátí a ukáže toast). Cizí soukromý profil, který
+  nesleduju: hlavička se jménem a tlačítkem Sledovat, počty, které API
+  skryje, jako „–“, místo sbírky a příspěvků empty state „Soukromý profil“.
+  Po sledování se obsah ukáže až po novém otevření profilu (neověřeno, jestli
+  sledování soukromého profilu potřebuje schválení). `PUT /api/user` posílá
+  vždy celý profil – úprava profilu proto posílá i aktuální `isPrivate`.
+- **R62 – Pero u příspěvku z autorových záznamů (22. 10. 2026).**
+  `PostResponse` má jen `userEagleFeatherId`; `EagleFeatherService.postFeathers`
+  načte `/users/{autor}/eagle-feathers` (jeden sdílený request na autora za
+  relaci, i pro paralelně načítané feedy; neúspěch se neopakuje; znovu jen
+  jednou, když příspěvek odkazuje na záznam, který v seznamu není – nový
+  příspěvek) a dohledá pero v katalogu. U mých příspěvků se použijí moje
+  záznamy (`/user/eagle-feathers`), které už má načtené postup. Skutečné pero nemá výkon (API ho neukládá) → karta ukazuje
+  „Splněno“, ne ukázkovou metriku. Ukázkové pero (MOCK, R5) zůstává jen
+  jako záloha, když záznam autora nejde přečíst (např. soukromý profil).
+  Profily mají u příspěvků nekonečný scroll (stránky po 20).
+
+## 6. Fáze a výstup
+
+| Fáze | Výstup | Commit |
+|---|---|---|
+| 1 | tokeny, `@theme`, fonty, typografické třídy, Transloco + pipes, `index.html`, oprava stávajících testů | `feat: design tokens, typography and i18n foundation` |
+| 2 | design-system komponenty + `/dev/ui` | `feat: design system components` |
+| 3 | navbar, routy, placeholdery, služby + VM + `core/mocks/`, `backend-requirements.md` | `feat: floating navbar, routes and data layer` |
+| 4 | `PostCard`, menu příspěvku, Domů | `feat: post card and home screen` |
+| 5 | Orlí pera (katalog, kategorie, pero, hledání) | `feat: eagle feathers screens` |
+| 6 | Skupina | `feat: group screen` |
+| 7 | Profil, nastavení, úprava profilu, lidé | `feat: profile, settings and people` |
+| 8 | Přihlášení, registrace | `feat: login and registration screens` |
+| 9 | úklid, a11y, shrnutí | `chore: cleanup and accessibility pass` |
+
+Každá fáze končí `npm run lint`, `npm run build` a `npm test` bez chyb.
+
+## 7. Stav po dokončení (11. 10. 2026, aktualizováno 22. 10. 2026)
+
+Všechny obrazovky z designu jsou hotové (kromě nenavržených: nahrání pera,
+detail příspěvku, dark mode). Lint, build a 38 unit testů procházejí.
+Vizuálně ověřeno při 390 px proti `design/` s mockovanými odpověďmi API;
+**proti skutečnému backendu zatím neověřeno** (chybí testovací účet).
+
+| Obrazovka | Skutečná data z API | Ukázková data (MOCK) / skryto |
+|---|---|---|
+| Přihlášení, registrace | přihlášení, registrace (všechna pole `RegisterRequest`) | výběr oddílu (neodesílá se); souhlas rodiče jen jako rada |
+| Domů | feed, pírka (odeslání), režim sleduju / celá Liga, mazání, pero u příspěvku (R62), denní výzva | výkon u příspěvku (skutečná pera ukazují „Splněno“), „lajkl jsem“; pero jen jako záloha; místo skryto |
+| Orlí pera | katalog, kategorie, pera, texty úkolů, můj postup | názvy kategorií, pravidla, co se měří, limity, slovníček, kdo ze skupiny pero má |
+| Skupina | hlavička, feed skupiny, oznámení (název, text, autor), žebříček | cover = ilustrace; kdy/kde/vstupné/věk skryto |
+| Můj profil | jméno, přezdívka, skupina, statistiky (`/users/{id}/stats`), sbírka, moje příspěvky | bio (jen v zařízení) |
+| Cizí profil | jméno, fotka, počty, sbírka, příspěvky, sledovat / přestat, soukromý profil | bio a skupina skryté |
+| Hledání lidí | členové vlastní skupiny, sledování, počty per | hledá se jen ve skupině |
+| Nastavení | odhlášení, osobní údaje → úprava profilu, soukromý profil | notifikace jen v zařízení; ostatní „Brzy“ |
+| Úprava profilu | jméno, příjmení, přezdívka | bio; změna fotky nedostupná |
+
+Otevřené body pro tebe: kontrast oranžových tlačítek (známý dluh, O1),
+souhlas rodiče pod 15 let (právní, R57), skloňování jmen (R31/R32), věkové kategorie limitů pro 8–13 let
+(§4.6), testovací účet pro ověření proti backendu.
+

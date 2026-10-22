@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideTestDefaults } from '../../testing/test-providers';
 
 import { NavPage } from './nav.page';
 
@@ -10,7 +10,7 @@ describe('NavPage', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NavPage],
-      providers: [provideRouter([])]
+      providers: provideTestDefaults()
     }).compileComponents();
   });
 

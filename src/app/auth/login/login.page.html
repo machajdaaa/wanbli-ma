@@ -1,110 +1,42 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Wanbli</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
+  <div class="flex min-h-full flex-col px-4 pb-[calc(var(--wanbli-space-6)+var(--ion-safe-area-bottom,0px))]">
+    <section class="flex flex-col items-center gap-1.5 pt-[max(4.75rem,calc(var(--ion-safe-area-top,0px)+2rem))] text-center">
+      <img src="/assets/images/eagle-auth.png" alt="" class="mb-2.5 h-[140px] w-[168px]" />
+      <h1 class="type-display text-text">{{ 'auth.loginTitle' | transloco }}</h1>
+      <p class="font-text text-[0.9375rem] leading-5 text-text-muted">{{ 'auth.loginText' | transloco }}</p>
+    </section>
 
-<ion-content class="[--padding-top:1rem] [--padding-bottom:1rem] [--padding-start:1rem] [--padding-end:1rem]">
-  @if (mode() === 'login') {
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form class="flex flex-col gap-4 pt-7" [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <app-text-input
-        label="Přezdívka"
-        type="text"
         formControlName="nickname"
-        autocomplete="username">
-      </app-text-input>
-
+        autocomplete="username"
+        [label]="'auth.nickname' | transloco"
+        [error]="errorFor('nickname')"
+      />
       <app-text-input
-        label="Heslo"
-        type="password"
         formControlName="password"
-        autocomplete="current-password">
-      </app-text-input>
-
-      <app-button
-        class="mt-4"
-        type="submit"
-        [disabled]="form.invalid || isSubmitting()">
-        {{ isSubmitting() ? 'Přihlašování...' : 'Přihlásit se' }}
+        type="password"
+        autocomplete="current-password"
+        [label]="'auth.password' | transloco"
+        [error]="errorFor('password')"
+      />
+      <a
+        routerLink="/forgot-password"
+        class="-mt-3 -mr-1 -mb-2 inline-flex h-11 items-center self-end px-1 type-label text-text underline decoration-primary decoration-2 underline-offset-4"
+        >{{ 'auth.forgotPassword' | transloco }}</a
+      >
+      <app-button type="submit" size="lg" [block]="true" [loading]="submitting()" class="mt-1">
+        {{ (submitting() ? 'auth.loggingIn' : 'auth.login') | transloco }}
       </app-button>
     </form>
 
-    <p>
-      Nemáte účet?
-      <a (click)="toggleMode()">Zaregistrujte se</a>
+    <p class="mt-auto flex items-center justify-center gap-1.5 pt-8 type-body text-text-muted">
+      {{ 'auth.noAccount' | transloco }}
+      <a
+        routerLink="/register"
+        class="inline-flex h-11 items-center type-label text-text underline decoration-primary decoration-2 underline-offset-4"
+        >{{ 'auth.toRegister' | transloco }}</a
+      >
     </p>
-  } @else {
-    <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
-      <app-text-input
-        label="Přezdívka"
-        type="text"
-        formControlName="nickname"
-        autocomplete="username">
-      </app-text-input>
-
-      <app-text-input
-        label="E-mail"
-        type="email"
-        formControlName="email"
-        autocomplete="email">
-      </app-text-input>
-
-      <app-text-input
-        label="Jméno"
-        type="text"
-        formControlName="firstName"
-        autocomplete="given-name">
-      </app-text-input>
-
-      <app-text-input
-        label="Příjmení"
-        type="text"
-        formControlName="lastName"
-        autocomplete="family-name">
-      </app-text-input>
-
-      <app-text-input
-        label="Datum narození (RRRR-MM-DD)"
-        type="text"
-        formControlName="birthDate"
-        autocomplete="bday">
-      </app-text-input>
-
-      <select formControlName="gender">
-        <option [ngValue]="null" disabled>Vyberte pohlaví</option>
-        <option [ngValue]="Gender.Male">Muž</option>
-        <option [ngValue]="Gender.Female">Žena</option>
-      </select>
-
-      <app-text-input
-        label="Heslo"
-        type="password"
-        formControlName="password"
-        autocomplete="new-password">
-      </app-text-input>
-
-      <app-text-input
-        label="Heslo znovu"
-        type="password"
-        formControlName="passwordConfirm"
-        autocomplete="new-password">
-      </app-text-input>
-
-      @if (registerForm.errors?.['passwordsMismatch'] && registerForm.get('passwordConfirm')?.touched) {
-        <p>Hesla se neshodují.</p>
-      }
-
-      <app-button
-        class="mt-4"
-        type="submit"
-        [disabled]="registerForm.invalid || isSubmitting()">
-        {{ isSubmitting() ? 'Registrace...' : 'Zaregistrovat se' }}
-      </app-button>
-    </form>
-
-    <p>
-      Máte účet?
-      <a (click)="toggleMode()">Přihlaste se</a>
-    </p>
-  }
+  </div>
 </ion-content>

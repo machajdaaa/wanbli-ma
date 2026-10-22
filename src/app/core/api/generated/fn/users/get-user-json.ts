@@ -7,13 +7,13 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { PublicUserResponse } from '../../models/public-user-response';
+import { UserProfileResponse } from '../../models/user-profile-response';
 
 export interface GetUser$Json$Params {
   id: number;
 }
 
-export function getUser$Json(http: HttpClient, rootUrl: string, params: GetUser$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<PublicUserResponse>> {
+export function getUser$Json(http: HttpClient, rootUrl: string, params: GetUser$Json$Params, context?: HttpContext): Observable<StrictHttpResponse<UserProfileResponse>> {
   const rb = new RequestBuilder(rootUrl, getUser$Json.PATH, 'get');
   if (params) {
     rb.path('id', params.id, {});
@@ -24,7 +24,7 @@ export function getUser$Json(http: HttpClient, rootUrl: string, params: GetUser$
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<PublicUserResponse>;
+      return r as StrictHttpResponse<UserProfileResponse>;
     })
   );
 }

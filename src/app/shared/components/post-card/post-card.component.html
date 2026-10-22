@@ -1,0 +1,127 @@
+<article
+  class="relative flex flex-col gap-3.5 overflow-hidden rounded-16 border border-border bg-surface p-4 text-text"
+  [attr.aria-labelledby]="titleId()"
+>
+  <!-- 1 Author -->
+  <div class="flex items-center gap-3">
+    <a [routerLink]="authorLink()" class="-my-0.5 flex min-h-11 min-w-0 flex-1 items-center gap-3 rounded-12">
+      <app-avatar [size]="40" [name]="post().author.name" [imageUrl]="post().author.avatarUrl" [seed]="post().author.id" />
+      <span class="flex min-w-0 flex-col gap-px">
+        <span class="truncate type-label">{{ post().author.name }}</span>
+        <span class="flex min-w-0 gap-1 type-caption text-text-muted">
+          @if (post().place) {
+            <span class="truncate">{{ post().place }}</span>
+            <span aria-hidden="true">·</span>
+          }
+          <span class="shrink-0">{{ post().createdAt | relativeTime }}</span>
+        </span>
+      </span>
+    </a>
+    <button
+      type="button"
+      class="-my-2.5 -mr-3 flex size-11 shrink-0 items-center justify-center rounded-12 text-text-muted"
+      [attr.aria-label]="'post.more' | transloco"
+      aria-haspopup="dialog"
+      (click)="menu.emit(post())"
+    >
+      <app-icon name="more" [size]="20" />
+    </button>
+  </div>
+
+  <!-- 2 Light + feather name -->
+  <div class="flex flex-col gap-1.5">
+    <div class="flex items-center justify-between gap-2">
+      <app-light-tag [light]="post().feather.light" [label]="post().feather.categoryName" />
+      @if (post().isGrandChallenge) {
+        <app-badge variant="grand-challenge" />
+      }
+    </div>
+    <h3 [id]="titleId()" class="type-h2">{{ post().feather.name }}</h3>
+    @if (post().content) {
+      <p class="line-clamp-3 type-body text-text-muted">{{ post().content }}</p>
+    }
+  </div>
+
+  <!-- 3 Performance (max. 2) or "Splněno" -->
+  @if (post().metrics.length) {
+    <dl class="grid grid-cols-2 gap-3">
+      @for (metric of post().metrics; track metric.label) {
+        <div class="flex flex-col">
+          <dt class="type-caption text-text-muted">{{ metric.label }}</dt>
+          <dd class="flex items-baseline gap-1 font-display text-[2rem] leading-[2.375rem] font-extrabold tracking-[-0.5px]">
+            {{ metric.value | decimal }}<span class="text-[1.25rem] leading-6 font-bold tracking-normal">{{ metric.unit }}</span>
+          </dd>
+        </div>
+      }
+    </dl>
+  } @else {
+    <app-badge variant="done" class="self-start" />
+  }
+
+  <!-- 4 Photos -->
+  @switch (photos().length) {
+    @case (0) {}
+    @case (1) {
+      <ng-container *ngTemplateOutlet="photo; context: { $implicit: photos()[0], cls: 'h-[244px]', icon: 36, n: 1 }" />
+    }
+    @case (2) {
+      <div class="grid grid-cols-2 gap-2">
+        @for (p of photos(); track $index) {
+          <ng-container *ngTemplateOutlet="photo; context: { $implicit: p, cls: 'h-[159px]', icon: 28, n: $index + 1, alt: $odd }" />
+        }
+      </div>
+    }
+    @default {
+      <div class="grid grid-cols-[2fr_1fr] grid-rows-[96px_96px] gap-2">
+        <ng-container *ngTemplateOutlet="photo; context: { $implicit: photos()[0], cls: 'row-span-2', icon: 32, n: 1 }" />
+        <ng-container *ngTemplateOutlet="photo; context: { $implicit: photos()[1], cls: '', icon: 0, n: 2, alt: true }" />
+        <div class="relative overflow-hidden rounded-12">
+          <ng-container *ngTemplateOutlet="photo; context: { $implicit: photos()[2], cls: 'h-full', icon: 0, n: 3 }" />
+          @if (extraPhotos()) {
+            <span
+              class="absolute inset-0 flex items-center justify-center bg-photo-overlay font-display text-[1.625rem] leading-none font-extrabold text-white"
+              [attr.aria-label]="'post.morePhotos' | transloco: { count: extraPhotos() }"
+              role="img"
+              >+{{ extraPhotos() }}</span
+            >
+          }
+        </div>
+      </div>
+    }
+  }
+
+  <!-- 5 Pírko -->
+  <div class="-mx-1.5 -mb-2 -mt-1 flex items-center border-t border-border pt-1">
+    <button
+      type="button"
+      class="mt-1 inline-flex h-11 items-center gap-1.5 rounded-full pr-3.5 pl-2.5 font-text text-[0.875rem] leading-5"
+      [class]="liked() ? 'bg-primary-subtle font-bold text-primary-pressed' : 'font-semibold text-text'"
+      [attr.aria-pressed]="liked()"
+      [attr.aria-label]="(liked() ? 'post.unlike' : 'post.like') | transloco: { count: (likeCount() | plural: 'likes') }"
+      (click)="toggleLike()"
+    >
+      @if (liked()) {
+        <app-icon name="feather-filled" [size]="22" class="text-primary" />
+      } @else {
+        <app-icon name="feather" [size]="22" />
+      }
+      <span aria-hidden="true">{{ likeCount() }}</span>
+    </button>
+  </div>
+</article>
+
+<ng-template #photo let-p let-cls="cls" let-icon="icon" let-n="n" let-alt="alt">
+  @if (p.url) {
+    <img [src]="p.url" [alt]="'post.photoAlt' | transloco: { n: n }" [class]="'w-full rounded-12 object-cover ' + cls" />
+  } @else {
+    <div
+      role="img"
+      [attr.aria-label]="'post.photoAlt' | transloco: { n: n }"
+      [class]="'flex w-full items-center justify-center rounded-12 text-text-disabled ' + (alt ? 'bg-placeholder-alt ' : 'bg-placeholder ') + cls"
+    >
+      @if (icon) {
+        <app-icon name="image" [size]="icon" [strokeWidth]="1.6" />
+      }
+    </div>
+  }
+</ng-template>
